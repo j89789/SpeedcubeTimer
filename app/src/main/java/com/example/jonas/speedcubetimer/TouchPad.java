@@ -20,7 +20,12 @@ public class TouchPad {
     View view = null;
     final MyOnTouchListener touchListener = new MyOnTouchListener();
     Listener listener = null;
-    int touchCount = 0;
+
+    /**
+     * True if the Listener.onUp() was call for avoid a Listener.onDown() call with the
+     * same touch points.
+     */
+    boolean isTouchInvalid = false;
 
 
     public void setListener(Listener listener) {
@@ -37,38 +42,46 @@ public class TouchPad {
         this.view.setOnTouchListener(this.touchListener);
     }
 
-    class MyOnTouchListener implements View.OnTouchListener{
+    class MyOnTouchListener implements View.OnTouchListener {
 
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            switch(event.getAction() & MotionEvent.ACTION_MASK)
-            {
-                case MotionEvent.ACTION_POINTER_DOWN:
-
+            if (!isTouchInvalid) {
+                if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
                     if (!isDown) {
                         isDown = true;
                         if (listener != null) {
                             listener.onDown();
                         }
                     }
-                    break;
+                }
+
+                if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
+                    if (event.getPointerCount() <= 2) {
+                        if (isDown) {
+                            isDown = false;
+                            if (listener != null) {
+                                listener.onUp();
+                            }
+                            isTouchInvalid = true;
+                        }
+                    }
+                }
             }
 
             if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                    if (isDown) {
-                        isDown = false;
-
-                        if (listener != null) {
-                            listener.onUp();
-                        }
-                    } else{
-                        if (listener != null) {
-                            listener.onTrigger();
-                        }
+                if (isTouchInvalid) {
+                    isTouchInvalid = false;
+                }
+                else
+                {
+                    if (listener != null) {
+                        listener.onTrigger();
                     }
+                }
             }
 
             return true;
