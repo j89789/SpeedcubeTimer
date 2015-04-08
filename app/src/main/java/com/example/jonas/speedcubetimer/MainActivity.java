@@ -16,14 +16,15 @@ public class MainActivity extends Activity {
 
     private TextView timerView;
     private final SpeedcubeTimer timer = new SpeedcubeTimer();
+    private final TouchPad touchPad = new TouchPad();
+    private MyTouchPadListener touchPadListener = new MyTouchPadListener();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.activity_main);
-
-        this.getWindow().getDecorView().setOnTouchListener(new OnTouchListener());
 
         this.timerView = (TextView) findViewById(R.id.timerView);
         this.timerView.setOnClickListener(new View.OnClickListener() {
@@ -32,6 +33,9 @@ public class MainActivity extends Activity {
                 timer.reset();
             }
         });
+
+        this.touchPad.setView(this.getWindow().getDecorView());
+        this.touchPad.setListener(this.touchPadListener);
     }
 
     @Override
@@ -57,34 +61,44 @@ public class MainActivity extends Activity {
     }
 
 
-    private class OnTouchListener implements View.OnTouchListener {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (timer.isRunning()) {
-                    timer.stop();
-                } else {
-                    if (timer.isNullTime()) {
-                        timer.start();
-                    } else {
-                        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(MainActivity.this);
-                        dlgAlert.setTitle("Reset Timer before restart.");
-                        dlgAlert.setMessage("Click on time view or back button!");
-                        dlgAlert.setPositiveButton("OK", null);
-                        dlgAlert.setCancelable(true);
-                        dlgAlert.create().show();
-                    }
-                }
-            }
+    private class MyTouchPadListener implements TouchPad.Listener {
 
-            return false;
+        @Override
+        public void onUp() {
+
+            if (timer.isNullTime()) {
+                timer.start();
+            }
+        }
+
+        @Override
+        public void onDown() {
+
+            if (timer.isRunning()) {
+                timer.stop();
+            }
+            else if(!timer.isNullTime())
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Rest Timer...");
+                builder.create().show();
+            }
+        }
+
+        @Override
+        public void onTrigger() {
+
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (!timer.isNullTime()) {
+
+            if(timer.isRunning()) {
+                return true;
+            }
+            else if (!timer.isNullTime()) {
                 timer.reset();
                 return true;
             }
