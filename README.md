@@ -1,2 +1,2 @@
 # Speedcube Timer
-A simpel speedcube timer for android.
+A simple speedcube timer for android.

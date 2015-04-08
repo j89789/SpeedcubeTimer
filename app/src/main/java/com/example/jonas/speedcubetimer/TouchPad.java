@@ -1,31 +1,30 @@
 package com.example.jonas.speedcubetimer;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 /**
  * Represented the touch field as in the StackMat.
- *
+ * <p/>
  * The source view of touch events must be set with setView().
- *
+ * <p/>
  * The Listener hat the following events:
  * 1. onDown() Both hand are on the pad
  * 2. onUp() One hand leave the pad after both hands were on the pad
  * 3. onTrigger() One hand leave the pad but no both hands wer on the pad
  */
-public class TouchPad {
+class TouchPad {
 
-    boolean isDown = false;
-    View view = null;
-    final MyOnTouchListener touchListener = new MyOnTouchListener();
-    Listener listener = null;
+    private boolean isDown = false;
+    private View view = null;
+    private final MyOnTouchListener touchListener = new MyOnTouchListener();
+    private Listener listener = null;
 
     /**
      * True if the Listener.onUp() was call for avoid a Listener.onDown() call with the
      * same touch points.
      */
-    boolean isTouchInvalid = false;
+    private boolean isTouchInvalid = false;
 
 
     public void setListener(Listener listener) {
@@ -75,9 +74,7 @@ public class TouchPad {
 
                 if (isTouchInvalid) {
                     isTouchInvalid = false;
-                }
-                else
-                {
+                } else {
                     if (listener != null) {
                         listener.onTrigger();
                     }

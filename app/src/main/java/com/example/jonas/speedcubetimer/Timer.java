@@ -9,9 +9,9 @@ import android.util.Log;
  * in the function currentTime(). By Calling stop the timer is not running but is also not a
  * null time. rest() will reset the time to null. start() will restart the Timer.
  */
-public class Timer {
+class Timer {
 
-    private ElapsedTimer elapsedTimer = new ElapsedTimer();
+    private final ElapsedTimer elapsedTimer = new ElapsedTimer();
     private boolean isRunning = false;
     private boolean isNullTime = true;
 
@@ -28,7 +28,7 @@ public class Timer {
     /**
      * @return Time in milliseconds since start was called.
      */
-    long currentTime(){
+    private long currentTime(){
         return this.offset + (this.isRunning ? elapsedTimer.elapsed() : 0);
     }
 

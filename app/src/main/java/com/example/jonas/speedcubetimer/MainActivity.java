@@ -7,17 +7,16 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
 
-    private TextView timerView;
     private final SpeedcubeTimer timer = new SpeedcubeTimer();
     private final TouchPad touchPad = new TouchPad();
-    private MyTouchPadListener touchPadListener = new MyTouchPadListener();
+    private TextView timerView;
+    private final MyTouchPadListener touchPadListener = new MyTouchPadListener();
 
 
     @Override
@@ -60,6 +59,20 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (timer.isRunning()) {
+                return true;
+            } else if (!timer.isNullTime()) {
+                timer.reset();
+                return true;
+            }
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 
     private class MyTouchPadListener implements TouchPad.Listener {
 
@@ -76,9 +89,7 @@ public class MainActivity extends Activity {
 
             if (timer.isRunning()) {
                 timer.stop();
-            }
-            else if(!timer.isNullTime())
-            {
+            } else if (!timer.isNullTime()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Rest Timer...");
                 builder.create().show();
@@ -91,27 +102,11 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-            if(timer.isRunning()) {
-                return true;
-            }
-            else if (!timer.isNullTime()) {
-                timer.reset();
-                return true;
-            }
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
     private class SpeedcubeTimer extends Timer {
 
         private final Handler handler = new Handler();
-        private int viewUpdateInterval = 50;
-        private TimeViewUpdater timeViewUpdater = new TimeViewUpdater();
+        private final int viewUpdateInterval = 50;
+        private final TimeViewUpdater timeViewUpdater = new TimeViewUpdater();
 
         public void start() {
             super.start();

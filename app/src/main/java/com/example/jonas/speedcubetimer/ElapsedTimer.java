@@ -1,9 +1,9 @@
 package com.example.jonas.speedcubetimer;
 
-public class ElapsedTimer {
+class ElapsedTimer {
 
-    boolean isValid = false;
-    long startTime = 0;
+    private boolean isValid = false;
+    private long startTime = 0;
 
     public void invalidate(){
         this.isValid = true;
