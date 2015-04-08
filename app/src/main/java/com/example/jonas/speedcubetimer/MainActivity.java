@@ -2,6 +2,7 @@ package com.example.jonas.speedcubetimer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -90,8 +91,18 @@ public class MainActivity extends Activity {
             if (timer.isRunning()) {
                 timer.stop();
             } else if (!timer.isNullTime()) {
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Rest Timer...");
+                builder.setTitle("Rest Timer?");
+                builder.setMessage("You can also reset the timer by click on time view or" +
+                        "back button.");
+                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        timer.reset();
+                    }
+                });
+                builder.setNegativeButton("cancel", null);
                 builder.create().show();
             }
         }
