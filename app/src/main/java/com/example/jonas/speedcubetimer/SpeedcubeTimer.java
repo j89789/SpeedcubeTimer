@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 
 /**
- * Combine touch pad and timer to a speedcube time functions
+ * Combine touch pad and solvingTimer to a speedcube time functions
  */
 class SpeedcubeTimer {
 
@@ -16,10 +16,13 @@ class SpeedcubeTimer {
     private final int viewUpdateInterval = 50;
     private String tag = "SpeedcubeTimer";
     private Context context;
-    private Runnable timerRunnable = new TimerRunnable();
-    private CountdownTimer timer = new CountdownTimer();
+    private ViewTextUpdater viewTextUpdater = new ViewTextUpdater();
+    private DownValidMaker downValidMaker = new DownValidMaker() ;
+    private Runnable updater = new ViewTextUpdater();
+    private Timer solvingTimer = new Timer();
     private TimerState timerState = TimerState.ready;
     private Listener listener = null;
+    private boolean isDownValid = false;
 
     public SpeedcubeTimer(Context context) {
         this.context = context;
@@ -36,8 +39,8 @@ class SpeedcubeTimer {
     private void startSolving() {
         if (timerState == TimerState.ready || timerState == TimerState.inspection) {
             timerState = TimerState.solving;
-            this.timer.start();
-            this.handler.postDelayed(this.timerRunnable, this.viewUpdateInterval);
+            this.solvingTimer.start();
+            this.handler.postDelayed(this.viewTextUpdater, this.viewUpdateInterval);
         } else {
             Log.d(tag, "startSolving() failed");
         }
@@ -46,8 +49,8 @@ class SpeedcubeTimer {
     private void stopSolving() {
         if (timerState == TimerState.solving) {
             timerState = TimerState.solved;
-            this.timer.stop();
-            handler.removeCallbacks(timerRunnable);
+            this.solvingTimer.stop();
+            handler.removeCallbacks(viewTextUpdater);
         } else {
             Log.d(tag, "stopSolving() failed");
         }
@@ -60,8 +63,8 @@ class SpeedcubeTimer {
     public void reset() {
         if (timerState == TimerState.solved) {
             timerState = TimerState.ready;
-            timer.reset();
-            listener.onTextChanged(timer.currentTimeAsString());
+            solvingTimer.reset();
+            listener.onTextChanged(solvingTimer.currentTimeAsString());
         } else {
             Log.d(tag, "reset() failed");
         }
@@ -72,7 +75,7 @@ class SpeedcubeTimer {
     }
 
     public String getDisplayString() {
-        return this.timer.currentTimeAsString();
+        return this.solvingTimer.currentTimeAsString();
     }
 
     public void setListener(Listener listener) {
@@ -104,22 +107,33 @@ class SpeedcubeTimer {
         public void onUp() {
 
             if (timerState == TimerState.ready) {
-                startSolving();
-                listener.onColorChanged(R.color.red);
+                if(isDownValid) {
+                    startSolving();
+                }else{
+                    handler.removeCallbacks(downValidMaker);
+                }
+
+                listener.onColorChanged(R.color.normal);
             }
         }
 
         @Override
         public void onDown() {
 
+            if(timerState == TimerState.ready)
+            {
+                isDownValid = false;
+                listener.onColorChanged(R.color.invalid);
+
+                handler.postDelayed(downValidMaker, 550);
+            }
             if (timerState == TimerState.solving) {
                 stopSolving();
-                listener.onColorChanged(R.color.normal);
             } else if (timerState == TimerState.solved) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Rest Timer?");
-                builder.setMessage("You can also reset the timer by click on time view or" +
+                builder.setMessage("You can also reset the solvingTimer by click on time view or" +
                         "back button.");
                 builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -138,11 +152,19 @@ class SpeedcubeTimer {
         }
     }
 
-    private class TimerRunnable implements Runnable {
+    private class ViewTextUpdater implements Runnable {
         @Override
         public void run() {
-            listener.onTextChanged(timer.currentTimeAsString());
+            listener.onTextChanged(solvingTimer.currentTimeAsString());
             handler.postDelayed(this, viewUpdateInterval);
+        }
+    }
+
+    private class DownValidMaker implements Runnable {
+        @Override
+        public void run() {
+            isDownValid = true;
+            listener.onColorChanged(R.color.valid);
         }
     }
 }
