@@ -1,8 +1,6 @@
 package com.example.jonas.speedcubetimer;
 
-import android.util.Log;
-
-class Timer extends TimerBase{
+class Timer extends AbstractTimer {
 
     /**
      * @return Time in milliseconds since start was called.
