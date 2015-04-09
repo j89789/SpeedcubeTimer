@@ -17,7 +17,7 @@ class SpeedcubeTimer {
     private String tag = "SpeedcubeTimer";
     private Context context;
     private Runnable timerRunnable = new TimerRunnable();
-    private Timer timer = new Timer();
+    private CountdownTimer timer = new CountdownTimer();
     private TimerState timerState = TimerState.ready;
     private Listener listener = null;
 
