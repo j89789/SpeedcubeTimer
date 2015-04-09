@@ -1,24 +1,21 @@
 package com.example.jonas.speedcubetimer;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+// 3014159 26535 89793 23846
 
 public class MainActivity extends Activity {
 
-    private final SpeedcubeTimer timer = new SpeedcubeTimer();
     private final TouchPad touchPad = new TouchPad();
+    private final SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer(this);
     private TextView timerView;
-    private final MyTouchPadListener touchPadListener = new MyTouchPadListener();
-
+    private TimeViewUpdater timeViewUpdater = new TimeViewUpdater();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +24,12 @@ public class MainActivity extends Activity {
         this.setContentView(R.layout.activity_main);
 
         this.timerView = (TextView) findViewById(R.id.timerView);
-        this.timerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timer.reset();
-            }
-        });
+        this.timerView.setOnClickListener(new TimeViewOnClickListener());
 
         this.touchPad.setView(this.getWindow().getDecorView());
-        this.touchPad.setListener(this.touchPadListener);
+
+        this.speedcubeTimer.setTouchPad(this.touchPad);
+        this.speedcubeTimer.setUpdateRunnable(timeViewUpdater);
     }
 
     @Override
@@ -64,10 +58,10 @@ public class MainActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            if (timer.isRunning()) {
+            if (speedcubeTimer.getTimerState() != SpeedcubeTimer.TimerState.ready) {
                 return true;
-            } else if (!timer.isNullTime()) {
-                timer.reset();
+            } else {
+                speedcubeTimer.reset();
                 return true;
             }
         }
@@ -75,77 +69,17 @@ public class MainActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private class MyTouchPadListener implements TouchPad.Listener {
-
+    private class TimeViewUpdater implements Runnable {
         @Override
-        public void onUp() {
-
-            if (timer.isNullTime()) {
-                timer.start();
-            }
-        }
-
-        @Override
-        public void onDown() {
-
-            if (timer.isRunning()) {
-                timer.stop();
-            } else if (!timer.isNullTime()) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Rest Timer?");
-                builder.setMessage("You can also reset the timer by click on time view or" +
-                        "back button.");
-                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        timer.reset();
-                    }
-                });
-                builder.setNegativeButton("cancel", null);
-                builder.create().show();
-            }
-        }
-
-        @Override
-        public void onTrigger() {
-
+        public void run() {
+            timerView.setText(speedcubeTimer.getDisplayString());
         }
     }
 
-    private class SpeedcubeTimer extends Timer {
-
-        private final Handler handler = new Handler();
-        private final int viewUpdateInterval = 50;
-        private final TimeViewUpdater timeViewUpdater = new TimeViewUpdater();
-
-        public void start() {
-            super.start();
-
-            this.handler.postDelayed(this.timeViewUpdater, this.viewUpdateInterval);
-        }
-
-        public void stop() {
-            super.stop();
-            handler.removeCallbacks(timeViewUpdater);
-        }
-
-        public void reset() {
-            super.reset();
-
-            this.timeViewUpdater.run();
-
-        }
-
-        private class TimeViewUpdater implements Runnable {
-            @Override
-            public void run() {
-                timerView.setText(currentTimeAsString());
-
-                if (isRunning()) {
-                    handler.postDelayed(this, viewUpdateInterval);
-                }
-            }
+    private class TimeViewOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            speedcubeTimer.reset();
         }
     }
 }
