@@ -75,7 +75,28 @@ class SpeedcubeTimer {
         return this.timer.currentTimeAsString();
     }
 
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
     public enum TimerState {ready, inspection, solving, solved}
+
+    interface Listener {
+
+        /**
+         * Text to display changed
+         *
+         * @param text New text
+         */
+        void onTextChanged(String text);
+
+        /**
+         * Color of Text changed
+         *
+         * @param colorId Resource id of the new color
+         */
+        void onColorChanged(int colorId);
+    }
 
     private class MyTouchPadListener implements TouchPad.Listener {
 
@@ -123,26 +144,5 @@ class SpeedcubeTimer {
             listener.onTextChanged(timer.currentTimeAsString());
             handler.postDelayed(this, viewUpdateInterval);
         }
-    }
-
-    public void setListener(Listener listener) {
-        this.listener = listener;
-    }
-
-    interface Listener{
-
-        /**
-         * Text to display changed
-         *
-         * @param text New text
-         */
-        void onTextChanged(String text);
-
-        /**
-         * Color of Text changed
-         *
-         * @param colorId Resource id of the new color
-         */
-        void onColorChanged(int colorId);
     }
 }
