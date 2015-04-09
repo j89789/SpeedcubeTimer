@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
     private final TouchPad touchPad = new TouchPad();
     private final SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer(this);
     private TextView timerView;
-    private TimeViewUpdater timeViewUpdater = new TimeViewUpdater();
+    private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +28,8 @@ public class MainActivity extends Activity {
 
         this.touchPad.setView(this.getWindow().getDecorView());
 
-        this.speedcubeTimer.setTouchPad(this.touchPad);
-        this.speedcubeTimer.setUpdateRunnable(timeViewUpdater);
+        this.speedcubeTimer.setTouchPad(touchPad);
+        this.speedcubeTimer.setListener(speedcubeListener);
     }
 
     @Override
@@ -73,6 +73,19 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
             timerView.setText(speedcubeTimer.getDisplayString());
+        }
+    }
+
+
+    private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
+        @Override
+        public void onTextChanged(String text) {
+            timerView.setText(text);
+        }
+
+        @Override
+        public void onColorChanged(int colorId) {
+            timerView.setTextColor(getResources().getColor(colorId));
         }
     }
 

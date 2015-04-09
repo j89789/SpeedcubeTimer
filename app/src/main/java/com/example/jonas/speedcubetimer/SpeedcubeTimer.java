@@ -16,10 +16,10 @@ class SpeedcubeTimer {
     private final int viewUpdateInterval = 50;
     private String tag = "SpeedcubeTimer";
     private Context context;
-    private Runnable updateRunnable = null;
     private Runnable timerRunnable = new TimerRunnable();
     private Timer timer = new Timer();
     private TimerState timerState = TimerState.ready;
+    private Listener listener = null;
 
     public SpeedcubeTimer(Context context) {
         this.context = context;
@@ -61,7 +61,7 @@ class SpeedcubeTimer {
         if (timerState == TimerState.solved) {
             timerState = TimerState.ready;
             timer.reset();
-            updateRunnable.run();
+            listener.onTextChanged(timer.currentTimeAsString());
         } else {
             Log.d(tag, "reset() failed");
         }
@@ -69,10 +69,6 @@ class SpeedcubeTimer {
 
     public void setTouchPad(TouchPad touchPad) {
         touchPad.setListener(touchPadListener);
-    }
-
-    public void setUpdateRunnable(Runnable updateRunnable) {
-        this.updateRunnable = updateRunnable;
     }
 
     public String getDisplayString() {
@@ -88,6 +84,7 @@ class SpeedcubeTimer {
 
             if (timerState == TimerState.ready) {
                 startSolving();
+                listener.onColorChanged(R.color.red);
             }
         }
 
@@ -96,6 +93,7 @@ class SpeedcubeTimer {
 
             if (timerState == TimerState.solving) {
                 stopSolving();
+                listener.onColorChanged(R.color.normal);
             } else if (timerState == TimerState.solved) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -122,8 +120,29 @@ class SpeedcubeTimer {
     private class TimerRunnable implements Runnable {
         @Override
         public void run() {
-            updateRunnable.run();
+            listener.onTextChanged(timer.currentTimeAsString());
             handler.postDelayed(this, viewUpdateInterval);
         }
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    interface Listener{
+
+        /**
+         * Text to display changed
+         *
+         * @param text New text
+         */
+        void onTextChanged(String text);
+
+        /**
+         * Color of Text changed
+         *
+         * @param colorId Resource id of the new color
+         */
+        void onColorChanged(int colorId);
     }
 }
