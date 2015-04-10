@@ -3,6 +3,8 @@ package com.example.jonas.speedcubetimer;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Handler;
 import android.util.Log;
 
@@ -17,9 +19,10 @@ class SpeedcubeTimer {
     private String tag = "SpeedcubeTimer";
     private Context context;
     private ViewTextUpdater viewTextUpdater = new ViewTextUpdater();
-    private DownValidMaker downValidMaker = new DownValidMaker() ;
+    private DownValidMaker downValidMaker = new DownValidMaker();
     private Runnable updater = new ViewTextUpdater();
     private Timer solvingTimer = new Timer();
+    private CountdownTimer inspectionTimer = new CountdownTimer();
     private TimerState timerState = TimerState.ready;
     private Listener listener = null;
     private boolean isDownValid = false;
@@ -39,32 +42,51 @@ class SpeedcubeTimer {
     private void startSolving() {
         if (timerState == TimerState.ready || timerState == TimerState.inspection) {
             timerState = TimerState.solving;
-            this.solvingTimer.start();
-            this.handler.postDelayed(this.viewTextUpdater, this.viewUpdateInterval);
+            solvingTimer.start();
+            inspectionTimer.stop();
+            inspectionTimer.reset();
+            startUpdater();
         } else {
             Log.d(tag, "startSolving() failed");
         }
     }
 
+    private void startUpdater() {
+        this.stopUpdater();
+        handler.postDelayed(this.viewTextUpdater, this.viewUpdateInterval);
+    }
+
+    private void stopUpdater() {
+        handler.removeCallbacks(this.viewTextUpdater);
+    }
+
+
     private void stopSolving() {
         if (timerState == TimerState.solving) {
             timerState = TimerState.solved;
             this.solvingTimer.stop();
-            handler.removeCallbacks(viewTextUpdater);
+            stopUpdater();
         } else {
             Log.d(tag, "stopSolving() failed");
         }
     }
 
     private void startInspection() {
+        if (timerState == TimerState.ready) {
+            timerState = TimerState.inspection;
 
+            inspectionTimer.start();
+            startUpdater();
+        }else {
+            Log.d(tag, "startInspection() failed");
+        }
     }
 
     public void reset() {
         if (timerState == TimerState.solved) {
             timerState = TimerState.ready;
             solvingTimer.reset();
-            listener.onTextChanged(solvingTimer.currentTimeAsString());
+            listener.onTextChanged(solvingTimer.currentTimeToNormalString());
         } else {
             Log.d(tag, "reset() failed");
         }
@@ -75,7 +97,7 @@ class SpeedcubeTimer {
     }
 
     public String getDisplayString() {
-        return this.solvingTimer.currentTimeAsString();
+        return this.solvingTimer.currentTimeToNormalString();
     }
 
     public void setListener(Listener listener) {
@@ -106,10 +128,10 @@ class SpeedcubeTimer {
         @Override
         public void onSensorUp() {
 
-            if (timerState == TimerState.ready) {
-                if(isDownValid) {
+            if (timerState == TimerState.inspection) {
+                if (isDownValid) {
                     startSolving();
-                }else{
+                } else {
                     handler.removeCallbacks(downValidMaker);
                 }
 
@@ -120,8 +142,7 @@ class SpeedcubeTimer {
         @Override
         public void onSensorDown() {
 
-            if(timerState == TimerState.ready)
-            {
+            if (timerState == TimerState.inspection) {
                 isDownValid = false;
                 listener.onColorChanged(R.color.invalid);
 
@@ -148,15 +169,73 @@ class SpeedcubeTimer {
 
         @Override
         public void onTrigger() {
-
+            if (timerState == TimerState.ready) {
+                startInspection();
+            }
         }
     }
 
     private class ViewTextUpdater implements Runnable {
+
+        final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+        long lastTime = Long.MAX_VALUE;
+
         @Override
         public void run() {
-            listener.onTextChanged(solvingTimer.currentTimeAsString());
-            handler.postDelayed(this, viewUpdateInterval);
+            String text = "";
+            boolean recall = true;
+
+            if (timerState == TimerState.solving) {
+                text = solvingTimer.currentTimeToNormalString();
+            } else if (timerState == TimerState.inspection) {
+
+                long currentTime = inspectionTimer.getCurrentTime();
+
+                if (currentTime < -2000) {
+                    text += "DNF";
+                    recall = false;
+                } else if (currentTime < 0) {
+                    text += "+2";
+                } else {
+                    text = inspectionTimer.currentToTenthOfSecondsString();
+                }
+
+                /* Play countdown Sounds at 8, 3, and 0 seconds */
+                boolean isCountdownBeep = lastTime >= 8000 && currentTime < 8000 ||
+                        lastTime >= 3000 && currentTime < 3000;
+
+                boolean isZeroBeep = lastTime >= 0 && currentTime < 0;
+
+                if (isCountdownBeep || isZeroBeep) {
+                    Beep beep = new Beep(isZeroBeep);
+                    beep.start();
+                }
+
+                lastTime = currentTime;
+            }
+
+            listener.onTextChanged(text);
+
+            if(recall) {
+                handler.postDelayed(this, viewUpdateInterval);
+            }
+        }
+
+        class Beep extends Thread{
+
+            private int tone = ToneGenerator.TONE_PROP_BEEP;
+
+            Beep(boolean isZeroBeep){
+                if (isZeroBeep) {
+                    tone = ToneGenerator.TONE_PROP_BEEP2;
+                }
+            }
+
+            @Override
+            public void run() {
+                super.run();
+                tg.startTone(tone);
+            }
         }
     }
 

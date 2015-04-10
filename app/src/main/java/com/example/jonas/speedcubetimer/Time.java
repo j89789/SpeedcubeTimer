@@ -15,6 +15,13 @@ public class Time {
         String secondsString = String.format("%02d", seconds % 60);
         String minutesString = String.format("%d", minutes % 60);
 
-        return "" + minutesString + ":" + secondsString + ":" + millisecondsString;
+        return "" + minutesString + ":" + secondsString + "." + millisecondsString;
+    }
+
+    static public String toTenthOfSecondsString(long timeMs) {
+        long tenthOfSeconds = timeMs / 100;
+        long seconds = timeMs / 1000;
+
+        return (timeMs < 0 ? "- " : "") + Math.abs(seconds % 60) + "." + Math.abs(tenthOfSeconds % 10);
     }
 }
