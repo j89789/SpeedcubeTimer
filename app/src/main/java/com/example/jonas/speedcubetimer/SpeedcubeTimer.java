@@ -89,7 +89,7 @@ class SpeedcubeTimer {
         if (timerState == TimerState.solved) {
             timerState = TimerState.ready;
             solvingTimer.reset();
-            listener.onTextChanged(solvingTimer.currentTimeToNormalString());
+            listener.onTextChanged(solvingTimer.currentTimeToMsString());
             Log.d(Tag, "Reset");
         } else {
             Log.d(Tag, "reset() failed");
@@ -101,7 +101,7 @@ class SpeedcubeTimer {
     }
 
     public String getDisplayString() {
-        return this.solvingTimer.currentTimeToNormalString();
+        return this.solvingTimer.currentTimeToMsString();
     }
 
     public void setListener(Listener listener) {
@@ -190,7 +190,7 @@ class SpeedcubeTimer {
             boolean recall = true;
 
             if (timerState == TimerState.solving) {
-                text = solvingTimer.currentTimeToNormalString();
+                text = solvingTimer.currentTimeToMsString();
             } else if (timerState == TimerState.inspection) {
 
                 long currentTime = inspectionTimer.getCurrentTime();

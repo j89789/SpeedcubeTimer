@@ -5,23 +5,55 @@ package com.example.jonas.speedcubetimer;
  */
 public class Time {
 
-    static public String toNormalString(long timeMs) {
-        long milliseconds = timeMs;
+    static public String toString(long timeMs) {
+        return Time.toString(timeMs, 3);
+    }
+
+    /**
+     * Convert a millisecond time in to a String e.g 3:02.642.
+     *
+     * @param timeMs   Time in milliseconds
+     * @param decimals Count of seconds decimals
+     */
+    static public String toString(long timeMs, int decimals) {
+        long milliseconds = Math.abs(timeMs);
         long seconds = milliseconds / 1000;
         long minutes = seconds / 60;
         long hours = minutes / 60;
 
-        String millisecondsString = String.format("%03d", milliseconds % 1000);
-        String secondsString = String.format("%02d", seconds % 60);
-        String minutesString = String.format("%d", minutes % 60);
+        milliseconds %= 1000;
+        seconds %= 60;
+        minutes %= 60;
 
-        return "" + minutesString + ":" + secondsString + "." + millisecondsString;
-    }
+        String millisecondsString = "";
+        String secondsString = "";
+        String minutesString = "";
 
-    static public String toTenthOfSecondsString(long timeMs) {
-        long tenthOfSeconds = timeMs / 100;
-        long seconds = timeMs / 1000;
+        if (decimals == 2) {
+            millisecondsString = String.format("%02d", (milliseconds / 10) % 100);
+        } else if (decimals == 1) {
+            millisecondsString = "" + ((milliseconds / 100) % 10);
+        } else {
+            millisecondsString = String.format("%03d", milliseconds);
+        }
 
-        return (timeMs < 0 ? "- " : "") + Math.abs(seconds % 60) + "." + Math.abs(tenthOfSeconds % 10);
+
+        if (minutes != 0) {
+            secondsString = String.format("%02d", seconds);
+            minutesString = "" + minutes;
+        } else {
+            secondsString = "" + seconds;
+        }
+
+        String s = timeMs < 0 ? "- " : "";
+
+        if (!minutesString.isEmpty()) {
+            s += minutesString + ":";
+        }
+
+        s += secondsString + ".";
+        s += millisecondsString;
+
+        return s;
     }
 }
