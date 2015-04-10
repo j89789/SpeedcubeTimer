@@ -9,8 +9,8 @@ import android.view.View;
  * The source view of touch events must be set with setView().
  * <p/>
  * The Listener hat the following events:
- * 1. onDown() Both hand are on the pad
- * 2. onUp() One hand leave the pad after both hands were on the pad
+ * 1. onSensorDown() Both hand are on the pad
+ * 2. onSensorUp() One hand leave the pad after both hands were on the pad
  * 3. onTrigger() One hand leave the pad but no both hands wer on the pad
  */
 class TouchPad {
@@ -21,7 +21,7 @@ class TouchPad {
     private Listener listener = null;
 
     /**
-     * True if the Listener.onUp() was call for avoid a Listener.onDown() call with the
+     * True if the Listener.onSensorUp() was call for avoid a Listener.onSensorDown() call with the
      * same touch points.
      */
     private boolean isTouchInvalid = false;
@@ -52,7 +52,7 @@ class TouchPad {
                     if (!isDown) {
                         isDown = true;
                         if (listener != null) {
-                            listener.onDown();
+                            listener.onSensorDown();
                         }
                     }
                 }
@@ -62,7 +62,7 @@ class TouchPad {
                         if (isDown) {
                             isDown = false;
                             if (listener != null) {
-                                listener.onUp();
+                                listener.onSensorUp();
                             }
                             isTouchInvalid = true;
                         }
@@ -91,12 +91,12 @@ class TouchPad {
         /**
          * Called when one hands leave the touch pad after both hands has touched the pad.
          */
-        void onUp();
+        void onSensorUp();
 
         /**
          * Called when both hands are on the touch pad
          */
-        void onDown();
+        void onSensorDown();
 
         /**
          * Called when one hand leave the touch pad when no both hands has touched the pad.

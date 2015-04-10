@@ -104,7 +104,7 @@ class SpeedcubeTimer {
     private class MyTouchPadListener implements TouchPad.Listener {
 
         @Override
-        public void onUp() {
+        public void onSensorUp() {
 
             if (timerState == TimerState.ready) {
                 if(isDownValid) {
@@ -118,7 +118,7 @@ class SpeedcubeTimer {
         }
 
         @Override
-        public void onDown() {
+        public void onSensorDown() {
 
             if(timerState == TimerState.ready)
             {
