@@ -1,5 +1,6 @@
 package com.example.jonas.speedcubetimer;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,6 +20,7 @@ class TouchPad {
     private View view = null;
     private final MyOnTouchListener touchListener = new MyOnTouchListener();
     private Listener listener = null;
+    private String TAG = TouchPad.class.getSimpleName();
 
     /**
      * True if the Listener.onSensorUp() was call for avoid a Listener.onSensorDown() call with the
@@ -52,6 +54,7 @@ class TouchPad {
                     if (!isDown) {
                         isDown = true;
                         if (listener != null) {
+                            Log.d(TAG, "onSensorDown()");
                             listener.onSensorDown();
                         }
                     }
@@ -62,6 +65,7 @@ class TouchPad {
                         if (isDown) {
                             isDown = false;
                             if (listener != null) {
+                                Log.d(TAG, "onSensorUp()");
                                 listener.onSensorUp();
                             }
                             isTouchInvalid = true;
@@ -76,6 +80,7 @@ class TouchPad {
                     isTouchInvalid = false;
                 } else {
                     if (listener != null) {
+                        Log.d(TAG, "onTrigger()");
                         listener.onTrigger();
                     }
                 }

@@ -12,7 +12,7 @@ import android.util.Log;
 abstract public class AbstractTimer {
 
     protected final ElapsedTimer elapsedTimer = new ElapsedTimer();
-    private final String TAG = Timer.class.getName();
+    private final String TAG = Timer.class.getSimpleName();
     protected long offset = 0;
     private boolean isReady = true;
     private boolean isRunning = false;

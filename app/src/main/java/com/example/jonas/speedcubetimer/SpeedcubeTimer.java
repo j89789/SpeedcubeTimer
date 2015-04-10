@@ -16,7 +16,7 @@ class SpeedcubeTimer {
     private final MyTouchPadListener touchPadListener = new MyTouchPadListener();
     private final Handler handler = new Handler();
     private final int viewUpdateInterval = 50;
-    private String tag = "SpeedcubeTimer";
+    private String Tag = SpeedcubeTimer.class.getSimpleName();
     private Context context;
     private ViewTextUpdater viewTextUpdater = new ViewTextUpdater();
     private DownValidMaker downValidMaker = new DownValidMaker();
@@ -46,8 +46,9 @@ class SpeedcubeTimer {
             inspectionTimer.stop();
             inspectionTimer.reset();
             startUpdater();
+            Log.d(Tag, "Start solving...");
         } else {
-            Log.d(tag, "startSolving() failed");
+            Log.d(Tag, "startSolving() failed");
         }
     }
 
@@ -61,13 +62,14 @@ class SpeedcubeTimer {
     }
 
 
-    private void stopSolving() {
+    private void finishedSolving() {
         if (timerState == TimerState.solving) {
             timerState = TimerState.solved;
             this.solvingTimer.stop();
             stopUpdater();
+            Log.d(Tag, "Finished solving!");
         } else {
-            Log.d(tag, "stopSolving() failed");
+            Log.d(Tag, "finishedSolving() failed");
         }
     }
 
@@ -77,8 +79,9 @@ class SpeedcubeTimer {
 
             inspectionTimer.start();
             startUpdater();
+            Log.d(Tag, "Start inspection...");
         }else {
-            Log.d(tag, "startInspection() failed");
+            Log.d(Tag, "startInspection() failed");
         }
     }
 
@@ -87,8 +90,9 @@ class SpeedcubeTimer {
             timerState = TimerState.ready;
             solvingTimer.reset();
             listener.onTextChanged(solvingTimer.currentTimeToNormalString());
+            Log.d(Tag, "Reset");
         } else {
-            Log.d(tag, "reset() failed");
+            Log.d(Tag, "reset() failed");
         }
     }
 
@@ -149,7 +153,7 @@ class SpeedcubeTimer {
                 handler.postDelayed(downValidMaker, 550);
             }
             if (timerState == TimerState.solving) {
-                stopSolving();
+                finishedSolving();
             } else if (timerState == TimerState.solved) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
