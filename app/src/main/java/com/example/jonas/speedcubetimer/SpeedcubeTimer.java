@@ -99,7 +99,7 @@ class SpeedcubeTimer {
         if (timerState == TimerState.solved) {
             timerState = TimerState.ready;
             solvingTimer.reset();
-            listener.onTextChanged(solvingTimer.currentTimeToMsString());
+            timeUpdater.run();
             Log.d(TAG, "Reset");
         } else {
             Log.d(TAG, "reset() failed");
