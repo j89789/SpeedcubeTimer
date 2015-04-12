@@ -3,9 +3,11 @@ package com.example.jonas.speedcubetimer;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -80,7 +82,7 @@ class SpeedcubeTimer {
             inspectionTimer.start();
             startUpdater();
             Log.d(Tag, "Start inspection...");
-        }else {
+        } else {
             Log.d(Tag, "startInspection() failed");
         }
     }
@@ -108,6 +110,11 @@ class SpeedcubeTimer {
         this.listener = listener;
     }
 
+    private boolean getIsInspectionTimeEnable() {
+        SharedPreferences myPreference = PreferenceManager.getDefaultSharedPreferences(context);
+        return myPreference.getBoolean("inspectionTimeEnable", true);
+    }
+
     public enum TimerState {ready, inspection, solving, solved}
 
     interface Listener {
@@ -132,7 +139,8 @@ class SpeedcubeTimer {
         @Override
         public void onSensorUp() {
 
-            if (timerState == TimerState.inspection) {
+            if (timerState == TimerState.ready && !getIsInspectionTimeEnable() ||
+                    timerState == TimerState.inspection) {
                 if (isDownValid) {
                     startSolving();
                 } else {
@@ -146,7 +154,8 @@ class SpeedcubeTimer {
         @Override
         public void onSensorDown() {
 
-            if (timerState == TimerState.inspection) {
+            if (timerState == TimerState.ready && !getIsInspectionTimeEnable() ||
+                    timerState == TimerState.inspection) {
                 isDownValid = false;
                 listener.onColorChanged(R.color.invalid);
 
@@ -173,8 +182,11 @@ class SpeedcubeTimer {
 
         @Override
         public void onTrigger() {
-            if (timerState == TimerState.ready) {
-                startInspection();
+
+            if (getIsInspectionTimeEnable()) {
+                if (timerState == TimerState.ready) {
+                    startInspection();
+                }
             }
         }
     }
@@ -220,16 +232,16 @@ class SpeedcubeTimer {
 
             listener.onTextChanged(text);
 
-            if(recall) {
+            if (recall) {
                 handler.postDelayed(this, viewUpdateInterval);
             }
         }
 
-        class Beep extends Thread{
+        class Beep extends Thread {
 
             private int tone = ToneGenerator.TONE_PROP_BEEP;
 
-            Beep(boolean isZeroBeep){
+            Beep(boolean isZeroBeep) {
                 if (isZeroBeep) {
                     tone = ToneGenerator.TONE_PROP_BEEP2;
                 }
