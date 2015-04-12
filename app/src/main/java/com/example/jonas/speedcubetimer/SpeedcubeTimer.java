@@ -3,11 +3,9 @@ package com.example.jonas.speedcubetimer;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -27,9 +25,20 @@ class SpeedcubeTimer {
     private TimerState timerState = TimerState.ready;
     private Listener listener = null;
     private boolean isSensorDownValid = false;
+    private boolean isUseInspectionTime = true;
+    private boolean isUseMilliseconds = true;
 
     public SpeedcubeTimer(Context context) {
         this.context = context;
+    }
+
+    public void setIsUseInspectionTime(boolean isUseInspectionTime) {
+        this.isUseInspectionTime = isUseInspectionTime;
+    }
+
+    public void setIsUseMilliseconds(boolean isUseMilliseconds) {
+        this.isUseMilliseconds = isUseMilliseconds;
+        timeUpdater.run();
     }
 
     public void cancel() {
@@ -109,11 +118,6 @@ class SpeedcubeTimer {
         this.listener = listener;
     }
 
-    private boolean getIsInspectionTimeEnable() {
-        SharedPreferences myPreference = PreferenceManager.getDefaultSharedPreferences(context);
-        return myPreference.getBoolean("inspectionTimeEnable", true);
-    }
-
     public enum TimerState {ready, inspection, solving, solved}
 
     interface Listener {
@@ -138,7 +142,7 @@ class SpeedcubeTimer {
         @Override
         public void onSensorUp() {
 
-            if (timerState == TimerState.ready && !getIsInspectionTimeEnable() ||
+            if (timerState == TimerState.ready && !isUseInspectionTime ||
                     timerState == TimerState.inspection) {
                 if (isSensorDownValid) {
                     startSolving();
@@ -153,7 +157,7 @@ class SpeedcubeTimer {
         @Override
         public void onSensorDown() {
 
-            if (timerState == TimerState.ready && !getIsInspectionTimeEnable() ||
+            if (timerState == TimerState.ready && !isUseInspectionTime ||
                     timerState == TimerState.inspection) {
                 isSensorDownValid = false;
                 listener.onColorChanged(R.color.invalid);
@@ -182,7 +186,7 @@ class SpeedcubeTimer {
         @Override
         public void onTrigger() {
 
-            if (getIsInspectionTimeEnable()) {
+            if (isUseInspectionTime) {
                 if (timerState == TimerState.ready) {
                     startInspection();
                 }
@@ -200,9 +204,7 @@ class SpeedcubeTimer {
             String text = "";
             boolean recall = true;
 
-            if (timerState == TimerState.solving) {
-                text = solvingTimer.currentTimeToMsString();
-            } else if (timerState == TimerState.inspection) {
+            if (timerState == TimerState.inspection) {
 
                 long currentTime = inspectionTimer.getCurrentTime();
 
@@ -212,7 +214,7 @@ class SpeedcubeTimer {
                 } else if (currentTime < 0) {
                     text += "+2";
                 } else {
-                    text = inspectionTimer.currentToTenthOfSecondsString();
+                    text = inspectionTimer.currentToTsString();
                 }
 
                 /* Play countdown Sounds at 8, 3, and 0 seconds */
@@ -227,7 +229,14 @@ class SpeedcubeTimer {
                 }
 
                 lastTime = currentTime;
+            } else {
+                text = isUseMilliseconds ? solvingTimer.currentTimeToMsString() : solvingTimer.currentToHsString();
+
+                if(timerState == TimerState.ready){
+                    recall = false;
+                }
             }
+
 
             listener.onTextChanged(text);
 

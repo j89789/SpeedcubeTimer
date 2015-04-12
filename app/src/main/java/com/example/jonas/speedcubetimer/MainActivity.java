@@ -2,7 +2,10 @@ package com.example.jonas.speedcubetimer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,16 @@ public class MainActivity extends Activity {
     private final SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer(this);
     private TextView timerView;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
+
+    @Override
+    protected void onResume() {
+
+        SharedPreferences myPreference = PreferenceManager.getDefaultSharedPreferences(this);
+        speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
+        speedcubeTimer.setIsUseMilliseconds(myPreference.getBoolean("useMilliseconds", true));
+
+        super.onResume();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

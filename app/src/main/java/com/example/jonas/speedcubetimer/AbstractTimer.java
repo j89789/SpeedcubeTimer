@@ -61,7 +61,11 @@ abstract public class AbstractTimer {
         return Time.toString(getCurrentTime());
     }
 
-    public String currentToTenthOfSecondsString() {
+    public String currentToTsString() {
         return Time.toString(this.getCurrentTime(), 1);
+    }
+
+    public String currentToHsString() {
+        return Time.toString(this.getCurrentTime(), 2);
     }
 }
