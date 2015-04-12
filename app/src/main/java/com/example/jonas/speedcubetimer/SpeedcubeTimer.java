@@ -18,16 +18,15 @@ class SpeedcubeTimer {
     private final MyTouchPadListener touchPadListener = new MyTouchPadListener();
     private final Handler handler = new Handler();
     private final int viewUpdateInterval = 50;
-    private String Tag = SpeedcubeTimer.class.getSimpleName();
+    private String TAG = SpeedcubeTimer.class.getSimpleName();
     private Context context;
-    private ViewTextUpdater viewTextUpdater = new ViewTextUpdater();
-    private DownValidMaker downValidMaker = new DownValidMaker();
-    private Runnable updater = new ViewTextUpdater();
+    private TimerUpdater timeUpdater = new TimerUpdater();
+    private SensorDownValidMaker sensorDownValidMaker = new SensorDownValidMaker();
     private Timer solvingTimer = new Timer();
     private CountdownTimer inspectionTimer = new CountdownTimer();
     private TimerState timerState = TimerState.ready;
     private Listener listener = null;
-    private boolean isDownValid = false;
+    private boolean isSensorDownValid = false;
 
     public SpeedcubeTimer(Context context) {
         this.context = context;
@@ -48,19 +47,19 @@ class SpeedcubeTimer {
             inspectionTimer.stop();
             inspectionTimer.reset();
             startUpdater();
-            Log.d(Tag, "Start solving...");
+            Log.d(TAG, "Start solving...");
         } else {
-            Log.d(Tag, "startSolving() failed");
+            Log.d(TAG, "startSolving() failed");
         }
     }
 
     private void startUpdater() {
         this.stopUpdater();
-        handler.postDelayed(this.viewTextUpdater, this.viewUpdateInterval);
+        handler.postDelayed(this.timeUpdater, this.viewUpdateInterval);
     }
 
     private void stopUpdater() {
-        handler.removeCallbacks(this.viewTextUpdater);
+        handler.removeCallbacks(this.timeUpdater);
     }
 
 
@@ -69,9 +68,9 @@ class SpeedcubeTimer {
             timerState = TimerState.solved;
             this.solvingTimer.stop();
             stopUpdater();
-            Log.d(Tag, "Finished solving!");
+            Log.d(TAG, "Finished solving!");
         } else {
-            Log.d(Tag, "finishedSolving() failed");
+            Log.d(TAG, "finishedSolving() failed");
         }
     }
 
@@ -81,9 +80,9 @@ class SpeedcubeTimer {
 
             inspectionTimer.start();
             startUpdater();
-            Log.d(Tag, "Start inspection...");
+            Log.d(TAG, "Start inspection...");
         } else {
-            Log.d(Tag, "startInspection() failed");
+            Log.d(TAG, "startInspection() failed");
         }
     }
 
@@ -92,9 +91,9 @@ class SpeedcubeTimer {
             timerState = TimerState.ready;
             solvingTimer.reset();
             listener.onTextChanged(solvingTimer.currentTimeToMsString());
-            Log.d(Tag, "Reset");
+            Log.d(TAG, "Reset");
         } else {
-            Log.d(Tag, "reset() failed");
+            Log.d(TAG, "reset() failed");
         }
     }
 
@@ -141,10 +140,10 @@ class SpeedcubeTimer {
 
             if (timerState == TimerState.ready && !getIsInspectionTimeEnable() ||
                     timerState == TimerState.inspection) {
-                if (isDownValid) {
+                if (isSensorDownValid) {
                     startSolving();
                 } else {
-                    handler.removeCallbacks(downValidMaker);
+                    handler.removeCallbacks(sensorDownValidMaker);
                 }
 
                 listener.onColorChanged(R.color.normal);
@@ -156,10 +155,10 @@ class SpeedcubeTimer {
 
             if (timerState == TimerState.ready && !getIsInspectionTimeEnable() ||
                     timerState == TimerState.inspection) {
-                isDownValid = false;
+                isSensorDownValid = false;
                 listener.onColorChanged(R.color.invalid);
 
-                handler.postDelayed(downValidMaker, 550);
+                handler.postDelayed(sensorDownValidMaker, 550);
             }
             if (timerState == TimerState.solving) {
                 finishedSolving();
@@ -191,7 +190,7 @@ class SpeedcubeTimer {
         }
     }
 
-    private class ViewTextUpdater implements Runnable {
+    private class TimerUpdater implements Runnable {
 
         final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
         long lastTime = Long.MAX_VALUE;
@@ -255,10 +254,10 @@ class SpeedcubeTimer {
         }
     }
 
-    private class DownValidMaker implements Runnable {
+    private class SensorDownValidMaker implements Runnable {
         @Override
         public void run() {
-            isDownValid = true;
+            isSensorDownValid = true;
             listener.onColorChanged(R.color.valid);
         }
     }
