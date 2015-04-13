@@ -31,9 +31,12 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onResume() {
-        speedcubeTimer.setTouchPad(touchSensor);
+
+        // load settings
+        isUseMilliseconds = myPreference.getBoolean("useMilliseconds", true);
         speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
 
+        speedcubeTimer.setTouchPad(touchSensor);
         speedcubeTimer.setListener(speedcubeListener);
 
         super.onResume();
@@ -58,7 +61,6 @@ public class MainActivity extends Activity {
         touchSensor.setView(this.getWindow().getDecorView());
 
         myPreference = PreferenceManager.getDefaultSharedPreferences(this);
-        isUseMilliseconds = myPreference.getBoolean("useMilliseconds", true);
 
         speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
         speedcubeTimer.setContext(this);
@@ -120,9 +122,10 @@ public class MainActivity extends Activity {
                 } else {
                     text = Time.toString(inspectionTime + 1000, 0);
                 }
-            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solving) {
+            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solving ||
+                    speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
                 text = Time.toString(speedcubeTimer.getSolvingTime(), isUseMilliseconds ? 3 : 2);
-            } else {
+            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.ready) {
                 text = "ready";
             }
 
