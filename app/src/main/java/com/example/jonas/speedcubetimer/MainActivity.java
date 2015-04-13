@@ -120,7 +120,7 @@ public class MainActivity extends Activity {
                 } else if (inspectionTime < 0) {
                     text += "+2";
                 } else {
-                    text = Time.toString(inspectionTime + 1000, 0);
+                    text = Time.toString(inspectionTime + 999, 0);
                 }
             } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solving ||
                     speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
