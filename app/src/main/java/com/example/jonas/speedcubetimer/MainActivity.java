@@ -17,12 +17,17 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
     private final TouchPad touchPad = new TouchPad();
-    private final SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer(this);
+    private SpeedcubeTimer speedcubeTimer;
     private TextView timerView;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
 
     @Override
     protected void onResume() {
+
+        speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
+
+        speedcubeTimer.setTouchPad(touchPad);
+        speedcubeTimer.setListener(speedcubeListener);
 
         SharedPreferences myPreference = PreferenceManager.getDefaultSharedPreferences(this);
         speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
@@ -41,9 +46,6 @@ public class MainActivity extends Activity {
         this.timerView.setOnClickListener(new TimeViewOnClickListener());
 
         this.touchPad.setView(this.getWindow().getDecorView());
-
-        this.speedcubeTimer.setTouchPad(touchPad);
-        this.speedcubeTimer.setListener(speedcubeListener);
     }
 
     @Override
@@ -55,12 +57,9 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -84,14 +83,6 @@ public class MainActivity extends Activity {
 
         return super.onKeyDown(keyCode, event);
     }
-
-    private class TimeViewUpdater implements Runnable {
-        @Override
-        public void run() {
-            timerView.setText(speedcubeTimer.getDisplayString());
-        }
-    }
-
 
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
         @Override

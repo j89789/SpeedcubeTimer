@@ -3,7 +3,7 @@ package com.example.jonas.speedcubetimer;
 /**
  * Converting times in milliseconds to a readable String
  */
-public class Time {
+class Time {
 
     static public String toString(long timeMs) {
         return Time.toString(timeMs, 3);

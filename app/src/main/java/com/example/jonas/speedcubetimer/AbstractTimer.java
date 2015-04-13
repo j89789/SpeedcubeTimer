@@ -9,7 +9,7 @@ import android.util.Log;
  * in the abstract function getCurrentTime(). By Calling stop the timer is not running. The timer
  * can be restart with start() or reset by reset(), A reset time is a ready time (isReady()).
  */
-abstract public class AbstractTimer {
+abstract class AbstractTimer {
 
     protected final ElapsedTimer elapsedTimer = new ElapsedTimer();
     private final String TAG = Timer.class.getSimpleName();
