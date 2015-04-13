@@ -5,7 +5,7 @@ package com.example.jonas.speedcubetimer;
  */
 class Time {
 
-    static public String toString(long timeMs) {
+    static public String toStringMs(long timeMs) {
         return Time.toString(timeMs, 3);
     }
 

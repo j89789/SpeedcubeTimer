@@ -21,6 +21,13 @@ public class MainActivity extends Activity {
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        speedcubeTimer.setListener(null);
+    }
+
+    @Override
     protected void onResume() {
 
         speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
@@ -84,14 +91,37 @@ public class MainActivity extends Activity {
     }
 
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
-        @Override
-        public void onTextChanged(String text) {
-            timerView.setText(text);
-        }
 
         @Override
-        public void onColorChanged(int colorId) {
-            timerView.setTextColor(getResources().getColor(colorId));
+        public void onUpdate() {
+
+            String text = "";
+
+            if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.inspection) {
+
+                long inspectionTime = speedcubeTimer.getInspectionTime();
+
+                if (inspectionTime < -2000) {
+                    text += "DNF";
+                } else if (inspectionTime < 0) {
+                    text += "+2";
+                } else {
+                    text = Time.toString(inspectionTime, 0);
+                }
+            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solving) {
+                text = Time.toStringMs(speedcubeTimer.getSolvingTime());
+            }
+            else
+            {
+                text = "ready";
+            }
+
+            if(!text.isEmpty()) {
+                timerView.setText(text);
+            }
+
+            timerView.setTextColor(getResources().getColor(speedcubeTimer.getColorId()));
+
         }
     }
 

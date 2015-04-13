@@ -15,7 +15,7 @@ class SpeedcubeTimer {
 
     private final MyTouchPadListener touchPadListener = new MyTouchPadListener();
     private final Handler handler = new Handler();
-    private final int viewUpdateInterval = 50;
+    private final int timeUpdateInterval = 50;
     private String TAG = SpeedcubeTimer.class.getSimpleName();
     private Context context;
     private TimerUpdater timeUpdater = new TimerUpdater();
@@ -27,6 +27,21 @@ class SpeedcubeTimer {
     private boolean isSensorDownValid = false;
     private boolean isUseInspectionTime = true;
     private boolean isUseMilliseconds = true;
+
+    /**
+     * True while the time updater is active. Also when the Activity is in pause.
+     *
+     * @see #isTimeUpdaterEnable
+     */
+    private boolean isTimeUpdaterActive = false;
+
+
+    /**
+     * True when the updater is needed e.g. the Activity is running.
+     *
+     * @see #isTimeUpdaterActive
+     */
+    private boolean isTimeUpdaterEnable = false;
 
     public SpeedcubeTimer(Context context) {
         this.context = context;
@@ -55,28 +70,41 @@ class SpeedcubeTimer {
             solvingTimer.start();
             inspectionTimer.stop();
             inspectionTimer.reset();
-            startUpdater();
+            startTimeUpdater();
             Log.d(TAG, "Start solving...");
         } else {
             Log.d(TAG, "startSolving() failed");
         }
     }
 
-    private void startUpdater() {
-        this.stopUpdater();
-        handler.postDelayed(this.timeUpdater, this.viewUpdateInterval);
+    private void refreshTimeUpdater(){
+        boolean isActive = isTimeUpdaterEnable && isTimeUpdaterActive;
+
+        if(isActive){
+            handler.postDelayed(this.timeUpdater, this.timeUpdateInterval);
+        }
+        else{
+            handler.removeCallbacks(this.timeUpdater);
+        }
     }
 
-    private void stopUpdater() {
-        handler.removeCallbacks(this.timeUpdater);
+    private void startTimeUpdater() {
+        stopTimeUpdater();
+        isTimeUpdaterActive = true;
+        refreshTimeUpdater();
+    }
+
+    private void stopTimeUpdater() {
+        isTimeUpdaterActive = false;
+        refreshTimeUpdater();
     }
 
 
     private void finishedSolving() {
         if (timerState == TimerState.solving) {
             timerState = TimerState.solved;
-            this.solvingTimer.stop();
-            stopUpdater();
+            solvingTimer.stop();
+            stopTimeUpdater();
             Log.d(TAG, "Finished solving!");
         } else {
             Log.d(TAG, "finishedSolving() failed");
@@ -88,7 +116,7 @@ class SpeedcubeTimer {
             timerState = TimerState.inspection;
 
             inspectionTimer.start();
-            startUpdater();
+            startTimeUpdater();
             Log.d(TAG, "Start inspection...");
         } else {
             Log.d(TAG, "startInspection() failed");
@@ -116,6 +144,20 @@ class SpeedcubeTimer {
 
     public void setListener(Listener listener) {
         this.listener = listener;
+        isTimeUpdaterEnable = listener != null;
+        refreshTimeUpdater();
+    }
+
+    public long getInspectionTime() {
+        return inspectionTimer.getCurrentTime();
+    }
+
+    public long getSolvingTime() {
+        return solvingTimer.getCurrentTime();
+    }
+
+    public int getColorId() {
+        return colorId;
     }
 
     public enum TimerState {ready, inspection, solving, solved}
@@ -123,19 +165,13 @@ class SpeedcubeTimer {
     interface Listener {
 
         /**
-         * Text to display changed
-         *
-         * @param text New text
+         * Call if the status, inspection time the solving time are changed. While the
+         * time is running the interval ist defined in #timeUpdateInterval.
          */
-        void onTextChanged(String text);
-
-        /**
-         * Color of Text changed
-         *
-         * @param colorId Resource id of the new color
-         */
-        void onColorChanged(int colorId);
+        void onUpdate();
     }
+
+    private int colorId = R.color.normal;
 
     private class MyTouchPadListener implements TouchSensor.Listener {
 
@@ -150,7 +186,8 @@ class SpeedcubeTimer {
                     handler.removeCallbacks(sensorDownValidMaker);
                 }
 
-                listener.onColorChanged(R.color.normal);
+                colorId = R.color.normal;
+                sendUpdate();
             }
         }
 
@@ -160,7 +197,8 @@ class SpeedcubeTimer {
             if (timerState == TimerState.ready && !isUseInspectionTime ||
                     timerState == TimerState.inspection) {
                 isSensorDownValid = false;
-                listener.onColorChanged(R.color.invalid);
+                colorId = (R.color.invalid);
+                sendUpdate();
 
                 handler.postDelayed(sensorDownValidMaker, 550);
             }
@@ -194,6 +232,12 @@ class SpeedcubeTimer {
         }
     }
 
+    private void sendUpdate() {
+        if (listener != null) {
+            listener.onUpdate();
+        }
+    }
+
     private class TimerUpdater implements Runnable {
 
         final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
@@ -201,20 +245,13 @@ class SpeedcubeTimer {
 
         @Override
         public void run() {
-            String text = "";
-            boolean recall = true;
 
             if (timerState == TimerState.inspection) {
 
                 long currentTime = inspectionTimer.getCurrentTime();
 
                 if (currentTime < -2000) {
-                    text += "DNF";
-                    recall = false;
-                } else if (currentTime < 0) {
-                    text += "+2";
-                } else {
-                    text = inspectionTimer.currentToTsString();
+                    stopTimeUpdater();
                 }
 
                 /* Play countdown Sounds at 8, 3, and 0 seconds */
@@ -229,19 +266,12 @@ class SpeedcubeTimer {
                 }
 
                 lastTime = currentTime;
-            } else {
-                text = isUseMilliseconds ? solvingTimer.currentTimeToMsString() : solvingTimer.currentToHsString();
-
-                if(timerState == TimerState.ready){
-                    recall = false;
-                }
             }
 
+           sendUpdate();
 
-            listener.onTextChanged(text);
-
-            if (recall) {
-                handler.postDelayed(this, viewUpdateInterval);
+            if (isTimeUpdaterActive) {
+                handler.postDelayed(this, timeUpdateInterval);
             }
         }
 
@@ -267,7 +297,9 @@ class SpeedcubeTimer {
         @Override
         public void run() {
             isSensorDownValid = true;
-            listener.onColorChanged(R.color.valid);
+
+            colorId = R.color.valid;
+            sendUpdate();
         }
     }
 }
