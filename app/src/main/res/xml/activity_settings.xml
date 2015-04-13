@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:key="inspectionTimeEnable"
-        android:title="@string/pref_useInspectionTime"
-        android:summary="@string/pref_useInspectionTime_summery"
-        android:defaultValue="true" />
+    <PreferenceCategory
 
-    <CheckBoxPreference
-        android:key="useMilliseconds"
-        android:title="@string/pref_useMilliseconds"
-        android:summary="@string/pref_useMilliseconds_summery"
-        android:defaultValue="true" />
+        android:title="@string/timer"
+        android:key="category_timer">
+
+        <CheckBoxPreference
+            android:key="inspectionTimeEnable"
+            android:title="@string/pref_useInspectionTime"
+            android:summary="@string/pref_useInspectionTime_summery"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="inspectionAcousticSignals"
+            android:title="Acoustic signals"
+            android:summary="Play an acoustic signal at 8s and 3s while inspection"
+            android:defaultValue="true"
+            android:dependency="inspectionTimeEnable" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/display"
+        android:key="category_display">
+
+        <CheckBoxPreference
+            android:key="useMilliseconds"
+            android:title="@string/pref_useMilliseconds"
+            android:summary="@string/pref_useMilliseconds_summery"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
         // load settings
         isUseMilliseconds = myPreference.getBoolean("useMilliseconds", true);
         speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
+        speedcubeTimer.setIsAcousticSignalsEnable(myPreference.getBoolean("inspectionAcousticSignals", true));
 
         speedcubeTimer.setTouchPad(touchSensor);
         speedcubeTimer.setListener(speedcubeListener);

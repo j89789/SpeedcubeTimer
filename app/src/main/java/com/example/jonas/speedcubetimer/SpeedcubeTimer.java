@@ -24,7 +24,8 @@ class SpeedcubeTimer {
     private CountdownTimer inspectionTimer = new CountdownTimer();
     private Listener listener = null;
     private boolean isSensorDownValid = false;
-    private boolean isUseInspectionTime = true;
+    private boolean isUseInspectionTime = false;
+    private boolean isAcousticSignalsEnable = false;
 
     private PrivateData d = new PrivateData();
     /**
@@ -174,6 +175,10 @@ class SpeedcubeTimer {
         }
     }
 
+    public void setIsAcousticSignalsEnable(boolean isAcousticSignalsEnable) {
+        this.isAcousticSignalsEnable = isAcousticSignalsEnable;
+    }
+
     public enum TimerState {ready, inspection, solving, solved}
 
     interface Listener {
@@ -200,7 +205,7 @@ class SpeedcubeTimer {
 
         public void setColorId(int newColorId) {
 
-            if(colorId != newColorId) {
+            if (colorId != newColorId) {
                 colorId = newColorId;
                 sendUpdate();
             }
@@ -292,15 +297,18 @@ class SpeedcubeTimer {
                     stopTimeUpdater();
                 }
 
-                /* Play countdown Sounds at 8, 3, and 0 seconds */
-                boolean isCountdownBeep = lastTime >= 8000 && currentTime < 8000 ||
-                        lastTime >= 3000 && currentTime < 3000;
+                if (isAcousticSignalsEnable) {
 
-                boolean isZeroBeep = lastTime >= 0 && currentTime < 0;
+                    /* Play countdown Sounds at 8, 3, and 0 seconds */
+                    boolean isCountdownBeep = lastTime >= 8000 && currentTime < 8000 ||
+                            lastTime >= 3000 && currentTime < 3000;
 
-                if (isCountdownBeep || isZeroBeep) {
-                    Beep beep = new Beep(isZeroBeep);
-                    beep.start();
+                    boolean isZeroBeep = lastTime >= 0 && currentTime < 0;
+
+                    if (isCountdownBeep || isZeroBeep) {
+                        Beep beep = new Beep(isZeroBeep);
+                        beep.start();
+                    }
                 }
 
                 lastTime = currentTime;
