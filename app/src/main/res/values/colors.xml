@@ -3,4 +3,5 @@
     <color name="invalid">#ffff1e00</color>
     <color name="normal">#ff000000</color>
     <color name="valid">#ff00ff1c</color>
+    <color name="ready">#ff000aff</color>
 </resources>

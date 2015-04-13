@@ -40,7 +40,6 @@ class SpeedcubeTimer {
      */
     private boolean isTimeUpdaterEnable = false;
 
-    private int colorId = R.color.normal;
 
     public SpeedcubeTimer() {
     }
@@ -123,6 +122,7 @@ class SpeedcubeTimer {
     public void reset() {
         if (d.getTimerState() == TimerState.solved) {
             d.setTimerState(TimerState.ready);
+            d.setColorId(R.color.ready);
             solvingTimer.reset();
             timeUpdater.run();
             Log.d(TAG, "Reset");
@@ -165,7 +165,7 @@ class SpeedcubeTimer {
     }
 
     public int getColorId() {
-        return colorId;
+        return d.getColorId();
     }
 
     private void sendUpdate() {
@@ -192,6 +192,19 @@ class SpeedcubeTimer {
     private class PrivateData {
 
         private TimerState timerState = TimerState.ready;
+        private int colorId = R.color.ready;
+
+        public int getColorId() {
+            return colorId;
+        }
+
+        public void setColorId(int newColorId) {
+
+            if(colorId != newColorId) {
+                colorId = newColorId;
+                sendUpdate();
+            }
+        }
 
         public TimerState getTimerState() {
             return timerState;
@@ -203,7 +216,6 @@ class SpeedcubeTimer {
                 timerState = newTimerState;
                 sendUpdate();
             }
-
         }
     }
 
@@ -220,8 +232,7 @@ class SpeedcubeTimer {
                     handler.removeCallbacks(sensorDownValidMaker);
                 }
 
-                colorId = R.color.normal;
-                sendUpdate();
+                d.setColorId(R.color.normal);
             }
         }
 
@@ -231,8 +242,7 @@ class SpeedcubeTimer {
             if (d.getTimerState() == TimerState.ready && !isUseInspectionTime ||
                     d.getTimerState() == TimerState.inspection) {
                 isSensorDownValid = false;
-                colorId = (R.color.invalid);
-                sendUpdate();
+                d.setColorId(R.color.invalid);
 
                 handler.postDelayed(sensorDownValidMaker, 550);
             }
@@ -325,9 +335,7 @@ class SpeedcubeTimer {
         @Override
         public void run() {
             isSensorDownValid = true;
-
-            colorId = R.color.valid;
-            sendUpdate();
+            d.setColorId(R.color.valid);
         }
     }
 }
