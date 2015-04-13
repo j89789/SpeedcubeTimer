@@ -111,7 +111,9 @@ public class MainActivity extends Activity {
 
             String text = "";
 
-            if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.inspection) {
+            SpeedcubeTimer.TimerState state = speedcubeTimer.getTimerState();
+
+            if (state == SpeedcubeTimer.TimerState.inspection) {
 
                 long inspectionTime = speedcubeTimer.getInspectionTime();
 
@@ -122,11 +124,10 @@ public class MainActivity extends Activity {
                 } else {
                     text = Time.toString(inspectionTime + 999, 0);
                 }
-            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solving ||
-                    speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
+            } else if (state == SpeedcubeTimer.TimerState.solving
+                    || state == SpeedcubeTimer.TimerState.solved
+                    || state == SpeedcubeTimer.TimerState.ready) {
                 text = Time.toString(speedcubeTimer.getSolvingTime(), isUseMilliseconds ? 3 : 2);
-            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.ready) {
-                text = "ready";
             }
 
             if (!text.isEmpty()) {
