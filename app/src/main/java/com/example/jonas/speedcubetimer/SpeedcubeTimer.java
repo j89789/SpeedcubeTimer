@@ -13,7 +13,7 @@ import android.util.Log;
  */
 class SpeedcubeTimer {
 
-    private final MyTouchPadListener touchPadListener = new MyTouchPadListener();
+    private final MyTouchSensorListener touchPadListener = new MyTouchSensorListener();
     private final Handler handler = new Handler();
     private final int timeUpdateInterval = 50;
     private String TAG = SpeedcubeTimer.class.getSimpleName();
@@ -22,25 +22,25 @@ class SpeedcubeTimer {
     private SensorDownValidMaker sensorDownValidMaker = new SensorDownValidMaker();
     private Timer solvingTimer = new Timer();
     private CountdownTimer inspectionTimer = new CountdownTimer();
-    private TimerState timerState = TimerState.ready;
     private Listener listener = null;
     private boolean isSensorDownValid = false;
     private boolean isUseInspectionTime = true;
 
+    private PrivateData d = new PrivateData();
     /**
      * True while the time updater is active. Also when the Activity is in pause.
      *
      * @see #isTimeUpdaterEnable
      */
     private boolean isTimeUpdaterActive = false;
-
-
     /**
      * True when the updater is needed e.g. the Activity is running.
      *
      * @see #isTimeUpdaterActive
      */
     private boolean isTimeUpdaterEnable = false;
+
+    private int colorId = R.color.normal;
 
     public SpeedcubeTimer() {
     }
@@ -59,12 +59,12 @@ class SpeedcubeTimer {
     }
 
     public TimerState getTimerState() {
-        return timerState;
+        return d.getTimerState();
     }
 
     private void startSolving() {
-        if (timerState == TimerState.ready || timerState == TimerState.inspection) {
-            timerState = TimerState.solving;
+        if (d.getTimerState() == TimerState.ready || d.getTimerState() == TimerState.inspection) {
+            d.setTimerState(TimerState.solving);
             solvingTimer.start();
             inspectionTimer.stop();
             inspectionTimer.reset();
@@ -75,13 +75,12 @@ class SpeedcubeTimer {
         }
     }
 
-    private void refreshTimeUpdater(){
+    private void refreshTimeUpdater() {
         boolean isActive = isTimeUpdaterEnable && isTimeUpdaterActive;
 
-        if(isActive){
+        if (isActive) {
             handler.postDelayed(this.timeUpdater, this.timeUpdateInterval);
-        }
-        else{
+        } else {
             handler.removeCallbacks(this.timeUpdater);
         }
     }
@@ -99,8 +98,8 @@ class SpeedcubeTimer {
 
 
     private void finishedSolving() {
-        if (timerState == TimerState.solving) {
-            timerState = TimerState.solved;
+        if (d.getTimerState() == TimerState.solving) {
+            d.setTimerState(TimerState.solved);
             solvingTimer.stop();
             stopTimeUpdater();
             Log.d(TAG, "Finished solving!");
@@ -110,8 +109,8 @@ class SpeedcubeTimer {
     }
 
     private void startInspection() {
-        if (timerState == TimerState.ready) {
-            timerState = TimerState.inspection;
+        if (d.getTimerState() == TimerState.ready) {
+            d.setTimerState(TimerState.inspection);
 
             inspectionTimer.start();
             startTimeUpdater();
@@ -122,8 +121,8 @@ class SpeedcubeTimer {
     }
 
     public void reset() {
-        if (timerState == TimerState.solved) {
-            timerState = TimerState.ready;
+        if (d.getTimerState() == TimerState.solved) {
+            d.setTimerState(TimerState.ready);
             solvingTimer.reset();
             timeUpdater.run();
             Log.d(TAG, "Reset");
@@ -144,7 +143,7 @@ class SpeedcubeTimer {
      * The listener get all update Events. If any relevant property changed e.g timerState
      * solving time or inspection time. A null listener will remove the listener and
      * the update interval while the timer is running will be stopped.
-     *
+     * <p/>
      * Activity's: Remove listener on pause for low cpu. The onUpdate() will be called
      * in this function for initial GUI update
      */
@@ -169,6 +168,12 @@ class SpeedcubeTimer {
         return colorId;
     }
 
+    private void sendUpdate() {
+        if (listener != null) {
+            listener.onUpdate();
+        }
+    }
+
     public enum TimerState {ready, inspection, solving, solved}
 
     interface Listener {
@@ -180,15 +185,35 @@ class SpeedcubeTimer {
         void onUpdate();
     }
 
-    private int colorId = R.color.normal;
+    /**
+     * Protects the timer state variable. So you must call the set Function and the update
+     * will be send...
+     */
+    private class PrivateData {
 
-    private class MyTouchPadListener implements TouchSensor.Listener {
+        private TimerState timerState = TimerState.ready;
+
+        public TimerState getTimerState() {
+            return timerState;
+        }
+
+        public void setTimerState(TimerState newTimerState) {
+
+            if (timerState != newTimerState) {
+                timerState = newTimerState;
+                sendUpdate();
+            }
+
+        }
+    }
+
+    private class MyTouchSensorListener implements TouchSensor.Listener {
 
         @Override
         public void onSensorUp() {
 
-            if (timerState == TimerState.ready && !isUseInspectionTime ||
-                    timerState == TimerState.inspection) {
+            if (d.getTimerState() == TimerState.ready && !isUseInspectionTime ||
+                    d.getTimerState() == TimerState.inspection) {
                 if (isSensorDownValid) {
                     startSolving();
                 } else {
@@ -203,17 +228,17 @@ class SpeedcubeTimer {
         @Override
         public void onSensorDown() {
 
-            if (timerState == TimerState.ready && !isUseInspectionTime ||
-                    timerState == TimerState.inspection) {
+            if (d.getTimerState() == TimerState.ready && !isUseInspectionTime ||
+                    d.getTimerState() == TimerState.inspection) {
                 isSensorDownValid = false;
                 colorId = (R.color.invalid);
                 sendUpdate();
 
                 handler.postDelayed(sensorDownValidMaker, 550);
             }
-            if (timerState == TimerState.solving) {
+            if (d.getTimerState() == TimerState.solving) {
                 finishedSolving();
-            } else if (timerState == TimerState.solved) {
+            } else if (d.getTimerState() == TimerState.solved) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Rest Timer?");
@@ -234,16 +259,10 @@ class SpeedcubeTimer {
         public void onTrigger() {
 
             if (isUseInspectionTime) {
-                if (timerState == TimerState.ready) {
+                if (d.getTimerState() == TimerState.ready) {
                     startInspection();
                 }
             }
-        }
-    }
-
-    private void sendUpdate() {
-        if (listener != null) {
-            listener.onUpdate();
         }
     }
 
@@ -255,7 +274,7 @@ class SpeedcubeTimer {
         @Override
         public void run() {
 
-            if (timerState == TimerState.inspection) {
+            if (d.getTimerState() == TimerState.inspection) {
 
                 long currentTime = inspectionTimer.getCurrentTime();
 
@@ -277,7 +296,7 @@ class SpeedcubeTimer {
                 lastTime = currentTime;
             }
 
-           sendUpdate();
+            sendUpdate();
 
             if (isTimeUpdaterActive) {
                 handler.postDelayed(this, timeUpdateInterval);
