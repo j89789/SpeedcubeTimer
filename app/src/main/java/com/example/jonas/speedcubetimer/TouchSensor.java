@@ -14,13 +14,13 @@ import android.view.View;
  * 2. onSensorUp() One hand leave the pad after both hands were on the pad
  * 3. onTrigger() One hand leave the pad but no both hands wer on the pad
  */
-class TouchPad {
+class TouchSensor {
 
     private boolean isDown = false;
     private View view = null;
     private final MyOnTouchListener touchListener = new MyOnTouchListener();
     private Listener listener = null;
-    private String TAG = TouchPad.class.getSimpleName();
+    private String TAG = TouchSensor.class.getSimpleName();
 
     /**
      * True if the Listener.onSensorUp() was call for avoid a Listener.onSensorDown() call with the

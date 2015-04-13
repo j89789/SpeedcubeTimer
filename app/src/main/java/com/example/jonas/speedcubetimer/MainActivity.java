@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    private final TouchPad touchPad = new TouchPad();
+    private final TouchSensor touchSensor = new TouchSensor();
     private SpeedcubeTimer speedcubeTimer;
     private TextView timerView;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
@@ -26,7 +25,7 @@ public class MainActivity extends Activity {
 
         speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
 
-        speedcubeTimer.setTouchPad(touchPad);
+        speedcubeTimer.setTouchPad(touchSensor);
         speedcubeTimer.setListener(speedcubeListener);
 
         SharedPreferences myPreference = PreferenceManager.getDefaultSharedPreferences(this);
@@ -45,7 +44,7 @@ public class MainActivity extends Activity {
         this.timerView = (TextView) findViewById(R.id.timerView);
         this.timerView.setOnClickListener(new TimeViewOnClickListener());
 
-        this.touchPad.setView(this.getWindow().getDecorView());
+        this.touchSensor.setView(this.getWindow().getDecorView());
     }
 
     @Override

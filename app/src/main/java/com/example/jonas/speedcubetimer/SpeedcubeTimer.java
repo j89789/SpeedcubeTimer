@@ -106,8 +106,8 @@ class SpeedcubeTimer {
         }
     }
 
-    public void setTouchPad(TouchPad touchPad) {
-        touchPad.setListener(touchPadListener);
+    public void setTouchPad(TouchSensor touchSensor) {
+        touchSensor.setListener(touchPadListener);
     }
 
     public String getDisplayString() {
@@ -137,7 +137,7 @@ class SpeedcubeTimer {
         void onColorChanged(int colorId);
     }
 
-    private class MyTouchPadListener implements TouchPad.Listener {
+    private class MyTouchPadListener implements TouchSensor.Listener {
 
         @Override
         public void onSensorUp() {
