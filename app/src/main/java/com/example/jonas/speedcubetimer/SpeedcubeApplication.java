@@ -6,7 +6,7 @@ import android.app.Application;
  * Main Application
  */
 public class SpeedcubeApplication extends Application {
-    SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer(this);
+    SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer();
 
     @Override
     public void onCreate() {

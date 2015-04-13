@@ -26,7 +26,6 @@ class SpeedcubeTimer {
     private Listener listener = null;
     private boolean isSensorDownValid = false;
     private boolean isUseInspectionTime = true;
-    private boolean isUseMilliseconds = true;
 
     /**
      * True while the time updater is active. Also when the Activity is in pause.
@@ -43,7 +42,10 @@ class SpeedcubeTimer {
      */
     private boolean isTimeUpdaterEnable = false;
 
-    public SpeedcubeTimer(Context context) {
+    public SpeedcubeTimer() {
+    }
+
+    public void setContext(Context context) {
         this.context = context;
     }
 
@@ -51,10 +53,6 @@ class SpeedcubeTimer {
         this.isUseInspectionTime = isUseInspectionTime;
     }
 
-    public void setIsUseMilliseconds(boolean isUseMilliseconds) {
-        this.isUseMilliseconds = isUseMilliseconds;
-        timeUpdater.run();
-    }
 
     public void cancel() {
 
@@ -142,10 +140,21 @@ class SpeedcubeTimer {
         return this.solvingTimer.currentTimeToMsString();
     }
 
+    /**
+     * The listener get all update Events. If any relevant property changed e.g timerState
+     * solving time or inspection time. A null listener will remove the listener and
+     * the update interval while the timer is running will be stopped.
+     *
+     * Activity's: Remove listener on pause for low cpu. The onUpdate() will be called
+     * in this function for initial GUI update
+     */
     public void setListener(Listener listener) {
         this.listener = listener;
+
         isTimeUpdaterEnable = listener != null;
         refreshTimeUpdater();
+
+        sendUpdate();
     }
 
     public long getInspectionTime() {

@@ -16,9 +16,11 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
     private final TouchSensor touchSensor = new TouchSensor();
+    boolean isUseMilliseconds = false;
     private SpeedcubeTimer speedcubeTimer;
     private TextView timerView;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
+    private SharedPreferences myPreference;
 
     @Override
     protected void onPause() {
@@ -29,29 +31,37 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onResume() {
-
-        speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
-
         speedcubeTimer.setTouchPad(touchSensor);
+        speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
+
         speedcubeTimer.setListener(speedcubeListener);
 
-        SharedPreferences myPreference = PreferenceManager.getDefaultSharedPreferences(this);
-        speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
-        speedcubeTimer.setIsUseMilliseconds(myPreference.getBoolean("useMilliseconds", true));
-
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        this.speedcubeTimer.setContext(null);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-        this.timerView = (TextView) findViewById(R.id.timerView);
-        this.timerView.setOnClickListener(new TimeViewOnClickListener());
+        timerView = (TextView) findViewById(R.id.timerView);
+        timerView.setOnClickListener(new TimeViewOnClickListener());
 
-        this.touchSensor.setView(this.getWindow().getDecorView());
+        touchSensor.setView(this.getWindow().getDecorView());
+
+        myPreference = PreferenceManager.getDefaultSharedPreferences(this);
+        isUseMilliseconds = myPreference.getBoolean("useMilliseconds", true);
+
+        speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
+        speedcubeTimer.setContext(this);
     }
 
     @Override
@@ -79,9 +89,11 @@ public class MainActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            if (speedcubeTimer.getTimerState() != SpeedcubeTimer.TimerState.ready) {
+            // deactivate back button while inspection and solving
+            if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.inspection ||
+                    speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solving) {
                 return true;
-            } else {
+            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
                 speedcubeTimer.reset();
                 return true;
             }
@@ -106,17 +118,15 @@ public class MainActivity extends Activity {
                 } else if (inspectionTime < 0) {
                     text += "+2";
                 } else {
-                    text = Time.toString(inspectionTime, 0);
+                    text = Time.toString(inspectionTime + 1000, 0);
                 }
             } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solving) {
-                text = Time.toStringMs(speedcubeTimer.getSolvingTime());
-            }
-            else
-            {
+                text = Time.toString(speedcubeTimer.getSolvingTime(), isUseMilliseconds ? 3 : 2);
+            } else {
                 text = "ready";
             }
 
-            if(!text.isEmpty()) {
+            if (!text.isEmpty()) {
                 timerView.setText(text);
             }
 

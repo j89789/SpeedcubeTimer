@@ -33,6 +33,7 @@ class Time {
             millisecondsString = String.format("%02d", (milliseconds / 10) % 100);
         } else if (decimals == 1) {
             millisecondsString = "" + ((milliseconds / 100) % 10);
+        } else if (decimals == 0) {
         } else {
             millisecondsString = String.format("%03d", milliseconds);
         }
@@ -51,8 +52,11 @@ class Time {
             s += minutesString + ":";
         }
 
-        s += secondsString + ".";
-        s += millisecondsString;
+        s += secondsString;
+
+        if (!millisecondsString.isEmpty()) {
+            s += "." + millisecondsString;
+        }
 
         return s;
     }
