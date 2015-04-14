@@ -156,7 +156,7 @@ class SpeedcubeTimer {
 
         if (listener != null) {
             listener.onColorChanged();
-            listener.onStatusChanged();
+            listener.onStatusChanged(TimerState.ready, this.getTimerState());
             listener.onTimeChanged();
         }
     }
@@ -188,8 +188,10 @@ class SpeedcubeTimer {
 
         /**
          * Call if the status changed.
+         * @param oldState
+         * @param newState
          */
-        void onStatusChanged();
+        void onStatusChanged(TimerState oldState, TimerState newState);
 
         /**
          * Call if the color changed.
@@ -227,9 +229,10 @@ class SpeedcubeTimer {
         public void setTimerState(TimerState newTimerState) {
 
             if (timerState != newTimerState) {
+                TimerState oldTimerState = timerState;
                 timerState = newTimerState;
                 if (listener != null) {
-                    listener.onStatusChanged();
+                    listener.onStatusChanged(oldTimerState, newTimerState);
                 }
             }
         }
