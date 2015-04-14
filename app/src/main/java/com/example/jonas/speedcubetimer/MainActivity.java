@@ -106,9 +106,18 @@ public class MainActivity extends Activity {
     }
 
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
+        @Override
+        public void onStatusChanged() {
+
+        }
 
         @Override
-        public void onUpdate() {
+        public void onColorChanged() {
+            timerView.setTextColor(getResources().getColor(speedcubeTimer.getColorId()));
+        }
+
+        @Override
+        public void onTimeChanged() {
 
             String text = "";
 
@@ -134,9 +143,6 @@ public class MainActivity extends Activity {
             if (!text.isEmpty()) {
                 timerView.setText(text);
             }
-
-            timerView.setTextColor(getResources().getColor(speedcubeTimer.getColorId()));
-
         }
     }
 

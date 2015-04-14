@@ -145,8 +145,8 @@ class SpeedcubeTimer {
      * solving time or inspection time. A null listener will remove the listener and
      * the update interval while the timer is running will be stopped.
      * <p/>
-     * Activity's: Remove listener on pause for low cpu. The onUpdate() will be called
-     * in this function for initial GUI update
+     * Activity's: Remove listener on pause for low cpu. The listener funktions will be called
+     * in this for initial GUI update
      */
     public void setListener(Listener listener) {
         this.listener = listener;
@@ -154,7 +154,11 @@ class SpeedcubeTimer {
         isTimeUpdaterEnable = listener != null;
         refreshTimeUpdater();
 
-        sendUpdate();
+        if (listener != null) {
+            listener.onColorChanged();
+            listener.onStatusChanged();
+            listener.onTimeChanged();
+        }
     }
 
     public long getInspectionTime() {
@@ -169,12 +173,6 @@ class SpeedcubeTimer {
         return d.getColorId();
     }
 
-    private void sendUpdate() {
-        if (listener != null) {
-            listener.onUpdate();
-        }
-    }
-
     public void setIsAcousticSignalsEnable(boolean isAcousticSignalsEnable) {
         this.isAcousticSignalsEnable = isAcousticSignalsEnable;
     }
@@ -184,10 +182,19 @@ class SpeedcubeTimer {
     interface Listener {
 
         /**
-         * Call if the status, inspection time the solving time are changed. While the
-         * time is running the interval ist defined in #timeUpdateInterval.
+         * Call if the  inspection time or solving time are changed.
          */
-        void onUpdate();
+        void onTimeChanged();
+
+        /**
+         * Call if the status changed.
+         */
+        void onStatusChanged();
+
+        /**
+         * Call if the color changed.
+         */
+        void onColorChanged();
     }
 
     /**
@@ -207,7 +214,9 @@ class SpeedcubeTimer {
 
             if (colorId != newColorId) {
                 colorId = newColorId;
-                sendUpdate();
+                if (listener != null) {
+                    listener.onColorChanged();
+                }
             }
         }
 
@@ -219,7 +228,9 @@ class SpeedcubeTimer {
 
             if (timerState != newTimerState) {
                 timerState = newTimerState;
-                sendUpdate();
+                if (listener != null) {
+                    listener.onStatusChanged();
+                }
             }
         }
     }
@@ -314,7 +325,9 @@ class SpeedcubeTimer {
                 lastTime = currentTime;
             }
 
-            sendUpdate();
+            if (listener != null) {
+                listener.onTimeChanged();
+            }
 
             if (isTimeUpdaterActive) {
                 handler.postDelayed(this, timeUpdateInterval);
