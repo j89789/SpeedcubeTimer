@@ -84,6 +84,10 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
+        }else if (id == R.id.action_show_time_list) {
+            Intent intent = new Intent(this, TimeListActivity.class);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

@@ -26,6 +26,7 @@ class SpeedcubeTimer {
     private boolean isSensorDownValid = false;
     private boolean isUseInspectionTime = false;
     private boolean isAcousticSignalsEnable = false;
+    private SolvingTime solvingTime = new SolvingTime();
 
     private PrivateData d = new PrivateData();
     /**
@@ -102,6 +103,12 @@ class SpeedcubeTimer {
             d.setTimerState(TimerState.solved);
             solvingTimer.stop();
             stopTimeUpdater();
+
+            solvingTime.setTimeMs(solvingTimer.getCurrentTime());
+            SpeedcubeApplication.instance().getTimeList().add(solvingTime);
+
+            solvingTime = new SolvingTime();
+
             Log.d(TAG, "Finished solving!");
         } else {
             Log.d(TAG, "finishedSolving() failed");
@@ -309,6 +316,10 @@ class SpeedcubeTimer {
 
                 if (currentTime < -2000) {
                     stopTimeUpdater();
+                    solvingTime.setType(SolvingTime.Type.DNF);
+                }
+                else if (currentTime < 0) {
+                    solvingTime.setType(SolvingTime.Type.plus2);
                 }
 
                 if (isAcousticSignalsEnable) {

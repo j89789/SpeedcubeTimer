@@ -7,4 +7,5 @@
     <string name="pref_useMilliseconds_summery">Display 16.259 instead of 16.25</string>
     <string name="timer">Timer</string>
     <string name="display">Display</string>
+    <string name="title_activity_time_list">Time List</string>
 </resources>

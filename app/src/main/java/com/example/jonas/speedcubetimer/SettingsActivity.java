@@ -13,7 +13,6 @@ public class SettingsActivity extends PreferenceActivity {
 
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             this.finish();
             return true;

@@ -2,11 +2,20 @@ package com.example.jonas.speedcubetimer;
 
 import android.app.Application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Main Application
  */
 public class SpeedcubeApplication extends Application {
-    SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer();
+
+    private SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer();
+    private List<SolvingTime> timeList = new ArrayList<SolvingTime>();
+
+    public List<SolvingTime> getTimeList() {
+        return timeList;
+    }
 
     @Override
     public void onCreate() {
