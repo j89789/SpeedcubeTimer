@@ -111,6 +111,18 @@ public class MainActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
+    private void updateTypeView() {
+        if(speedcubeTimer.getSolvingTime().getType() == SolvingTime.Type.DNF) {
+            ((TextView) findViewById(R.id.textViewType)).setText("DNF");
+        }else if(speedcubeTimer.getSolvingTime().getType() == SolvingTime.Type.plus2) {
+            ((TextView) findViewById(R.id.textViewType)).setText("+2");
+        }
+        else
+        {
+            ((TextView) findViewById(R.id.textViewType)).setText("");
+        }
+    }
+
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
         @Override
         public void onStatusChanged(SpeedcubeTimer.TimerState oldState, SpeedcubeTimer.TimerState newState) {
@@ -120,6 +132,8 @@ public class MainActivity extends Activity {
             } else {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
+
+            updateTypeView();
         }
 
         @Override
@@ -181,23 +195,22 @@ public class MainActivity extends Activity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.ok:
-                                solvingTime.setType(SolvingTime.Type.valid);
-                                return true;
-                            case R.id.plus2:
-                                solvingTime.setType(SolvingTime.Type.plus2);
-                                return true;
-                            case R.id.DNF:
-                                solvingTime.setType(SolvingTime.Type.DNF);
-                                return true;
-                            case R.id.delete:
-                                SpeedcubeApplication.instance().getTimeList().remove(solvingTime);
-                                speedcubeTimer.reset();
-                                return true;
-                            default:
-                                return false;
+                        int i = item.getItemId();
+
+                        if (i == R.id.ok) {
+                            solvingTime.setType(SolvingTime.Type.valid);
+                        } else if (i == R.id.plus2) {
+                            solvingTime.setType(SolvingTime.Type.plus2);
+                        } else if (i == R.id.DNF) {
+                            solvingTime.setType(SolvingTime.Type.DNF);
+                        } else if (i == R.id.delete) {
+                            SpeedcubeApplication.instance().getTimeList().remove(solvingTime);
+                            speedcubeTimer.reset();
                         }
+
+                        updateTypeView();
+
+                        return true;
                     }
                 });
 
