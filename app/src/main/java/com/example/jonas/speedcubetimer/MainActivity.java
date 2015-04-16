@@ -157,14 +157,14 @@ public class MainActivity extends Activity {
                 } else if (inspectionTime < 0) {
                     text += "+2";
                 } else {
-                    text = Time2.toString(inspectionTime + 999, 0);
+                    text = Time.toString(inspectionTime + 999, 0);
                 }
             } else if (state == SpeedcubeTimer.TimerState.solving
                     || state == SpeedcubeTimer.TimerState.solved
                     || state == SpeedcubeTimer.TimerState.ready) {
-                text = Time2.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds ? 3 : 2);
+                text = Time.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds ? 3 : 2);
             } else if (state == SpeedcubeTimer.TimerState.ready) {
-                text = Time2.toString(speedcubeTimer.getTime().getTimeMs(), isUseMilliseconds ? 3 : 2);
+                text = Time.toString(speedcubeTimer.getTime().getTimeMs(), isUseMilliseconds ? 3 : 2);
             }
 
             if (!text.isEmpty()) {

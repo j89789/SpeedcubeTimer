@@ -26,7 +26,7 @@ abstract class AbstractTimer {
     }
 
     /**
-     * @return Current Time2 in milliseconds
+     * @return Current Time in milliseconds
      */
     public abstract long getCurrentTime();
 
@@ -58,14 +58,14 @@ abstract class AbstractTimer {
     }
 
     public String currentTimeToMsString() {
-        return Time2.toStringMs(getCurrentTime());
+        return Time.toStringMs(getCurrentTime());
     }
 
     public String currentToTsString() {
-        return Time2.toString(this.getCurrentTime(), 1);
+        return Time.toString(this.getCurrentTime(), 1);
     }
 
     public String currentToHsString() {
-        return Time2.toString(this.getCurrentTime(), 2);
+        return Time.toString(this.getCurrentTime(), 2);
     }
 }

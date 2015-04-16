@@ -48,7 +48,7 @@ public class TimeListAdapter extends BaseAdapter {
 
         Time time = sourceList.get(position);
         textViewPos.setText("" + (position + 1) + ".");
-        textViewTime.setText(Time2.toStringMs(time.getTimeMs()));
+        textViewTime.setText(Time.toStringMs(time.getTimeMs()));
 
         Time.Type type = time.getType();
 
