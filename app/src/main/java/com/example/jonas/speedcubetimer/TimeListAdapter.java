@@ -12,9 +12,9 @@ import java.util.List;
 
 public class TimeListAdapter extends BaseAdapter {
 
-    List<SolvingTime> sourceList;
+    List<Time> sourceList;
 
-    public TimeListAdapter(List<SolvingTime> sourceList) {
+    public TimeListAdapter(List<Time> sourceList) {
         this.sourceList = sourceList;
     }
 
@@ -46,16 +46,16 @@ public class TimeListAdapter extends BaseAdapter {
         TextView textViewTime = (TextView) convertView.findViewById(R.id.textView2);
         TextView textViewType = (TextView) convertView.findViewById(R.id.textView3);
 
-        SolvingTime solvingTime = sourceList.get(position);
+        Time time = sourceList.get(position);
         textViewPos.setText("" + (position + 1) + ".");
-        textViewTime.setText(Time.toStringMs(solvingTime.getTimeMs()));
+        textViewTime.setText(Time2.toStringMs(time.getTimeMs()));
 
-        SolvingTime.Type type = solvingTime.getType();
+        Time.Type type = time.getType();
 
-        if (type == SolvingTime.Type.plus2) {
+        if (type == Time.Type.plus2) {
             textViewType.setText("+2");
         }
-        else if (type == SolvingTime.Type.DNF) {
+        else if (type == Time.Type.DNF) {
             textViewType.setText("DNF");
         }
         else{

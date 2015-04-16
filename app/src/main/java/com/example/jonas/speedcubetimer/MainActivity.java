@@ -112,9 +112,9 @@ public class MainActivity extends Activity {
     }
 
     private void updateTypeView() {
-        if(speedcubeTimer.getSolvingTime().getType() == SolvingTime.Type.DNF) {
+        if(speedcubeTimer.getTime().getType() == Time.Type.DNF) {
             ((TextView) findViewById(R.id.textViewType)).setText("DNF");
-        }else if(speedcubeTimer.getSolvingTime().getType() == SolvingTime.Type.plus2) {
+        }else if(speedcubeTimer.getTime().getType() == Time.Type.plus2) {
             ((TextView) findViewById(R.id.textViewType)).setText("+2");
         }
         else
@@ -157,14 +157,14 @@ public class MainActivity extends Activity {
                 } else if (inspectionTime < 0) {
                     text += "+2";
                 } else {
-                    text = Time.toString(inspectionTime + 999, 0);
+                    text = Time2.toString(inspectionTime + 999, 0);
                 }
             } else if (state == SpeedcubeTimer.TimerState.solving
                     || state == SpeedcubeTimer.TimerState.solved
                     || state == SpeedcubeTimer.TimerState.ready) {
-                text = Time.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds ? 3 : 2);
+                text = Time2.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds ? 3 : 2);
             } else if (state == SpeedcubeTimer.TimerState.ready) {
-                text = Time.toString(speedcubeTimer.getSolvingTime().getTimeMs(), isUseMilliseconds ? 3 : 2);
+                text = Time2.toString(speedcubeTimer.getTime().getTimeMs(), isUseMilliseconds ? 3 : 2);
             }
 
             if (!text.isEmpty()) {
@@ -182,13 +182,13 @@ public class MainActivity extends Activity {
 
                 popup.inflate(R.menu.menu_time_type);
 
-                final SolvingTime solvingTime = speedcubeTimer.getSolvingTime();
+                final Time time = speedcubeTimer.getTime();
 
-                if (solvingTime.getType() == SolvingTime.Type.valid) {
+                if (time.getType() == Time.Type.valid) {
                     popup.getMenu().findItem(R.id.ok).setChecked(true);
-                } else if (solvingTime.getType() == SolvingTime.Type.plus2) {
+                } else if (time.getType() == Time.Type.plus2) {
                     popup.getMenu().findItem(R.id.plus2).setChecked(true);
-                } else if (solvingTime.getType() == SolvingTime.Type.DNF) {
+                } else if (time.getType() == Time.Type.DNF) {
                     popup.getMenu().findItem(R.id.DNF).setChecked(true);
                 }
 
@@ -198,13 +198,13 @@ public class MainActivity extends Activity {
                         int i = item.getItemId();
 
                         if (i == R.id.ok) {
-                            solvingTime.setType(SolvingTime.Type.valid);
+                            time.setType(Time.Type.valid);
                         } else if (i == R.id.plus2) {
-                            solvingTime.setType(SolvingTime.Type.plus2);
+                            time.setType(Time.Type.plus2);
                         } else if (i == R.id.DNF) {
-                            solvingTime.setType(SolvingTime.Type.DNF);
+                            time.setType(Time.Type.DNF);
                         } else if (i == R.id.delete) {
-                            SpeedcubeApplication.instance().getTimeList().remove(solvingTime);
+                            SpeedcubeApplication.instance().getTimeSession().removeTime(time);
                             speedcubeTimer.reset();
                         }
 

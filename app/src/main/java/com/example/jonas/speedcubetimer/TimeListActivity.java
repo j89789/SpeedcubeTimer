@@ -17,8 +17,8 @@ import java.util.List;
 public class TimeListActivity extends Activity {
 
     private ListView listView;
-    private TimeListAdapter adapter = new TimeListAdapter(SpeedcubeApplication.instance().getTimeList());
-    private List<SolvingTime> timeList = SpeedcubeApplication.instance().getTimeList();
+
+    private TimeSession timeSession = SpeedcubeApplication.instance().getTimeSession();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class TimeListActivity extends Activity {
         setContentView(R.layout.activity_time_list);
 
         listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(adapter);
+        listView.setAdapter(timeSession.getAdapter());
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -38,13 +38,13 @@ public class TimeListActivity extends Activity {
 
                 popup.inflate(R.menu.menu_time_type);
 
-                final SolvingTime solvingTime = timeList.get(position);
+                final Time time = timeSession.get(position);
 
-                if (solvingTime.getType() == SolvingTime.Type.valid) {
+                if (time.getType() == Time.Type.valid) {
                     popup.getMenu().findItem(R.id.ok).setChecked(true);
-                } else if (solvingTime.getType() == SolvingTime.Type.plus2) {
+                } else if (time.getType() == Time.Type.plus2) {
                     popup.getMenu().findItem(R.id.plus2).setChecked(true);
-                } else if (solvingTime.getType() == SolvingTime.Type.DNF) {
+                } else if (time.getType() == Time.Type.DNF) {
                     popup.getMenu().findItem(R.id.DNF).setChecked(true);
                 }
 
@@ -54,13 +54,13 @@ public class TimeListActivity extends Activity {
                         int i = item.getItemId();
 
                         if (i == R.id.ok) {
-                            solvingTime.setType(SolvingTime.Type.valid);
+                            time.setType(Time.Type.valid);
                         } else if (i == R.id.plus2) {
-                            solvingTime.setType(SolvingTime.Type.plus2);
+                            time.setType(Time.Type.plus2);
                         } else if (i == R.id.DNF) {
-                            solvingTime.setType(SolvingTime.Type.DNF);
+                            time.setType(Time.Type.DNF);
                         } else if (i == R.id.delete) {
-                            timeList.remove(solvingTime);
+                            timeSession.removeTime(time);
                         }
 
                         updateListView();
@@ -77,8 +77,8 @@ public class TimeListActivity extends Activity {
     }
 
     private void updateListView() {
-        setTitle(getString(R.string.title_activity_time_list) + " (" + timeList.size() + ")");
-        adapter.notifyDataSetChanged();
+        setTitle(getString(R.string.title_activity_time_list) + " (" + timeSession.size() + ")");
+        timeSession.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class TimeListActivity extends Activity {
         }
         else if (id == R.id.delete_list){
 
-            if(timeList.size() > 0) {
+            if(timeSession.size() > 0) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Delete all Times?");
@@ -108,7 +108,7 @@ public class TimeListActivity extends Activity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SpeedcubeApplication.instance().getTimeList().clear();
+                        timeSession.clear();
                         updateListView();
                     }
 

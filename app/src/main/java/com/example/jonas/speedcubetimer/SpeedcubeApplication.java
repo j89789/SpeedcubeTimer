@@ -11,10 +11,10 @@ import java.util.List;
 public class SpeedcubeApplication extends Application {
 
     private SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer();
-    private List<SolvingTime> timeList = new ArrayList<SolvingTime>();
+    TimeSession timeSession = new TimeSession();
 
-    public List<SolvingTime> getTimeList() {
-        return timeList;
+    public TimeSession getTimeSession() {
+        return timeSession;
     }
 
     @Override

@@ -24,7 +24,7 @@ class SpeedcubeTimer {
     private boolean isSensorDownValid = false;
     private boolean isUseInspectionTime = false;
     private boolean isAcousticSignalsEnable = false;
-    private SolvingTime solvingTime = new SolvingTime();
+    private Time time = new Time();
 
 
     private PrivateData d = new PrivateData();
@@ -106,8 +106,8 @@ class SpeedcubeTimer {
         solvingTimer.stop();
         stopTimeUpdater();
 
-        solvingTime.setTimeMs(solvingTimer.getCurrentTime());
-        SpeedcubeApplication.instance().getTimeList().add(solvingTime);
+        time.setTimeMs(solvingTimer.getCurrentTime());
+        SpeedcubeApplication.instance().getTimeSession().addNewTime(time);
 
         Log.d(TAG, "Finished solving!");
     }
@@ -166,8 +166,8 @@ class SpeedcubeTimer {
         return inspectionTimer.getCurrentTime();
     }
 
-    public SolvingTime getSolvingTime() {
-        return solvingTime;
+    public Time getTime() {
+        return time;
     }
 
     public int getColorId() {
@@ -236,13 +236,14 @@ class SpeedcubeTimer {
 
             if (timerState != newTimerState) {
                 TimerState oldTimerState = timerState;
+
+                if(oldTimerState == TimerState.solved){
+                    time = new Time();
+                }
+
                 timerState = newTimerState;
                 if (listener != null) {
                     listener.onStatusChanged(oldTimerState, newTimerState);
-                }
-
-                if(oldTimerState == TimerState.solved){
-                    solvingTime = new SolvingTime();
                 }
             }
         }
@@ -309,9 +310,9 @@ class SpeedcubeTimer {
 
                 if (currentTime < -2000) {
                     stopTimeUpdater();
-                    solvingTime.setType(SolvingTime.Type.DNF);
+                    time.setType(Time.Type.DNF);
                 } else if (currentTime < 0) {
-                    solvingTime.setType(SolvingTime.Type.plus2);
+                    time.setType(Time.Type.plus2);
                 }
 
                 if (isAcousticSignalsEnable) {
