@@ -1,6 +1,8 @@
 package com.example.jonas.speedcubetimer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,15 +15,15 @@ import java.util.List;
 
 public class TimeListActivity extends Activity {
 
+    private ListView listView;
+    private TimeListAdapter timeListAdapter = new TimeListAdapter(SpeedcubeApplication.instance().getTimeList());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_list);
 
-        ListView listView = (ListView) findViewById(R.id.listView);
-
-        TimeListAdapter timeListAdapter = new TimeListAdapter(SpeedcubeApplication.instance().getTimeList());
-
+        listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(timeListAdapter);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -42,6 +44,28 @@ public class TimeListActivity extends Activity {
         if (id == android.R.id.home) {
             this.finish();
             return true;
+        }
+        else if (id == R.id.delete_list){
+
+            List<SolvingTime> timeList = SpeedcubeApplication.instance().getTimeList();
+
+            if(timeList.size() > 0) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Delete all Times?");
+                builder.setNegativeButton("no", null);
+                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SpeedcubeApplication.instance().getTimeList().clear();
+                        timeListAdapter.notifyDataSetChanged();
+                    }
+
+                });
+
+                builder.create().show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

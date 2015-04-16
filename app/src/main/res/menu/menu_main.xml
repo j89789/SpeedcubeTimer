@@ -4,18 +4,17 @@
 
     <item
         android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:title="@string/settings"
         android:showAsAction="ifRoom"
         android:orderInCategory="20"
         android:icon="@android:drawable/ic_menu_manage" />
 
     <item
 
-        android:id="@+id/action_show_time_list"
-        android:title="time list"
+        android:id="@+id/action_show_timeList"
+        android:title="@string/timeList"
         android:showAsAction="ifRoom"
         android:orderInCategory="10"
         android:icon="@android:drawable/ic_menu_recent_history" />
-
 
 </menu>
