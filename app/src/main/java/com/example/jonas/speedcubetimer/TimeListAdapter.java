@@ -1,6 +1,7 @@
 package com.example.jonas.speedcubetimer;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,12 +54,10 @@ public class TimeListAdapter extends BaseAdapter {
         Time.Type type = time.getType();
 
         if (type == Time.Type.plus2) {
-            textViewType.setText("+2");
-        }
-        else if (type == Time.Type.DNF) {
-            textViewType.setText("DNF");
-        }
-        else{
+            textViewType.setText(Resources.getSystem().getString(R.string.plus2));
+        } else if (type == Time.Type.DNF) {
+            textViewType.setText(Resources.getSystem().getString(R.string.DNF));
+        } else {
             textViewType.setText("");
         }
 

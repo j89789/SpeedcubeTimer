@@ -11,8 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
-import java.util.List;
-
 
 public class TimeListActivity extends Activity {
 
@@ -97,7 +95,7 @@ public class TimeListActivity extends Activity {
             this.finish();
             return true;
         }
-        else if (id == R.id.delete_list){
+        else if (id == R.id.action_delete){
 
             if(timeSession.size() > 0) {
 

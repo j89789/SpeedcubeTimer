@@ -113,9 +113,9 @@ public class MainActivity extends Activity {
 
     private void updateTypeView() {
         if(speedcubeTimer.getTime().getType() == Time.Type.DNF) {
-            ((TextView) findViewById(R.id.textViewType)).setText("DNF");
+            ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.DNF));
         }else if(speedcubeTimer.getTime().getType() == Time.Type.plus2) {
-            ((TextView) findViewById(R.id.textViewType)).setText("+2");
+            ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.plus2));
         }
         else
         {
@@ -153,9 +153,9 @@ public class MainActivity extends Activity {
                 long inspectionTime = speedcubeTimer.getInspectionTime();
 
                 if (inspectionTime < -2000) {
-                    text += "DNF";
+                    text += getString(R.string.DNF);
                 } else if (inspectionTime < 0) {
-                    text += "+2";
+                    text += getString(R.string.plus2);
                 } else {
                     text = Time.toString(inspectionTime + 999, 0);
                 }

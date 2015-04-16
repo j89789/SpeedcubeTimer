@@ -9,4 +9,8 @@
     <string name="display">Display</string>
     <string name="title_activity_time_list">Time List</string>
     <string name="timeList">time list</string>
+    <string name="delete">delete</string>
+    <string name="ok">ok</string>
+    <string name="plus2">+2</string>
+    <string name="DNF">DNF</string>
 </resources>
