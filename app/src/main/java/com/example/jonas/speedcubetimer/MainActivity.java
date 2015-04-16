@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 // 3014159 26535 89793 23846
@@ -84,7 +85,7 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
-        }else if (id == R.id.action_show_timeList) {
+        } else if (id == R.id.action_show_timeList) {
             Intent intent = new Intent(this, TimeListActivity.class);
             startActivity(intent);
             return true;
@@ -147,7 +148,9 @@ public class MainActivity extends Activity {
             } else if (state == SpeedcubeTimer.TimerState.solving
                     || state == SpeedcubeTimer.TimerState.solved
                     || state == SpeedcubeTimer.TimerState.ready) {
-                text = Time.toString(speedcubeTimer.getSolvingTime(), isUseMilliseconds ? 3 : 2);
+                text = Time.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds ? 3 : 2);
+            } else if (state == SpeedcubeTimer.TimerState.ready) {
+                text = Time.toString(speedcubeTimer.getSolvingTime().getTimeMs(), isUseMilliseconds ? 3 : 2);
             }
 
             if (!text.isEmpty()) {
@@ -159,7 +162,49 @@ public class MainActivity extends Activity {
     private class TimeViewOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            speedcubeTimer.reset();
+
+            if(speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, v);
+
+                popup.inflate(R.menu.menu_time_type);
+
+                final SolvingTime solvingTime = speedcubeTimer.getSolvingTime();
+
+                if (solvingTime.getType() == SolvingTime.Type.valid) {
+                    popup.getMenu().findItem(R.id.ok).setChecked(true);
+                } else if (solvingTime.getType() == SolvingTime.Type.plus2) {
+                    popup.getMenu().findItem(R.id.plus2).setChecked(true);
+                } else if (solvingTime.getType() == SolvingTime.Type.DNF) {
+                    popup.getMenu().findItem(R.id.DNF).setChecked(true);
+                }
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.ok:
+                                solvingTime.setType(SolvingTime.Type.valid);
+                                return true;
+                            case R.id.plus2:
+                                solvingTime.setType(SolvingTime.Type.plus2);
+                                return true;
+                            case R.id.DNF:
+                                solvingTime.setType(SolvingTime.Type.DNF);
+                                return true;
+                            case R.id.delete:
+                                SpeedcubeApplication.instance().getTimeList().remove(solvingTime);
+                                speedcubeTimer.reset();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+
+                popup.show();
+            }
+
+//            speedcubeTimer.reset();
         }
     }
 }

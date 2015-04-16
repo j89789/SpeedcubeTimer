@@ -1,8 +1,6 @@
 package com.example.jonas.speedcubetimer;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Handler;
@@ -27,6 +25,7 @@ class SpeedcubeTimer {
     private boolean isUseInspectionTime = false;
     private boolean isAcousticSignalsEnable = false;
     private SolvingTime solvingTime = new SolvingTime();
+
 
     private PrivateData d = new PrivateData();
     /**
@@ -64,16 +63,18 @@ class SpeedcubeTimer {
     }
 
     private void startSolving() {
-        if (d.getTimerState() == TimerState.ready || d.getTimerState() == TimerState.inspection) {
-            d.setTimerState(TimerState.solving);
-            solvingTimer.start();
-            inspectionTimer.stop();
-            inspectionTimer.reset();
-            startTimeUpdater();
-            Log.d(TAG, "Start solving...");
-        } else {
-            Log.d(TAG, "startSolving() failed");
-        }
+
+        d.setTimerState(TimerState.solving);
+
+        solvingTimer.reset();
+        solvingTimer.start();
+
+        inspectionTimer.stop();
+        inspectionTimer.reset();
+
+        startTimeUpdater();
+
+        Log.d(TAG, "Start solving...");
     }
 
     private void refreshTimeUpdater() {
@@ -99,32 +100,25 @@ class SpeedcubeTimer {
 
 
     private void finishedSolving() {
-        if (d.getTimerState() == TimerState.solving) {
-            d.setTimerState(TimerState.solved);
-            solvingTimer.stop();
-            stopTimeUpdater();
 
-            solvingTime.setTimeMs(solvingTimer.getCurrentTime());
-            SpeedcubeApplication.instance().getTimeList().add(solvingTime);
+        d.setTimerState(TimerState.solved);
 
-            solvingTime = new SolvingTime();
+        solvingTimer.stop();
+        stopTimeUpdater();
 
-            Log.d(TAG, "Finished solving!");
-        } else {
-            Log.d(TAG, "finishedSolving() failed");
-        }
+        solvingTime.setTimeMs(solvingTimer.getCurrentTime());
+        SpeedcubeApplication.instance().getTimeList().add(solvingTime);
+
+        Log.d(TAG, "Finished solving!");
     }
 
     private void startInspection() {
-        if (d.getTimerState() == TimerState.ready) {
-            d.setTimerState(TimerState.inspection);
+        d.setTimerState(TimerState.inspection);
 
-            inspectionTimer.start();
-            startTimeUpdater();
-            Log.d(TAG, "Start inspection...");
-        } else {
-            Log.d(TAG, "startInspection() failed");
-        }
+        inspectionTimer.start();
+        startTimeUpdater();
+
+        Log.d(TAG, "Start inspection...");
     }
 
     public void reset() {
@@ -172,8 +166,8 @@ class SpeedcubeTimer {
         return inspectionTimer.getCurrentTime();
     }
 
-    public long getSolvingTime() {
-        return solvingTimer.getCurrentTime();
+    public SolvingTime getSolvingTime() {
+        return solvingTime;
     }
 
     public int getColorId() {
@@ -182,6 +176,10 @@ class SpeedcubeTimer {
 
     public void setIsAcousticSignalsEnable(boolean isAcousticSignalsEnable) {
         this.isAcousticSignalsEnable = isAcousticSignalsEnable;
+    }
+
+    public long getCurrentSolvingTime() {
+        return solvingTimer.getCurrentTime();
     }
 
     public enum TimerState {ready, inspection, solving, solved}
@@ -195,6 +193,7 @@ class SpeedcubeTimer {
 
         /**
          * Call if the status changed.
+         *
          * @param oldState
          * @param newState
          */
@@ -241,6 +240,10 @@ class SpeedcubeTimer {
                 if (listener != null) {
                     listener.onStatusChanged(oldTimerState, newTimerState);
                 }
+
+                if(oldTimerState == TimerState.solved){
+                    solvingTime = new SolvingTime();
+                }
             }
         }
     }
@@ -250,14 +253,16 @@ class SpeedcubeTimer {
         @Override
         public void onSensorUp() {
 
-            if (d.getTimerState() == TimerState.ready && !isUseInspectionTime ||
-                    d.getTimerState() == TimerState.inspection) {
-                if (isSensorDownValid) {
-                    startSolving();
-                } else {
-                    handler.removeCallbacks(sensorDownValidMaker);
-                }
+            if (isSensorDownValid) {
+                isSensorDownValid = false;
+                startSolving();
+            } else {
+                handler.removeCallbacks(sensorDownValidMaker);
+            }
 
+            if (d.getTimerState() == TimerState.ready) {
+                d.setColorId(R.color.ready);
+            } else {
                 d.setColorId(R.color.normal);
             }
         }
@@ -266,7 +271,8 @@ class SpeedcubeTimer {
         public void onSensorDown() {
 
             if (d.getTimerState() == TimerState.ready && !isUseInspectionTime ||
-                    d.getTimerState() == TimerState.inspection) {
+                    d.getTimerState() == TimerState.inspection ||
+                    d.getTimerState() == TimerState.solved && !isUseInspectionTime) {
                 isSensorDownValid = false;
                 d.setColorId(R.color.invalid);
 
@@ -274,20 +280,6 @@ class SpeedcubeTimer {
             }
             if (d.getTimerState() == TimerState.solving) {
                 finishedSolving();
-            } else if (d.getTimerState() == TimerState.solved) {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Rest Timer?");
-                builder.setMessage("You can also reset the solvingTimer by click on time view or" +
-                        "back button.");
-                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reset();
-                    }
-                });
-                builder.setNegativeButton("cancel", null);
-                builder.create().show();
             }
         }
 
@@ -295,7 +287,8 @@ class SpeedcubeTimer {
         public void onTrigger() {
 
             if (isUseInspectionTime) {
-                if (d.getTimerState() == TimerState.ready) {
+                if (d.getTimerState() == TimerState.ready ||
+                        d.getTimerState() == TimerState.solved) {
                     startInspection();
                 }
             }
@@ -317,8 +310,7 @@ class SpeedcubeTimer {
                 if (currentTime < -2000) {
                     stopTimeUpdater();
                     solvingTime.setType(SolvingTime.Type.DNF);
-                }
-                else if (currentTime < 0) {
+                } else if (currentTime < 0) {
                     solvingTime.setType(SolvingTime.Type.plus2);
                 }
 

@@ -47,7 +47,7 @@ public class TimeListAdapter extends BaseAdapter {
         TextView textViewType = (TextView) convertView.findViewById(R.id.textView3);
 
         SolvingTime solvingTime = sourceList.get(position);
-        textViewPos.setText("" + position + ".");
+        textViewPos.setText("" + (position + 1) + ".");
         textViewTime.setText(Time.toStringMs(solvingTime.getTimeMs()));
 
         SolvingTime.Type type = solvingTime.getType();
