@@ -82,6 +82,8 @@ public class MainActivity extends Activity {
         myPreference = PreferenceManager.getDefaultSharedPreferences(this);
 
         speedcubeTimer.setContext(this);
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -141,12 +143,6 @@ public class MainActivity extends Activity {
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
         @Override
         public void onStatusChanged(SpeedcubeTimer.TimerState oldState, SpeedcubeTimer.TimerState newState) {
-
-            if (newState == SpeedcubeTimer.TimerState.ready || newState == SpeedcubeTimer.TimerState.solved) {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            } else {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
 
             updateTypeView();
         }
