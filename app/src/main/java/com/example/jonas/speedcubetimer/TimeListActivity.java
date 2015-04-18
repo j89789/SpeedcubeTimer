@@ -32,52 +32,13 @@ public class TimeListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                PopupMenu popup = new PopupMenu(TimeListActivity.this, view);
-
-                popup.inflate(R.menu.menu_time_type);
-
                 final Time time = timeSession.get(position);
 
-                if (time.getType() == Time.Type.valid) {
-                    popup.getMenu().findItem(R.id.ok).setChecked(true);
-                } else if (time.getType() == Time.Type.plus2) {
-                    popup.getMenu().findItem(R.id.plus2).setChecked(true);
-                } else if (time.getType() == Time.Type.DNF) {
-                    popup.getMenu().findItem(R.id.DNF).setChecked(true);
-                }
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int i = item.getItemId();
-
-                        if (i == R.id.ok) {
-                            time.setType(Time.Type.valid);
-                        } else if (i == R.id.plus2) {
-                            time.setType(Time.Type.plus2);
-                        } else if (i == R.id.DNF) {
-                            time.setType(Time.Type.DNF);
-                        } else if (i == R.id.delete) {
-                            timeSession.removeTime(time);
-                        }
-
-                        updateListView();
-
-                        return true;
-                    }
-                });
-
-                popup.show();
+                time.showPopupMenu(TimeListActivity.this, view, null);
             }
         });
-
-        updateListView();
     }
 
-    private void updateListView() {
-        setTitle(getString(R.string.title_activity_time_list) + " (" + timeSession.size() + ")");
-        timeSession.getAdapter().notifyDataSetChanged();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,7 +68,6 @@ public class TimeListActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         timeSession.clear();
-                        updateListView();
                     }
 
                 });

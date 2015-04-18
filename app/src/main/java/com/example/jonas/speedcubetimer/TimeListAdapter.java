@@ -54,9 +54,9 @@ public class TimeListAdapter extends BaseAdapter {
         Time.Type type = time.getType();
 
         if (type == Time.Type.plus2) {
-            textViewType.setText(Resources.getSystem().getString(R.string.plus2));
+            textViewType.setText(SpeedcubeApplication.instance().getString(R.string.plus2));
         } else if (type == Time.Type.DNF) {
-            textViewType.setText(Resources.getSystem().getString(R.string.DNF));
+            textViewType.setText(SpeedcubeApplication.instance().getString(R.string.DNF));
         } else {
             textViewType.setText("");
         }

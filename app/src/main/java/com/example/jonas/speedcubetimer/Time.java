@@ -1,28 +1,17 @@
 package com.example.jonas.speedcubetimer;
 
 
+import android.content.Context;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
+
 public class Time {
 
     private long timeMs = 0;
     private Type type = Type.valid;
 
-    public long getTimeMs() {
-        return timeMs;
-    }
-
-    public void setTimeMs(long timeMs) {
-        this.timeMs = timeMs;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    enum Type {valid, plus2, DNF}
+    private OnChangeLister lister;
 
     static public String toStringMs(long timeMs) {
         return Time.toString(timeMs, 3);
@@ -78,5 +67,91 @@ public class Time {
         }
 
         return s;
+    }
+
+    public void setOnChangeLister(OnChangeLister lister) {
+        this.lister = lister;
+    }
+
+    public long getTimeMs() {
+        return timeMs;
+    }
+
+    public void setTimeMs(long timeMs) {
+        this.timeMs = timeMs;
+        if (lister != null) {
+            lister.onChanged(this);
+        }
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+        if (lister != null) {
+            lister.onChanged(this);
+        }
+    }
+
+    public void showPopupMenu(Context context, View view, final PopupMenuLister popupMenuLister) {
+
+        PopupMenu popup = new PopupMenu(context, view);
+
+        popup.inflate(R.menu.menu_time_type);
+
+        if (type == Time.Type.valid) {
+            popup.getMenu().findItem(R.id.ok).setChecked(true);
+        } else if (type == Time.Type.plus2) {
+            popup.getMenu().findItem(R.id.plus2).setChecked(true);
+        } else if (type == Time.Type.DNF) {
+            popup.getMenu().findItem(R.id.DNF).setChecked(true);
+        }
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.ok) {
+                    setType(Time.Type.valid);
+                } else if (id == R.id.plus2) {
+                    setType(Time.Type.plus2);
+                } else if (id == R.id.DNF) {
+                    setType(Time.Type.DNF);
+                } else if (id == R.id.delete) {
+                    SpeedcubeApplication.instance().getTimeSession().removeTime(Time.this);
+                }
+
+                if (popupMenuLister != null) {
+                    popupMenuLister.onAction(id);
+                }
+
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    enum Type {valid, plus2, DNF}
+
+    interface OnChangeLister {
+
+        /**
+         * Called if any data changed
+         */
+        void onChanged(Time time);
+    }
+
+    interface PopupMenuLister {
+
+        /**
+         * Called by action form Popup menu
+         *
+         * @param id Action id
+         */
+        void onAction(int id);
     }
 }

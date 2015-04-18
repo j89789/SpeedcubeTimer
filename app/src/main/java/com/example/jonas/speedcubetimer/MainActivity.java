@@ -178,43 +178,20 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
 
             if(speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
-                PopupMenu popup = new PopupMenu(MainActivity.this, v);
-
-                popup.inflate(R.menu.menu_time_type);
 
                 final Time time = speedcubeTimer.getTime();
 
-                if (time.getType() == Time.Type.valid) {
-                    popup.getMenu().findItem(R.id.ok).setChecked(true);
-                } else if (time.getType() == Time.Type.plus2) {
-                    popup.getMenu().findItem(R.id.plus2).setChecked(true);
-                } else if (time.getType() == Time.Type.DNF) {
-                    popup.getMenu().findItem(R.id.DNF).setChecked(true);
-                }
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                time.showPopupMenu(MainActivity.this, timerView, new Time.PopupMenuLister() {
                     @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int i = item.getItemId();
+                    public void onAction(int id) {
 
-                        if (i == R.id.ok) {
-                            time.setType(Time.Type.valid);
-                        } else if (i == R.id.plus2) {
-                            time.setType(Time.Type.plus2);
-                        } else if (i == R.id.DNF) {
-                            time.setType(Time.Type.DNF);
-                        } else if (i == R.id.delete) {
-                            SpeedcubeApplication.instance().getTimeSession().removeTime(time);
+                        if(id == R.id.delete){
                             speedcubeTimer.reset();
                         }
 
                         updateTypeView();
-
-                        return true;
                     }
                 });
-
-                popup.show();
             }
 
 //            speedcubeTimer.reset();
