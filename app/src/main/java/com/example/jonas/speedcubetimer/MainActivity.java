@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 // 3014159 26535 89793 23846
@@ -19,16 +18,28 @@ public class MainActivity extends Activity {
 
     private final TouchSensor touchSensor = new TouchSensor();
     boolean isUseMilliseconds = false;
-    private SpeedcubeTimer speedcubeTimer;
+    private SpeedcubeTimer speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
+    private TimeSession session = SpeedcubeApplication.instance().getTimeSession();
     private TextView timerView;
+    private TextView timerViewAverage5;
+    private TextView timerViewAverage12;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
     private SharedPreferences myPreference;
+
+    private TimeSession.OnAverageChangedListener onAverageChangedListener = new TimeSession.OnAverageChangedListener() {
+        @Override
+        public void onAverageChanged() {
+            timerViewAverage5.setText(Time.toStringMs(session.getAverage5()));
+            timerViewAverage12.setText(Time.toStringMs(session.getAverage12()));
+        }
+    };
 
     @Override
     protected void onPause() {
         super.onPause();
 
         speedcubeTimer.setListener(null);
+        session.setOnChangeLister(null);
     }
 
     @Override
@@ -41,6 +52,8 @@ public class MainActivity extends Activity {
 
         speedcubeTimer.setTouchPad(touchSensor);
         speedcubeTimer.setListener(speedcubeListener);
+
+        session.setOnChangeLister(onAverageChangedListener);
 
         super.onResume();
     }
@@ -58,6 +71,9 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
+        timerViewAverage12 = (TextView) findViewById(R.id.textViewAverage12);
+        timerViewAverage5 = (TextView) findViewById(R.id.textViewAverage5);
+
         timerView = (TextView) findViewById(R.id.timerView);
         timerView.setOnClickListener(new TimeViewOnClickListener());
 
@@ -65,7 +81,6 @@ public class MainActivity extends Activity {
 
         myPreference = PreferenceManager.getDefaultSharedPreferences(this);
 
-        speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
         speedcubeTimer.setContext(this);
     }
 

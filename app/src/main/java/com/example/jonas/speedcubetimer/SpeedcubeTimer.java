@@ -106,6 +106,10 @@ class SpeedcubeTimer {
         solvingTimer.stop();
         stopTimeUpdater();
 
+        if (listener != null) {
+            listener.onTimeChanged();
+        }
+
         time.setTimeMs(solvingTimer.getCurrentTime());
         SpeedcubeApplication.instance().getTimeSession().addNewTime(time);
 
