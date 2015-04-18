@@ -1,7 +1,6 @@
 package com.example.jonas.speedcubetimer;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,22 +43,27 @@ public class TimeListAdapter extends BaseAdapter {
         }
 
         TextView textViewPos = (TextView) convertView.findViewById(R.id.textView1);
-        TextView textViewTime = (TextView) convertView.findViewById(R.id.textView2);
-        TextView textViewType = (TextView) convertView.findViewById(R.id.textView3);
+        TextView textViewTime = (TextView) convertView.findViewById(R.id.textViewTime);
+        TextView textViewInfo = (TextView) convertView.findViewById(R.id.textViewInfo);
+
+        textViewPos.setText("" + (position + 1) + ".");
 
         Time time = sourceList.get(position);
-        textViewPos.setText("" + (position + 1) + ".");
-        textViewTime.setText(Time.toStringMs(time.getTimeMs()));
-
         Time.Type type = time.getType();
 
+        String timeString = Time.toStringMs(time.getTimeMs());
+        String infoString = "";
+
         if (type == Time.Type.plus2) {
-            textViewType.setText(SpeedcubeApplication.instance().getString(R.string.plus2));
+            timeString += "+";
+            infoString = "( " + Time.toStringMs(time.getOriginTimeMs()) + " )";
         } else if (type == Time.Type.DNF) {
-            textViewType.setText(SpeedcubeApplication.instance().getString(R.string.DNF));
-        } else {
-            textViewType.setText("");
+            timeString = SpeedcubeApplication.instance().getString(R.string.DNF);
+            infoString = "( " + Time.toStringMs(time.getOriginTimeMs()) + " )";
         }
+
+        textViewTime.setText(timeString);
+        textViewInfo.setText(infoString);
 
         return convertView;
     }

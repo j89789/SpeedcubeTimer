@@ -73,8 +73,12 @@ public class Time {
         this.lister = lister;
     }
 
+    /**
+     * May including +2000 ms
+     */
     public long getTimeMs() {
-        return timeMs;
+
+        return timeMs + (type == Type.plus2 ? 2000 : 0);
     }
 
     public void setTimeMs(long timeMs) {
@@ -133,6 +137,10 @@ public class Time {
         });
 
         popup.show();
+    }
+
+    public long getOriginTimeMs() {
+        return timeMs;
     }
 
     enum Type {valid, plus2, DNF}
