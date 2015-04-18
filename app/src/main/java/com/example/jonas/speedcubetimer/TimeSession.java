@@ -68,7 +68,13 @@ public class TimeSession {
         if(timeList.size() >= count)
         {
             for (int i = timeList.size() - (count) ; i < timeList.size() ; i++) {
-                average += timeList.get(i).getTimeMs();
+                Time time = timeList.get(i);
+
+                if (time.getType() == Time.Type.DNF){
+                    return 0;
+                }
+
+                average += time.getTimeMs();
             }
             average /= count;
         }

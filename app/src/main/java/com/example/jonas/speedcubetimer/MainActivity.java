@@ -29,8 +29,23 @@ public class MainActivity extends Activity {
     private TimeSession.OnAverageChangedListener onAverageChangedListener = new TimeSession.OnAverageChangedListener() {
         @Override
         public void onAverageChanged() {
-            timerViewAverage5.setText(Time.toStringMs(session.getAverage5()));
-            timerViewAverage12.setText(Time.toStringMs(session.getAverage12()));
+
+            long average5 = session.getAverage5();
+            long average12 = session.getAverage12();
+
+            if (average5 != 0) {
+                timerViewAverage5.setText(Time.toStringMs(average5));
+                findViewById(R.id.rowAo5).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.rowAo5).setVisibility(View.GONE);
+            }
+
+            if (average12 != 0) {
+                timerViewAverage12.setText(Time.toStringMs(average12));
+                findViewById(R.id.rowAo12).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.rowAo12).setVisibility(View.GONE);
+            }
         }
     };
 
@@ -71,8 +86,10 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        timerViewAverage12 = (TextView) findViewById(R.id.textViewAverage12);
-        timerViewAverage5 = (TextView) findViewById(R.id.textViewAverage5);
+        timerViewAverage12 = (TextView) findViewById(R.id.textViewAo12);
+        timerViewAverage5 = (TextView) findViewById(R.id.textViewAo5);
+        findViewById(R.id.rowAo5).setVisibility(View.GONE);
+        findViewById(R.id.rowAo12).setVisibility(View.GONE);
 
         timerView = (TextView) findViewById(R.id.timerView);
         timerView.setOnClickListener(new TimeViewOnClickListener());
@@ -129,13 +146,11 @@ public class MainActivity extends Activity {
     }
 
     private void updateTypeView() {
-        if(speedcubeTimer.getTime().getType() == Time.Type.DNF) {
+        if (speedcubeTimer.getTime().getType() == Time.Type.DNF) {
             ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.DNF));
-        }else if(speedcubeTimer.getTime().getType() == Time.Type.plus2) {
+        } else if (speedcubeTimer.getTime().getType() == Time.Type.plus2) {
             ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.plus2));
-        }
-        else
-        {
+        } else {
             ((TextView) findViewById(R.id.textViewType)).setText("");
         }
     }
@@ -143,6 +158,12 @@ public class MainActivity extends Activity {
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
         @Override
         public void onStatusChanged(SpeedcubeTimer.TimerState oldState, SpeedcubeTimer.TimerState newState) {
+
+            if (speedcubeTimer.getTimerState() != SpeedcubeTimer.TimerState.ready &&
+                    speedcubeTimer.getTimerState() != SpeedcubeTimer.TimerState.solved) {
+                findViewById(R.id.rowAo5).setVisibility(View.GONE);
+                findViewById(R.id.rowAo12).setVisibility(View.GONE);
+            }
 
             updateTypeView();
         }
@@ -188,7 +209,7 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
 
-            if(speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
+            if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.solved) {
 
                 final Time time = speedcubeTimer.getTime();
 
@@ -196,7 +217,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onAction(int id) {
 
-                        if(id == R.id.delete){
+                        if (id == R.id.delete) {
                             speedcubeTimer.reset();
                         }
 
