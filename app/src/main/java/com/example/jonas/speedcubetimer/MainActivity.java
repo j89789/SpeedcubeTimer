@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-// 3014159 26535 89793 23846
 
 public class MainActivity extends Activity {
 
@@ -23,10 +22,12 @@ public class MainActivity extends Activity {
     private TextView timerView;
     private TextView timerViewAverage5;
     private TextView timerViewAverage12;
+    private TextView timerViewBestTime;
+    private TextView timerViewWorstTime;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
     private SharedPreferences myPreference;
 
-    private TimeSession.OnAverageChangedListener onAverageChangedListener = new TimeSession.OnAverageChangedListener() {
+    private TimeSession.OnChangListener onChangListener = new TimeSession.OnChangListener() {
         @Override
         public void onAverageChanged() {
 
@@ -47,6 +48,20 @@ public class MainActivity extends Activity {
                 findViewById(R.id.rowAo12).setVisibility(View.GONE);
             }
         }
+
+        @Override
+        public void onExtremeValuesChange() {
+
+            timerViewBestTime.setText(Time.toStringMs(session.getBestTime()));
+            timerViewWorstTime.setText(Time.toStringMs(session.getWorseTime()));
+        }
+
+        @Override
+        public void onSizeChanged() {
+            if (session.size() > 1) {
+                findViewById(R.id.extremeValues).setVisibility(View.VISIBLE);
+            }
+        }
     };
 
     @Override
@@ -54,7 +69,7 @@ public class MainActivity extends Activity {
         super.onPause();
 
         speedcubeTimer.setListener(null);
-        session.setOnChangeLister(null);
+        session.setOnChangListener(null);
     }
 
     @Override
@@ -68,7 +83,7 @@ public class MainActivity extends Activity {
         speedcubeTimer.setTouchPad(touchSensor);
         speedcubeTimer.setListener(speedcubeListener);
 
-        session.setOnChangeLister(onAverageChangedListener);
+        session.setOnChangListener(onChangListener);
 
         super.onResume();
     }
@@ -88,8 +103,12 @@ public class MainActivity extends Activity {
 
         timerViewAverage12 = (TextView) findViewById(R.id.textViewAo12);
         timerViewAverage5 = (TextView) findViewById(R.id.textViewAo5);
+        timerViewBestTime = (TextView) findViewById(R.id.textViewBestTime);
+        timerViewWorstTime = (TextView) findViewById(R.id.textViewWorstTime);
+
         findViewById(R.id.rowAo5).setVisibility(View.GONE);
         findViewById(R.id.rowAo12).setVisibility(View.GONE);
+        findViewById(R.id.extremeValues).setVisibility(View.GONE);
 
         timerView = (TextView) findViewById(R.id.timerView);
         timerView.setOnClickListener(new TimeViewOnClickListener());
@@ -163,6 +182,7 @@ public class MainActivity extends Activity {
                     speedcubeTimer.getTimerState() != SpeedcubeTimer.TimerState.solved) {
                 findViewById(R.id.rowAo5).setVisibility(View.GONE);
                 findViewById(R.id.rowAo12).setVisibility(View.GONE);
+                findViewById(R.id.extremeValues).setVisibility(View.GONE);
             }
 
             updateTypeView();
@@ -224,7 +244,7 @@ public class MainActivity extends Activity {
                         updateTypeView();
                     }
                 });
-            }else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.inspection) {
+            } else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.inspection) {
                 speedcubeTimer.reset();
             }
 

@@ -37,7 +37,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingLeft="30dp"
-        android:paddingBottom="30dp">
+        android:paddingBottom="30dp"
+        android:id="@+id/tableLayout">
 
         <TableRow android:id="@+id/rowAo5"
             android:longClickable="true">
@@ -82,6 +83,65 @@
                 android:gravity="right" />
         </TableRow>
 
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/extremeValues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="30dp"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="30dp">
+
+        <TableRow
+            android:longClickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="best"
+                android:paddingRight="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="0.000"
+                android:id="@+id/textViewBestTime"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="right" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="worst"
+                android:paddingRight="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="0.000"
+                android:id="@+id/textViewWorstTime"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="right" />
+        </TableRow>
     </TableLayout>
 
 </RelativeLayout>
