@@ -131,10 +131,21 @@ class SpeedcubeTimer {
             d.setColorId(R.color.ready);
             solvingTimer.reset();
             timeUpdater.run();
-            Log.d(TAG, "Reset");
-        } else {
-            Log.d(TAG, "reset() failed");
         }
+        else if(d.getTimerState() == TimerState.inspection)
+        {
+            d.setTimerState(TimerState.ready);
+            d.setColorId(R.color.ready);
+
+            inspectionTimer.stop();
+            inspectionTimer.reset();
+
+            time.setType(Time.Type.valid);
+
+            timeUpdater.run();
+        }
+
+        Log.d(TAG, "Reset");
     }
 
     public void setTouchPad(TouchSensor touchSensor) {

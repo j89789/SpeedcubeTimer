@@ -224,6 +224,8 @@ public class MainActivity extends Activity {
                         updateTypeView();
                     }
                 });
+            }else if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.inspection) {
+                speedcubeTimer.reset();
             }
 
 //            speedcubeTimer.reset();
