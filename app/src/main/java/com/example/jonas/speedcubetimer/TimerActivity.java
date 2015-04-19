@@ -26,41 +26,21 @@ public class TimerActivity extends Activity {
     private TextView timerViewWorstTime;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
     private SharedPreferences myPreference;
-
+    private boolean isShowAverage;
+    private boolean isShowExtremeValues;
     private TimeSession.OnChangListener onChangListener = new TimeSession.OnChangListener() {
         @Override
         public void onAverageChanged() {
-
-            long average5 = session.getAverage5();
-            long average12 = session.getAverage12();
-
-            if (average5 != 0) {
-                timerViewAverage5.setText(Time.toStringMs(average5));
-                findViewById(R.id.rowAo5).setVisibility(View.VISIBLE);
-            } else {
-                findViewById(R.id.rowAo5).setVisibility(View.GONE);
-            }
-
-            if (average12 != 0) {
-                timerViewAverage12.setText(Time.toStringMs(average12));
-                findViewById(R.id.rowAo12).setVisibility(View.VISIBLE);
-            } else {
-                findViewById(R.id.rowAo12).setVisibility(View.GONE);
-            }
+            updateAverage();
         }
 
         @Override
         public void onExtremeValuesChange() {
-
-            timerViewBestTime.setText(Time.toStringMs(session.getBestTime()));
-            timerViewWorstTime.setText(Time.toStringMs(session.getWorseTime()));
+            updateExtremeValues();
         }
 
         @Override
         public void onSizeChanged() {
-            if (session.size() > 1) {
-                findViewById(R.id.extremeValues).setVisibility(View.VISIBLE);
-            }
         }
     };
 
@@ -77,6 +57,8 @@ public class TimerActivity extends Activity {
 
         // load settings
         isUseMilliseconds = myPreference.getBoolean("useMilliseconds", true);
+        isShowAverage = myPreference.getBoolean("showAverage", true);
+        isShowExtremeValues = myPreference.getBoolean("showExtremeValues", true);
         speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
         speedcubeTimer.setIsAcousticSignalsEnable(myPreference.getBoolean("inspectionAcousticSignals", true));
 
@@ -85,7 +67,50 @@ public class TimerActivity extends Activity {
 
         session.setOnChangListener(onChangListener);
 
+        updateExtremeValues();
+        updateAverage();
+        updateColor();
+        updateTimeView();
+        updateTypeView();
+
         super.onResume();
+    }
+
+    private void updateAverage() {
+
+        if (isShowAverage && !speedcubeTimer.isRunning()) {
+            long average5 = session.getAverage5();
+            long average12 = session.getAverage12();
+
+            if (average5 != 0) {
+                timerViewAverage5.setText(Time.toString(average5, isUseMilliseconds));
+                findViewById(R.id.rowAo5).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.rowAo5).setVisibility(View.GONE);
+            }
+
+            if (average12 != 0) {
+                timerViewAverage12.setText(Time.toString(average12, isUseMilliseconds));
+                findViewById(R.id.rowAo12).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.rowAo12).setVisibility(View.GONE);
+            }
+        } else {
+            findViewById(R.id.rowAo5).setVisibility(View.GONE);
+            findViewById(R.id.rowAo12).setVisibility(View.GONE);
+        }
+
+    }
+
+    private void updateExtremeValues() {
+
+        if (isShowExtremeValues && session.size() > 1 && !speedcubeTimer.isRunning()) {
+            timerViewBestTime.setText(Time.toString(session.getBestTime(), isUseMilliseconds));
+            timerViewWorstTime.setText(Time.toString(session.getWorseTime(), isUseMilliseconds));
+            findViewById(R.id.tableLayoutExtremeValues).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.tableLayoutExtremeValues).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -105,10 +130,6 @@ public class TimerActivity extends Activity {
         timerViewAverage5 = (TextView) findViewById(R.id.textViewAo5);
         timerViewBestTime = (TextView) findViewById(R.id.textViewBestTime);
         timerViewWorstTime = (TextView) findViewById(R.id.textViewWorstTime);
-
-        findViewById(R.id.rowAo5).setVisibility(View.GONE);
-        findViewById(R.id.rowAo12).setVisibility(View.GONE);
-        findViewById(R.id.extremeValues).setVisibility(View.GONE);
 
         timerView = (TextView) findViewById(R.id.timerView);
         timerView.setOnClickListener(new TimeViewOnClickListener());
@@ -174,54 +195,69 @@ public class TimerActivity extends Activity {
         }
     }
 
+    private void updateTimeView() {
+        String text = "";
+
+        SpeedcubeTimer.TimerState state = speedcubeTimer.getTimerState();
+
+        if (state == SpeedcubeTimer.TimerState.inspection) {
+
+            long inspectionTime = speedcubeTimer.getInspectionTime();
+
+            if (inspectionTime < -2000) {
+                text += getString(R.string.DNF);
+            } else if (inspectionTime < 0) {
+                text += getString(R.string.plus2);
+            } else {
+                text = Time.toString(inspectionTime + 999, 0);
+            }
+        } else if (state == SpeedcubeTimer.TimerState.solving
+                || state == SpeedcubeTimer.TimerState.solved
+                || state == SpeedcubeTimer.TimerState.ready) {
+            text = Time.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds);
+        } else if (state == SpeedcubeTimer.TimerState.ready) {
+            text = Time.toString(speedcubeTimer.getTime().getTimeMs(), isUseMilliseconds);
+        }
+
+        if (!text.isEmpty()) {
+            timerView.setText(text);
+        }
+    }
+
+    private void updateColor() {
+
+        SpeedcubeTimer.SensorStatus i = speedcubeTimer.getSensorStatus();
+        if (i == SpeedcubeTimer.SensorStatus.waitForValidation) {
+            timerView.setTextColor(getResources().getColor(R.color.red));
+        } else if (i == SpeedcubeTimer.SensorStatus.valid) {
+            timerView.setTextColor(getResources().getColor(R.color.green));
+        } else if (i == SpeedcubeTimer.SensorStatus.invalid) {
+            if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.ready) {
+                timerView.setTextColor(getResources().getColor(R.color.blue));
+            } else {
+                timerView.setTextColor(getResources().getColor(R.color.black));
+            }
+        }
+
+    }
+
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
         @Override
         public void onStatusChanged(SpeedcubeTimer.TimerState oldState, SpeedcubeTimer.TimerState newState) {
-
-            if (speedcubeTimer.getTimerState() != SpeedcubeTimer.TimerState.ready &&
-                    speedcubeTimer.getTimerState() != SpeedcubeTimer.TimerState.solved) {
-                findViewById(R.id.rowAo5).setVisibility(View.GONE);
-                findViewById(R.id.rowAo12).setVisibility(View.GONE);
-                findViewById(R.id.extremeValues).setVisibility(View.GONE);
-            }
-
+            updateExtremeValues();
+            updateAverage();
             updateTypeView();
+            updateColor();
         }
 
         @Override
-        public void onColorChanged() {
-            timerView.setTextColor(getResources().getColor(speedcubeTimer.getColorId()));
+        public void onSensorStatusChanged() {
+            updateColor();
         }
 
         @Override
         public void onTimeChanged() {
-
-            String text = "";
-
-            SpeedcubeTimer.TimerState state = speedcubeTimer.getTimerState();
-
-            if (state == SpeedcubeTimer.TimerState.inspection) {
-
-                long inspectionTime = speedcubeTimer.getInspectionTime();
-
-                if (inspectionTime < -2000) {
-                    text += getString(R.string.DNF);
-                } else if (inspectionTime < 0) {
-                    text += getString(R.string.plus2);
-                } else {
-                    text = Time.toString(inspectionTime + 999, 0);
-                }
-            } else if (state == SpeedcubeTimer.TimerState.solving
-                    || state == SpeedcubeTimer.TimerState.solved
-                    || state == SpeedcubeTimer.TimerState.ready) {
-                text = Time.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds ? 3 : 2);
-            } else if (state == SpeedcubeTimer.TimerState.ready) {
-                text = Time.toString(speedcubeTimer.getTime().getTimeMs(), isUseMilliseconds ? 3 : 2);
-            }
-
-            if (!text.isEmpty()) {
-                timerView.setText(text);
-            }
+            updateTimeView();
         }
     }
 

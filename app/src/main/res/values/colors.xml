@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="invalid">#ffff1e00</color>
-    <color name="normal">#ff000000</color>
-    <color name="valid">#ff00ff1c</color>
-    <color name="ready">#ff000aff</color>
+    <color name="red">#ffff1e00</color>
+    <color name="black">#ff000000</color>
+    <color name="green">#ff00ff1c</color>
+    <color name="blue">#ff000aff</color>
 </resources>

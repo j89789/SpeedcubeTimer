@@ -23,7 +23,7 @@
         android:id="@+id/textViewType"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:textColor="@color/invalid"
+        android:textColor="@color/red"
         android:textSize="25dp"
         android:layout_alignBottom="@+id/timerView"
         android:layout_toRightOf="@+id/timerView"
@@ -38,10 +38,10 @@
         android:layout_alignParentStart="true"
         android:paddingLeft="30dp"
         android:paddingBottom="30dp"
-        android:id="@+id/tableLayout">
+        android:id="@+id/tableLayoutAverage">
 
-        <TableRow android:id="@+id/rowAo5"
-            android:longClickable="true">
+        <TableRow
+            android:id="@+id/rowAo5">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,7 +62,8 @@
                 android:gravity="right" />
         </TableRow>
 
-        <TableRow android:id="@+id/rowAo12">
+        <TableRow
+            android:id="@+id/rowAo12">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,7 +87,7 @@
     </TableLayout>
 
     <TableLayout
-        android:id="@+id/extremeValues"
+        android:id="@+id/tableLayoutExtremeValues"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="30dp"
@@ -97,7 +98,7 @@
         android:paddingRight="30dp">
 
         <TableRow
-            android:longClickable="true"
+            android:id="@+id/rowBest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
@@ -105,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="best"
+                android:text="@string/best"
                 android:paddingRight="20dp"/>
 
             <TextView
@@ -121,6 +122,7 @@
         </TableRow>
 
         <TableRow
+            android:id="@+id/rowWorst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
@@ -128,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="worst"
+                android:text="@string/worst"
                 android:paddingRight="20dp"/>
 
             <TextView

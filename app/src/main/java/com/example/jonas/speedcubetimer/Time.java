@@ -17,6 +17,10 @@ public class Time {
         return Time.toString(timeMs, 3);
     }
 
+    static public String toString(long timeMs, boolean isMilliseconds) {
+        return Time.toString(timeMs, isMilliseconds ? 3 : 2);
+    }
+
     /**
      * Convert a millisecond time in to a String e.g 3:02.642.
      *

@@ -60,12 +60,6 @@ public class TimeSession {
 
     public void setOnChangListener(OnChangListener listener) {
         onChangListener = listener;
-
-        if (onChangListener != null) {
-            onChangListener.onAverageChanged();
-            onChangListener.onExtremeValuesChange();
-            onChangListener.onSizeChanged();
-        }
     }
 
     public long getAverage12() {

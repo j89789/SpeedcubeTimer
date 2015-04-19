@@ -21,13 +21,11 @@ class SpeedcubeTimer {
     private Timer solvingTimer = new Timer();
     private CountdownTimer inspectionTimer = new CountdownTimer();
     private Listener listener = null;
-    private boolean isSensorDownValid = false;
     private boolean isUseInspectionTime = false;
     private boolean isAcousticSignalsEnable = false;
     private Time time = new Time();
-
-
     private PrivateData d = new PrivateData();
+
     /**
      * True while the time updater is active. Also when the Activity is in pause.
      *
@@ -53,6 +51,9 @@ class SpeedcubeTimer {
         this.isUseInspectionTime = isUseInspectionTime;
     }
 
+    public SensorStatus getSensorStatus(){
+        return d.getSensorStatus();
+    }
 
     public void cancel() {
 
@@ -128,14 +129,14 @@ class SpeedcubeTimer {
     public void reset() {
         if (d.getTimerState() == TimerState.solved) {
             d.setTimerState(TimerState.ready);
-            d.setColorId(R.color.ready);
+            d.setSensorStatus(SensorStatus.invalid);
             solvingTimer.reset();
             timeUpdater.run();
         }
         else if(d.getTimerState() == TimerState.inspection)
         {
             d.setTimerState(TimerState.ready);
-            d.setColorId(R.color.ready);
+            d.setSensorStatus(SensorStatus.invalid);
 
             inspectionTimer.stop();
             inspectionTimer.reset();
@@ -161,20 +162,13 @@ class SpeedcubeTimer {
      * solving time or inspection time. A null listener will remove the listener and
      * the update interval while the timer is running will be stopped.
      * <p/>
-     * Activity's: Remove listener on pause for low cpu. The listener funktions will be called
-     * in this for initial GUI update
+     * Activity's: Remove listener on pause for low cpu.
      */
     public void setListener(Listener listener) {
         this.listener = listener;
 
         isTimeUpdaterEnable = listener != null;
         refreshTimeUpdater();
-
-        if (listener != null) {
-            listener.onColorChanged();
-            listener.onStatusChanged(TimerState.ready, this.getTimerState());
-            listener.onTimeChanged();
-        }
     }
 
     public long getInspectionTime() {
@@ -185,16 +179,19 @@ class SpeedcubeTimer {
         return time;
     }
 
-    public int getColorId() {
-        return d.getColorId();
-    }
-
     public void setIsAcousticSignalsEnable(boolean isAcousticSignalsEnable) {
         this.isAcousticSignalsEnable = isAcousticSignalsEnable;
     }
 
     public long getCurrentSolvingTime() {
         return solvingTimer.getCurrentTime();
+    }
+
+    /**
+     * @return True if inspection or solving timer running
+     */
+    public boolean isRunning() {
+        return d.getTimerState() == TimerState.inspection || d.getTimerState() == TimerState.solving;
     }
 
     public enum TimerState {ready, inspection, solving, solved}
@@ -217,8 +214,10 @@ class SpeedcubeTimer {
         /**
          * Call if the color changed.
          */
-        void onColorChanged();
+        void onSensorStatusChanged();
     }
+
+    enum SensorStatus {waitForValidation, valid, invalid}
 
     /**
      * Protects the timer state variable. So you must call the set Function and the update
@@ -227,18 +226,17 @@ class SpeedcubeTimer {
     private class PrivateData {
 
         private TimerState timerState = TimerState.ready;
-        private int colorId = R.color.ready;
+        private SensorStatus sensorStatus = SensorStatus.invalid;
 
-        public int getColorId() {
-            return colorId;
+        public SensorStatus getSensorStatus() {
+            return sensorStatus;
         }
 
-        public void setColorId(int newColorId) {
-
-            if (colorId != newColorId) {
-                colorId = newColorId;
+        public void setSensorStatus(SensorStatus status) {
+            if (sensorStatus != status) {
+                sensorStatus = status;
                 if (listener != null) {
-                    listener.onColorChanged();
+                    listener.onSensorStatusChanged();
                 }
             }
         }
@@ -269,18 +267,13 @@ class SpeedcubeTimer {
         @Override
         public void onSensorUp() {
 
-            if (isSensorDownValid) {
-                isSensorDownValid = false;
+            if (d.getSensorStatus() == SensorStatus.valid) {
                 startSolving();
             } else {
                 handler.removeCallbacks(sensorDownValidMaker);
             }
 
-            if (d.getTimerState() == TimerState.ready) {
-                d.setColorId(R.color.ready);
-            } else {
-                d.setColorId(R.color.normal);
-            }
+            d.setSensorStatus(SensorStatus.invalid);
         }
 
         @Override
@@ -289,8 +282,7 @@ class SpeedcubeTimer {
             if (d.getTimerState() == TimerState.ready && !isUseInspectionTime ||
                     d.getTimerState() == TimerState.inspection ||
                     d.getTimerState() == TimerState.solved && !isUseInspectionTime) {
-                isSensorDownValid = false;
-                d.setColorId(R.color.invalid);
+                d.setSensorStatus(SensorStatus.waitForValidation);
 
                 handler.postDelayed(sensorDownValidMaker, 550);
             }
@@ -377,8 +369,7 @@ class SpeedcubeTimer {
     private class SensorDownValidMaker implements Runnable {
         @Override
         public void run() {
-            isSensorDownValid = true;
-            d.setColorId(R.color.valid);
+            d.setSensorStatus(SensorStatus.valid);
         }
     }
 }

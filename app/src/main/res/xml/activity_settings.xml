@@ -30,6 +30,17 @@
             android:summary="@string/pref_useMilliseconds_summery"
             android:defaultValue="true" />
 
+        <CheckBoxPreference
+            android:key="showAverage"
+            android:title="@string/pref_showAverage"
+            android:summary="@string/pref_showAverage_summery"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="showExtremeValues"
+            android:title="@string/pref_showExtremeValues"
+            android:defaultValue="true" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
