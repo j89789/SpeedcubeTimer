@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 
-public class MainActivity extends Activity {
+public class TimerActivity extends Activity {
 
     private final TouchSensor touchSensor = new TouchSensor();
     boolean isUseMilliseconds = false;
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_timer);
 
         timerViewAverage12 = (TextView) findViewById(R.id.textViewAo12);
         timerViewAverage5 = (TextView) findViewById(R.id.textViewAo5);
@@ -125,7 +125,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_timer, menu);
         return true;
     }
 
@@ -233,7 +233,7 @@ public class MainActivity extends Activity {
 
                 final Time time = speedcubeTimer.getTime();
 
-                time.showPopupMenu(MainActivity.this, timerView, new Time.PopupMenuLister() {
+                time.showPopupMenu(TimerActivity.this, timerView, new Time.PopupMenuLister() {
                     @Override
                     public void onAction(int id) {
 
