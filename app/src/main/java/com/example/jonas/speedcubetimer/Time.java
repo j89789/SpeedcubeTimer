@@ -11,7 +11,7 @@ public class Time {
     private long timeMs = 0;
     private Type type = Type.valid;
 
-    private OnChangeLister lister;
+    private OnChangeListener lister;
 
     static public String toStringMs(long timeMs) {
         return Time.toString(timeMs, 3);
@@ -69,7 +69,7 @@ public class Time {
         return s;
     }
 
-    public void setOnChangeLister(OnChangeLister lister) {
+    public void setOnChangeLister(OnChangeListener lister) {
         this.lister = lister;
     }
 
@@ -145,7 +145,7 @@ public class Time {
 
     enum Type {valid, plus2, DNF}
 
-    interface OnChangeLister {
+    interface OnChangeListener {
 
         /**
          * Called if any data changed

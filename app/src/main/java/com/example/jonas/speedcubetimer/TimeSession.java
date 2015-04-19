@@ -3,17 +3,52 @@ package com.example.jonas.speedcubetimer;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Time list
+ * <p/>
+ * Provides best, worst and average Times.
+ */
 public class TimeSession {
 
-    private List<Time> timeList = new ArrayList<Time>();
-    private TimeListAdapter adapter = new TimeListAdapter(timeList);
+    /**
+     * List of solving Times
+     */
+    private List<Time> times = new ArrayList<Time>();
+
+    /**
+     * Adapter vor ListView
+     */
+    private TimeListAdapter adapter = new TimeListAdapter(times);
+
+    /**
+     * Reviver for change events
+     */
     private OnChangListener onChangListener = null;
+
+    /**
+     * Average of the last 5 Times. 0 if there a DNF time.
+     */
     private long average5;
+
+    /**
+     * Average of the last 12 Times. 0 if there a DNF time.
+     */
     private long average12;
+
+    /**
+     * Best time in the session
+     */
     private long bestTime = Long.MAX_VALUE;
+
+    /**
+     * Worst time in the session
+     */
     private long worseTime;
-    private Time.OnChangeLister onTimeChangeLister = new OnChangeLister();
+
+    /**
+     * Listen to all time changes in the session
+     */
+    private Time.OnChangeListener onTimeChangeLister = new OnTimeChangeListener();
 
     public long getBestTime() {
         return bestTime;
@@ -46,7 +81,7 @@ public class TimeSession {
     }
 
     public void addNewTime(Time time) {
-        timeList.add(time);
+        times.add(time);
         time.setOnChangeLister(onTimeChangeLister);
 
         boolean extremeValuesChanged = false;
@@ -87,8 +122,8 @@ public class TimeSession {
         bestTime = Long.MAX_VALUE;
         worseTime = 0;
 
-        for (int i = 0; i < timeList.size(); i++) {
-            Time time = timeList.get(i);
+        for (int i = 0; i < times.size(); i++) {
+            Time time = times.get(i);
             long timeMs = time.getTimeMs();
             Time.Type type = time.getType();
 
@@ -110,9 +145,9 @@ public class TimeSession {
 
         long average = 0;
 
-        if (timeList.size() >= count) {
-            for (int i = timeList.size() - (count); i < timeList.size(); i++) {
-                Time time = timeList.get(i);
+        if (times.size() >= count) {
+            for (int i = times.size() - (count); i < times.size(); i++) {
+                Time time = times.get(i);
 
                 if (time.getType() == Time.Type.DNF) {
                     return 0;
@@ -127,7 +162,7 @@ public class TimeSession {
     }
 
     public void removeTime(Time time) {
-        if (timeList.remove(time)) {
+        if (times.remove(time)) {
             time.setOnChangeLister(null);
             adapter.notifyDataSetChanged();
 
@@ -141,15 +176,15 @@ public class TimeSession {
     }
 
     public Time get(int position) {
-        return timeList.get(position);
+        return times.get(position);
     }
 
     public int size() {
-        return timeList.size();
+        return times.size();
     }
 
     public void clear() {
-        timeList.clear();
+        times.clear();
         adapter.notifyDataSetChanged();
 
         average5 = 0;
@@ -165,7 +200,7 @@ public class TimeSession {
     }
 
     public int getSize() {
-        return timeList.size();
+        return times.size();
     }
 
     interface OnChangListener {
@@ -177,7 +212,7 @@ public class TimeSession {
         void onSizeChanged();
     }
 
-    private class OnChangeLister implements Time.OnChangeLister {
+    private class OnTimeChangeListener implements Time.OnChangeListener {
         @Override
         public void onChanged(Time time) {
             adapter.notifyDataSetChanged();
