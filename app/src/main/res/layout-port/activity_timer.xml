@@ -33,10 +33,13 @@
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="30dp"
         android:id="@+id/tableLayoutAverage"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/textViewScramble"
+        android:layout_marginBottom="30dp"
+        android:layout_alignWithParentIfMissing="true"
+        android:visibility="visible">
 
         <TableRow
             android:id="@+id/rowAo5">
@@ -88,9 +91,10 @@
         android:id="@+id/tableLayoutExtremeValues"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="30dp"
         android:layout_above="@+id/tableLayoutAverage"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:layout_alignWithParentIfMissing="true">
 
         <TableRow
             android:id="@+id/rowBest"
@@ -140,5 +144,19 @@
                 android:gravity="right" />
         </TableRow>
     </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="L B D L2 U2 D&apos; B2 D2 F L2 B&apos; L2 F L&apos; B&apos; L D L2 R&apos; F R "
+        android:id="@+id/textViewScramble"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp" />
 
 </RelativeLayout>

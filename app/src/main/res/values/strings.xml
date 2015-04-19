@@ -18,4 +18,6 @@
     <string name="pref_showExtremeValues">Show best and worst time</string>
     <string name="worst">worst</string>
     <string name="best">best</string>
+    <string name="pref_showScramble">Show scramble</string>
+    <string name="pref_showScramble_summery">For a 3*3*3 speedcube</string>
 </resources>

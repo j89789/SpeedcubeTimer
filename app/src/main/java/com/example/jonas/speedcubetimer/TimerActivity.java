@@ -24,6 +24,7 @@ public class TimerActivity extends Activity {
     private TextView timerViewAverage12;
     private TextView timerViewBestTime;
     private TextView timerViewWorstTime;
+    private TextView textViewScramble;
     private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
     private SharedPreferences myPreference;
     private boolean isShowAverage;
@@ -59,6 +60,14 @@ public class TimerActivity extends Activity {
         isUseMilliseconds = myPreference.getBoolean("useMilliseconds", true);
         isShowAverage = myPreference.getBoolean("showAverage", true);
         isShowExtremeValues = myPreference.getBoolean("showExtremeValues", true);
+        isShowScramble = myPreference.getBoolean("showScramble", true);
+
+        if (!isShowScramble) {
+            textViewScramble.setVisibility(View.GONE);
+        }else{
+            textViewScramble.setVisibility(View.VISIBLE);
+        }
+
         speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
         speedcubeTimer.setIsAcousticSignalsEnable(myPreference.getBoolean("inspectionAcousticSignals", true));
 
@@ -72,6 +81,7 @@ public class TimerActivity extends Activity {
         updateColor();
         updateTimeView();
         updateTypeView();
+        nextScramble();
 
         super.onResume();
     }
@@ -95,9 +105,12 @@ public class TimerActivity extends Activity {
             } else {
                 findViewById(R.id.rowAo12).setVisibility(View.GONE);
             }
+
+            findViewById(R.id.tableLayoutAverage).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.rowAo5).setVisibility(View.GONE);
             findViewById(R.id.rowAo12).setVisibility(View.GONE);
+            findViewById(R.id.tableLayoutAverage).setVisibility(View.GONE);
         }
 
     }
@@ -120,6 +133,14 @@ public class TimerActivity extends Activity {
         this.speedcubeTimer.setContext(null);
     }
 
+    private boolean isShowScramble;
+
+    private void nextScramble(){
+        if(isShowScramble) {
+            textViewScramble.setText(ScrambleGenerator.generateScramble());
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +151,15 @@ public class TimerActivity extends Activity {
         timerViewAverage5 = (TextView) findViewById(R.id.textViewAo5);
         timerViewBestTime = (TextView) findViewById(R.id.textViewBestTime);
         timerViewWorstTime = (TextView) findViewById(R.id.textViewWorstTime);
+        textViewScramble = (TextView) findViewById(R.id.textViewScramble);
+
+        textViewScramble.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextScramble();
+            }
+        });
+
 
         timerView = (TextView) findViewById(R.id.timerView);
         timerView.setOnClickListener(new TimeViewOnClickListener());
@@ -248,6 +278,11 @@ public class TimerActivity extends Activity {
             updateAverage();
             updateTypeView();
             updateColor();
+
+            if(newState == SpeedcubeTimer.TimerState.solved)
+            {
+                nextScramble();
+            }
         }
 
         @Override
