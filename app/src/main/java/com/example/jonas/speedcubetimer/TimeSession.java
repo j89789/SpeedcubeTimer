@@ -124,7 +124,8 @@ public class TimeSession {
             if (type != Time.Type.DNF) {
                 if (timeMs < bestTime) {
                     bestTime = timeMs;
-                } else if (timeMs > worseTime) {
+                }
+                if (timeMs > worseTime) {
                     worseTime = timeMs;
                 }
             }
