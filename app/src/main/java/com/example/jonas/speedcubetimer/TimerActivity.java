@@ -29,6 +29,7 @@ public class TimerActivity extends Activity {
     private SharedPreferences myPreference;
     private boolean isShowAverage;
     private boolean isShowExtremeValues;
+
     private TimeSession.OnChangListener onChangListener = new TimeSession.OnChangListener() {
         @Override
         public void onAverageChanged() {
@@ -44,6 +45,7 @@ public class TimerActivity extends Activity {
         public void onSizeChanged() {
         }
     };
+    private boolean isShowScramble;
 
     @Override
     protected void onPause() {
@@ -64,7 +66,7 @@ public class TimerActivity extends Activity {
 
         if (!isShowScramble) {
             textViewScramble.setVisibility(View.GONE);
-        }else{
+        } else {
             textViewScramble.setVisibility(View.VISIBLE);
         }
 
@@ -81,7 +83,11 @@ public class TimerActivity extends Activity {
         updateColor();
         updateTimeView();
         updateTypeView();
-        nextScramble();
+        updateScramleView();
+
+        if(textViewScramble.getText() == ""){
+            nextScramble();
+        }
 
         super.onResume();
     }
@@ -133,10 +139,8 @@ public class TimerActivity extends Activity {
         this.speedcubeTimer.setContext(null);
     }
 
-    private boolean isShowScramble;
-
-    private void nextScramble(){
-        if(isShowScramble) {
+    private void nextScramble() {
+        if (isShowScramble) {
             textViewScramble.setText(ScrambleGenerator.generateScramble());
         }
     }
@@ -278,11 +282,9 @@ public class TimerActivity extends Activity {
             updateAverage();
             updateTypeView();
             updateColor();
+            updateScramleView();
 
-            if(newState == SpeedcubeTimer.TimerState.solved)
-            {
-                nextScramble();
-            }
+            nextScramble();
         }
 
         @Override
@@ -293,6 +295,16 @@ public class TimerActivity extends Activity {
         @Override
         public void onTimeChanged() {
             updateTimeView();
+        }
+    }
+
+    private void updateScramleView() {
+        if (isShowScramble) {
+            if (speedcubeTimer.isRunning()) {
+                textViewScramble.setVisibility(View.GONE);
+            }else{
+                textViewScramble.setVisibility(View.VISIBLE);
+            }
         }
     }
 
