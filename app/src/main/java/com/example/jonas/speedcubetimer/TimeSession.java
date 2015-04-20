@@ -36,6 +36,11 @@ public class TimeSession {
     private long average12;
 
     /**
+     * Average of all Times. Excluding DNF time.
+     */
+    private long averageAll;
+
+    /**
      * Best time in the session
      */
     private long bestTime = Long.MAX_VALUE;
@@ -104,8 +109,18 @@ public class TimeSession {
     }
 
     private void updateAverage() {
+
         average5 = calcAverage(5);
         average12 = calcAverage(12);
+        averageAll = 0;
+
+        if (times.size() > 0) {
+            for (int i = 0; i < times.size(); i++) {
+                averageAll += times.get(i).getTimeMs();
+            }
+
+            averageAll /= times.size();
+        }
 
         if (onChangListener != null) {
             onChangListener.onAverageChanged();
@@ -186,6 +201,7 @@ public class TimeSession {
         average12 = 0;
         bestTime = Long.MAX_VALUE;
         worseTime = 0;
+        averageAll = 0;
 
         if (onChangListener != null) {
             onChangListener.onAverageChanged();
@@ -196,6 +212,10 @@ public class TimeSession {
 
     public int getSize() {
         return times.size();
+    }
+
+    public long getMean() {
+        return averageAll;
     }
 
     interface OnChangListener {

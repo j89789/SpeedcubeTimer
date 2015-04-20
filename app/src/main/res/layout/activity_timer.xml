@@ -84,6 +84,30 @@
                 android:gravity="right" />
         </TableRow>
 
+        <TableRow
+            android:id="@+id/tableRowMean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="mean"
+                android:paddingRight="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="0.000"
+                android:id="@+id/textViewMean"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="right" />
+        </TableRow>
+
     </TableLayout>
 
     <TableLayout

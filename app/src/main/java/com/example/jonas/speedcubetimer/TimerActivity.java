@@ -85,7 +85,7 @@ public class TimerActivity extends Activity {
         updateTypeView();
         updateScramleView();
 
-        if(textViewScramble.getText() == ""){
+        if (textViewScramble.getText() == "") {
             nextScramble();
         }
 
@@ -97,6 +97,7 @@ public class TimerActivity extends Activity {
         if (isShowAverage && !speedcubeTimer.isRunning()) {
             long average5 = session.getAverage5();
             long average12 = session.getAverage12();
+            long mean = session.getMean();
 
             if (average5 != 0) {
                 timerViewAverage5.setText(Time.toString(average5, isUseMilliseconds));
@@ -112,10 +113,10 @@ public class TimerActivity extends Activity {
                 findViewById(R.id.rowAo12).setVisibility(View.GONE);
             }
 
+            ((TextView) findViewById(R.id.textViewMean)).setText(Time.toString(mean, isUseMilliseconds));
+
             findViewById(R.id.tableLayoutAverage).setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.rowAo5).setVisibility(View.GONE);
-            findViewById(R.id.rowAo12).setVisibility(View.GONE);
             findViewById(R.id.tableLayoutAverage).setVisibility(View.GONE);
         }
 
@@ -273,6 +274,18 @@ public class TimerActivity extends Activity {
             }
         }
 
+
+    }
+
+    private void updateScramleView() {
+        if (isShowScramble) {
+            if (speedcubeTimer.isRunning()) {
+                textViewScramble.setVisibility(View.GONE);
+            } else {
+                textViewScramble.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 
     private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
@@ -284,7 +297,9 @@ public class TimerActivity extends Activity {
             updateColor();
             updateScramleView();
 
-            nextScramble();
+            if(newState == SpeedcubeTimer.TimerState.solved) {
+                nextScramble();
+            }
         }
 
         @Override
@@ -296,16 +311,7 @@ public class TimerActivity extends Activity {
         public void onTimeChanged() {
             updateTimeView();
         }
-    }
 
-    private void updateScramleView() {
-        if (isShowScramble) {
-            if (speedcubeTimer.isRunning()) {
-                textViewScramble.setVisibility(View.GONE);
-            }else{
-                textViewScramble.setVisibility(View.VISIBLE);
-            }
-        }
     }
 
     private class TimeViewOnClickListener implements View.OnClickListener {

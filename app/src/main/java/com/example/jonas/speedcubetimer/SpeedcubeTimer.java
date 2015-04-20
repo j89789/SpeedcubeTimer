@@ -142,6 +142,7 @@ class SpeedcubeTimer {
             inspectionTimer.reset();
 
             time.setType(Time.Type.valid);
+            time.setTimeMs(0);
 
             timeUpdater.run();
         }
