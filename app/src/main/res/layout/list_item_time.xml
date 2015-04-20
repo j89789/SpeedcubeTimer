@@ -6,20 +6,27 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="14."
         android:id="@+id/textView1"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="0dp"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:paddingLeft="20dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/image"
+        android:layout_marginLeft="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,10 +34,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="24.342"
         android:id="@+id/textViewTime"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:textSize="30dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:layout_toRightOf="@id/textView1"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,13 +46,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="(23.568)"
         android:id="@+id/textViewInfo"
-        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/textView1"
         android:gravity="center_vertical"
-        android:paddingRight="20dp"
-        android:textColor="@color/red" />
+        android:textColor="@color/red"
+        android:layout_marginRight="20dp"/>
 
 
 </RelativeLayout>
