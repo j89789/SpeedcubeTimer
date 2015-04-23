@@ -19,7 +19,7 @@ public class ScrambleGenerator {
 
     public String generateScramble() {
 
-        ArrayList<Movement> moves = new ArrayList<Movement>();
+        ArrayList<Movement> moves = new ArrayList<>();
 
         for (int i = 0; i < 21; i++) {
 
@@ -111,7 +111,7 @@ public class ScrambleGenerator {
 
                 } else if (move2 != null) {
 
-                    if (face.equals(move2) && isOppositeFace(move1.face)) {
+                    if (face.equals(move2.face) && isOppositeFace(move1.face)) {
 
                         isValid = false; // don't allow F B F, R L2 R, U F U2
                     }

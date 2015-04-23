@@ -1,7 +1,6 @@
 package com.example.jonas.speedcubetimer;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.MenuItem;

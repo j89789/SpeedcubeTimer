@@ -10,7 +10,6 @@
     <string name="title_activity_time_list">Time List</string>
     <string name="timeList">time list</string>
     <string name="delete">delete</string>
-    <string name="ok">ok</string>
     <string name="plus2">+2</string>
     <string name="DNF">DNF</string>
     <string name="pref_showAverage">Show average times</string>
@@ -20,4 +19,6 @@
     <string name="best">best</string>
     <string name="pref_showScramble">Show scramble</string>
     <string name="pref_showScramble_summery">For a 3*3*3 speedcube</string>
+    <string name="mean">mean</string>
+    <string name="zeroTime">0.000</string>
 </resources>

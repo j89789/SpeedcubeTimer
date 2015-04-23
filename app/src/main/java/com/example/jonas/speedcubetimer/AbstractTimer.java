@@ -57,7 +57,4 @@ abstract class AbstractTimer {
         }
     }
 
-    public String currentTimeToMsString() {
-        return Time.toStringMs(getCurrentTime());
-    }
 }

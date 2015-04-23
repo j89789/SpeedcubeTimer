@@ -13,7 +13,7 @@ public class TimeSession {
     /**
      * List of solving Times
      */
-    private List<Time> times = new ArrayList<Time>();
+    private List<Time> times = new ArrayList<>();
 
     /**
      * Adapter vor ListView

@@ -18,7 +18,7 @@ class SpeedcubeTimer {
     /**
      * Generate the update frequency
      *
-     * @see updateInterval
+     * @see #updateInterval
      */
     private final Handler handler = new Handler();
     private final int updateInterval = 50;
@@ -35,7 +35,7 @@ class SpeedcubeTimer {
      */
     private TimerUpdater timeUpdater = new TimerUpdater();
     /**
-     * This makes the solving timer ready to strat.
+     * This makes the solving timer ready to stat.
      *
      * The touch sensor must be down for a certain time before the solving time can start.
      */
@@ -87,10 +87,6 @@ class SpeedcubeTimer {
 
     public SensorStatus getSensorStatus(){
         return d.getSensorStatus();
-    }
-
-    public void cancel() {
-
     }
 
     public TimerState getTimerState() {
@@ -242,9 +238,6 @@ class SpeedcubeTimer {
 
         /**
          * Call if the status changed.
-         *
-         * @param oldState
-         * @param newState
          */
         void onStatusChanged(TimerState oldState, TimerState newState);
 
@@ -257,7 +250,7 @@ class SpeedcubeTimer {
     enum SensorStatus {waitForValidation, valid, invalid}
 
     /**
-     * Protects the timer state variable. So you must call the set Function and the chande event
+     * Protects the timer state variable. So you must call the set Function and the chance event
      * will be send to the listener...
      */
     private class PrivateData {

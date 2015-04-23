@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/ok"
-            android:title="@string/ok" />
+            android:title="@android:string/ok" />
         <item
             android:id="@+id/plus2"
             android:title="@string/plus2" />
