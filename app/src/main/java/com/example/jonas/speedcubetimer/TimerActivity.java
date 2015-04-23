@@ -15,25 +15,42 @@ import android.widget.TextView;
 
 public class TimerActivity extends Activity {
 
+    /**
+     * Input for the SpeedcubeTimer.
+     */
     private final TouchSensor touchSensor = new TouchSensor();
-    boolean isUseMilliseconds = false;
+    private boolean isUseMilliseconds;
+    /**
+     * This is the central element which will be visualise with this activity
+     */
     private SpeedcubeTimer speedcubeTimer = SpeedcubeApplication.instance().getSpeedcubeTimer();
+    /**
+     * Information's of the current Session will be shown
+     */
     private TimeSession session = SpeedcubeApplication.instance().getTimeSession();
-    private TextView timerView;
-    private TextView timerViewAverage5;
-    private TextView timerViewAverage12;
-    private TextView timerViewBestTime;
-    private TextView timerViewWorstTime;
+    private TextView textViewTime;
+    private TextView textViewAverage5;
+    private TextView textViewAverage12;
+    private TextView textViewBestTime;
+    private TextView textViewWorstTime;
     private TextView textViewScramble;
-    private MySpeedcubeListener speedcubeListener = new MySpeedcubeListener();
-    private SharedPreferences myPreference;
+    /**
+     * Handel's changed form the Speedcube Timer
+     */
+    private SpeedcubeListener speedcubeListener = new SpeedcubeListener();
+
+    private SharedPreferences defaultSharedPreferences;
     private boolean isShowAverage;
+    /**
+     * Best and worst time
+     */
     private boolean isShowExtremeValues;
+    private ScrambleGenerator scrambleGenerator = new ScrambleGenerator();
 
     private TimeSession.OnChangListener onChangListener = new TimeSession.OnChangListener() {
         @Override
         public void onAverageChanged() {
-            updateAverage();
+            updateAverageView();
         }
 
         @Override
@@ -47,6 +64,10 @@ public class TimerActivity extends Activity {
     };
     private boolean isShowScramble;
 
+    public TimerActivity() {
+        isUseMilliseconds = false;
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -59,10 +80,10 @@ public class TimerActivity extends Activity {
     protected void onResume() {
 
         // load settings
-        isUseMilliseconds = myPreference.getBoolean("useMilliseconds", true);
-        isShowAverage = myPreference.getBoolean("showAverage", true);
-        isShowExtremeValues = myPreference.getBoolean("showExtremeValues", true);
-        isShowScramble = myPreference.getBoolean("showScramble", true);
+        isUseMilliseconds = defaultSharedPreferences.getBoolean("useMilliseconds", true);
+        isShowAverage = defaultSharedPreferences.getBoolean("showAverage", true);
+        isShowExtremeValues = defaultSharedPreferences.getBoolean("showExtremeValues", true);
+        isShowScramble = defaultSharedPreferences.getBoolean("showScramble", true);
 
         if (!isShowScramble) {
             textViewScramble.setVisibility(View.GONE);
@@ -70,29 +91,30 @@ public class TimerActivity extends Activity {
             textViewScramble.setVisibility(View.VISIBLE);
         }
 
-        speedcubeTimer.setIsUseInspectionTime(myPreference.getBoolean("inspectionTimeEnable", true));
-        speedcubeTimer.setIsAcousticSignalsEnable(myPreference.getBoolean("inspectionAcousticSignals", true));
+        speedcubeTimer.setIsUseInspectionTime(defaultSharedPreferences.getBoolean("inspectionTimeEnable", true));
+        speedcubeTimer.setIsAcousticSignalsEnable(defaultSharedPreferences.getBoolean("inspectionAcousticSignals", true));
 
         speedcubeTimer.setTouchPad(touchSensor);
         speedcubeTimer.setListener(speedcubeListener);
 
         session.setOnChangListener(onChangListener);
 
+        // Update all
         updateExtremeValues();
-        updateAverage();
-        updateColor();
+        updateAverageView();
+        updateColorOfTime();
         updateTimeView();
         updateTypeView();
-        updateScramleView();
+        updateScrambleView();
 
         if (textViewScramble.getText() == "") {
-            nextScramble();
+            invalidateScramble();
         }
 
         super.onResume();
     }
 
-    private void updateAverage() {
+    private void updateAverageView() {
 
         if (isShowAverage && !speedcubeTimer.isRunning()) {
             long average5 = session.getAverage5();
@@ -100,14 +122,14 @@ public class TimerActivity extends Activity {
             long mean = session.getMean();
 
             if (average5 != 0) {
-                timerViewAverage5.setText(Time.toString(average5, isUseMilliseconds));
+                textViewAverage5.setText(Time.toString(average5, isUseMilliseconds));
                 findViewById(R.id.rowAo5).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.rowAo5).setVisibility(View.GONE);
             }
 
             if (average12 != 0) {
-                timerViewAverage12.setText(Time.toString(average12, isUseMilliseconds));
+                textViewAverage12.setText(Time.toString(average12, isUseMilliseconds));
                 findViewById(R.id.rowAo12).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.rowAo12).setVisibility(View.GONE);
@@ -131,8 +153,8 @@ public class TimerActivity extends Activity {
     private void updateExtremeValues() {
 
         if (isShowExtremeValues && session.size() > 1 && !speedcubeTimer.isRunning()) {
-            timerViewBestTime.setText(Time.toString(session.getBestTime(), isUseMilliseconds));
-            timerViewWorstTime.setText(Time.toString(session.getWorseTime(), isUseMilliseconds));
+            textViewBestTime.setText(Time.toString(session.getBestTime(), isUseMilliseconds));
+            textViewWorstTime.setText(Time.toString(session.getWorseTime(), isUseMilliseconds));
             findViewById(R.id.tableLayoutExtremeValues).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.tableLayoutExtremeValues).setVisibility(View.GONE);
@@ -146,9 +168,9 @@ public class TimerActivity extends Activity {
         this.speedcubeTimer.setContext(null);
     }
 
-    private void nextScramble() {
+    private void invalidateScramble() {
         if (isShowScramble) {
-            textViewScramble.setText(ScrambleGenerator.generateScramble());
+            textViewScramble.setText(scrambleGenerator.generateScramble());
         }
     }
 
@@ -158,26 +180,26 @@ public class TimerActivity extends Activity {
 
         setContentView(R.layout.activity_timer);
 
-        timerViewAverage12 = (TextView) findViewById(R.id.textViewAo12);
-        timerViewAverage5 = (TextView) findViewById(R.id.textViewAo5);
-        timerViewBestTime = (TextView) findViewById(R.id.textViewBestTime);
-        timerViewWorstTime = (TextView) findViewById(R.id.textViewWorstTime);
+        textViewAverage12 = (TextView) findViewById(R.id.textViewAo12);
+        textViewAverage5 = (TextView) findViewById(R.id.textViewAo5);
+        textViewBestTime = (TextView) findViewById(R.id.textViewBestTime);
+        textViewWorstTime = (TextView) findViewById(R.id.textViewWorstTime);
         textViewScramble = (TextView) findViewById(R.id.textViewScramble);
 
         textViewScramble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextScramble();
+                invalidateScramble();
             }
         });
 
 
-        timerView = (TextView) findViewById(R.id.timerView);
-        timerView.setOnClickListener(new TimeViewOnClickListener());
+        textViewTime = (TextView) findViewById(R.id.timerView);
+        textViewTime.setOnClickListener(new TimeViewOnClickListener());
 
         touchSensor.setView(this.getWindow().getDecorView());
 
-        myPreference = PreferenceManager.getDefaultSharedPreferences(this);
+        defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         speedcubeTimer.setContext(this);
 
@@ -261,29 +283,29 @@ public class TimerActivity extends Activity {
         }
 
         if (!text.isEmpty()) {
-            timerView.setText(text);
+            textViewTime.setText(text);
         }
     }
 
-    private void updateColor() {
+    private void updateColorOfTime() {
 
         SpeedcubeTimer.SensorStatus i = speedcubeTimer.getSensorStatus();
         if (i == SpeedcubeTimer.SensorStatus.waitForValidation) {
-            timerView.setTextColor(getResources().getColor(R.color.red));
+            textViewTime.setTextColor(getResources().getColor(R.color.red));
         } else if (i == SpeedcubeTimer.SensorStatus.valid) {
-            timerView.setTextColor(getResources().getColor(R.color.green));
+            textViewTime.setTextColor(getResources().getColor(R.color.green));
         } else if (i == SpeedcubeTimer.SensorStatus.invalid) {
             if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.ready) {
-                timerView.setTextColor(getResources().getColor(R.color.blue));
+                textViewTime.setTextColor(getResources().getColor(R.color.blue));
             } else {
-                timerView.setTextColor(getResources().getColor(R.color.black));
+                textViewTime.setTextColor(getResources().getColor(R.color.black));
             }
         }
 
 
     }
 
-    private void updateScramleView() {
+    private void updateScrambleView() {
         if (isShowScramble) {
             if (speedcubeTimer.isRunning()) {
                 textViewScramble.setVisibility(View.GONE);
@@ -294,23 +316,24 @@ public class TimerActivity extends Activity {
 
     }
 
-    private class MySpeedcubeListener implements SpeedcubeTimer.Listener {
+    private class SpeedcubeListener implements SpeedcubeTimer.Listener {
         @Override
         public void onStatusChanged(SpeedcubeTimer.TimerState oldState, SpeedcubeTimer.TimerState newState) {
+            updateColorOfTime();
+            updateScrambleView();
             updateExtremeValues();
-            updateAverage();
             updateTypeView();
-            updateColor();
-            updateScramleView();
+            updateAverageView();
+
 
             if(newState == SpeedcubeTimer.TimerState.solved) {
-                nextScramble();
+                invalidateScramble();
             }
         }
 
         @Override
         public void onSensorStatusChanged() {
-            updateColor();
+            updateColorOfTime();
         }
 
         @Override
@@ -328,7 +351,7 @@ public class TimerActivity extends Activity {
 
                 final Time time = speedcubeTimer.getTime();
 
-                time.showPopupMenu(TimerActivity.this, timerView, new Time.PopupMenuLister() {
+                time.showPopupMenu(TimerActivity.this, textViewTime, new Time.PopupMenuLister() {
                     @Override
                     public void onAction(int id) {
 

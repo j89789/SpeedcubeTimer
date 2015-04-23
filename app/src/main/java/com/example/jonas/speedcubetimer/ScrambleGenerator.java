@@ -5,16 +5,19 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * Generate a scramble for a 3*3*3 speedcube
+ *
+ */
 public class ScrambleGenerator {
 
     enum Face {right, left, up, down, front, back}
     enum Direction {clockwise, counterclockwise, halfTurn}
 
-    static private Random random = new Random();
+    private Random random = new Random();
 
 
-    static public String generateScramble() {
+    public String generateScramble() {
 
         ArrayList<Movement> moves = new ArrayList<Movement>();
 
@@ -42,6 +45,9 @@ public class ScrambleGenerator {
         return scramble;
     }
 
+    /**
+     * One Move of a scramble.
+     */
     private static class Movement {
 
         private Face face;
@@ -61,7 +67,7 @@ public class ScrambleGenerator {
                     || face == Face.back && other == Face.front;
         }
 
-        String faceToString(Face face)
+        private String faceToString(Face face)
         {
             if (this.face == Face.right) {
                 return "R";
@@ -80,6 +86,9 @@ public class ScrambleGenerator {
             return "";
         }
 
+        /**
+         * Check if this move can be the next of the given list
+         */
         public boolean isValidForNext(ArrayList<Movement> moves) {
 
             boolean isValid = true;

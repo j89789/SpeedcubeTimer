@@ -11,19 +11,53 @@ import android.util.Log;
  */
 class SpeedcubeTimer {
 
-    private final MyTouchSensorListener touchPadListener = new MyTouchSensorListener();
+    /**
+     * Over the touch sensor the timer can be started and stopped.
+     */
+    private final TouchSensorListener touchPadListener = new TouchSensorListener();
+    /**
+     * Generate the update frequency
+     *
+     * @see updateInterval
+     */
     private final Handler handler = new Handler();
-    private final int timeUpdateInterval = 50;
-    private String TAG = SpeedcubeTimer.class.getSimpleName();
+    private final int updateInterval = 50;
+    /**
+     * Debug tag
+     */
+    private String tag = SpeedcubeTimer.class.getSimpleName();
+    /**
+     * Context only for showing Dialogs
+     */
     private Context context;
+    /**
+     * Is frequently called if the inspection or solving time is running.
+     */
     private TimerUpdater timeUpdater = new TimerUpdater();
+    /**
+     * This makes the solving timer ready to strat.
+     *
+     * The touch sensor must be down for a certain time before the solving time can start.
+     */
     private SensorDownValidMaker sensorDownValidMaker = new SensorDownValidMaker();
     private Timer solvingTimer = new Timer();
     private CountdownTimer inspectionTimer = new CountdownTimer();
+    /**
+     * Receiver for change action. Null in no.
+     */
     private Listener listener = null;
     private boolean isUseInspectionTime = false;
+    /**
+     * If true an acoustic signal will played while the incantation time.
+     */
     private boolean isAcousticSignalsEnable = false;
+    /**
+     * This is the last Solving time.
+     */
     private Time time = new Time();
+    /**
+     * Protect attributes which are source of Change events
+     */
     private PrivateData d = new PrivateData();
 
     /**
@@ -75,14 +109,19 @@ class SpeedcubeTimer {
 
         startTimeUpdater();
 
-        Log.d(TAG, "Start solving...");
+        Log.d(tag, "Start solving...");
     }
 
+    /**
+     * Check if the update is required. If no the update will stopped otherwise will start.
+     *
+     * Dependent of isTimeUpdaterActive and isTimeUpdaterActive
+     */
     private void refreshTimeUpdater() {
         boolean isActive = isTimeUpdaterEnable && isTimeUpdaterActive;
 
         if (isActive) {
-            handler.postDelayed(this.timeUpdater, this.timeUpdateInterval);
+            handler.postDelayed(this.timeUpdater, this.updateInterval);
         } else {
             handler.removeCallbacks(this.timeUpdater);
         }
@@ -114,7 +153,7 @@ class SpeedcubeTimer {
         time.setTimeMs(solvingTimer.getCurrentTime());
         SpeedcubeApplication.instance().getTimeSession().addNewTime(time);
 
-        Log.d(TAG, "Finished solving!");
+        Log.d(tag, "Finished solving!");
     }
 
     private void startInspection() {
@@ -123,7 +162,7 @@ class SpeedcubeTimer {
         inspectionTimer.start();
         startTimeUpdater();
 
-        Log.d(TAG, "Start inspection...");
+        Log.d(tag, "Start inspection...");
     }
 
     public void reset() {
@@ -147,16 +186,13 @@ class SpeedcubeTimer {
             timeUpdater.run();
         }
 
-        Log.d(TAG, "Reset");
+        Log.d(tag, "Reset");
     }
 
     public void setTouchPad(TouchSensor touchSensor) {
         touchSensor.setListener(touchPadListener);
     }
 
-    public String getDisplayString() {
-        return this.solvingTimer.currentTimeToMsString();
-    }
 
     /**
      * The listener get all update Events. If any relevant property changed e.g timerState
@@ -221,8 +257,8 @@ class SpeedcubeTimer {
     enum SensorStatus {waitForValidation, valid, invalid}
 
     /**
-     * Protects the timer state variable. So you must call the set Function and the update
-     * will be send...
+     * Protects the timer state variable. So you must call the set Function and the chande event
+     * will be send to the listener...
      */
     private class PrivateData {
 
@@ -263,7 +299,7 @@ class SpeedcubeTimer {
         }
     }
 
-    private class MyTouchSensorListener implements TouchSensor.Listener {
+    private class TouchSensorListener implements TouchSensor.Listener {
 
         @Override
         public void onSensorUp() {
@@ -345,7 +381,7 @@ class SpeedcubeTimer {
             }
 
             if (isTimeUpdaterActive) {
-                handler.postDelayed(this, timeUpdateInterval);
+                handler.postDelayed(this, updateInterval);
             }
         }
 
