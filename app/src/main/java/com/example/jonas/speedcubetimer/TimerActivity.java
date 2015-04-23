@@ -113,7 +113,13 @@ public class TimerActivity extends Activity {
                 findViewById(R.id.rowAo12).setVisibility(View.GONE);
             }
 
-            ((TextView) findViewById(R.id.textViewMean)).setText(Time.toString(mean, isUseMilliseconds));
+            if (mean != 0) {
+                ((TextView) findViewById(R.id.textViewMean)).setText(Time.toString(mean, isUseMilliseconds));
+                findViewById(R.id.tableRowMean).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.tableRowMean).setVisibility(View.GONE);
+            }
+
 
             findViewById(R.id.tableLayoutAverage).setVisibility(View.VISIBLE);
         } else {
