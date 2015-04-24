@@ -3,6 +3,7 @@ package com.example.jonas.speedcubetimer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
@@ -63,6 +64,7 @@ public class TimerActivity extends Activity {
         }
     };
     private boolean isShowScramble;
+    private ColorStateList defaultTextColor;
 
     public TimerActivity() {
         isUseMilliseconds = false;
@@ -186,6 +188,8 @@ public class TimerActivity extends Activity {
         textViewWorstTime = (TextView) findViewById(R.id.textViewWorstTime);
         textViewScramble = (TextView) findViewById(R.id.textViewScramble);
 
+        defaultTextColor = textViewAverage12.getTextColors();
+
         textViewScramble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,7 +302,7 @@ public class TimerActivity extends Activity {
             if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.ready) {
                 textViewTime.setTextColor(getResources().getColor(R.color.blue));
             } else {
-                textViewTime.setTextColor(getResources().getColor(R.color.black));
+                textViewTime.setTextColor(defaultTextColor);
             }
         }
 

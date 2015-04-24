@@ -4,7 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:theme="@style/AppTheme">
 
     <ImageView
         android:id="@+id/image"
@@ -12,7 +13,7 @@
         android:layout_height="50dp"
         android:src="@mipmap/speedcube_scrambled"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"/>
+        android:layout_marginLeft="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,10 +24,9 @@
         android:layout_marginTop="0dp"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:textColor="@color/black"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/image"
-        android:layout_marginLeft="20dp"/>
+        android:layout_marginLeft="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,23 +35,35 @@
         android:text="24.342"
         android:id="@+id/textViewTime"
         android:textSize="30dp"
-        android:textColor="@color/black"
         android:layout_toRightOf="@id/textView1"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"/>
+        android:layout_marginLeft="20dp" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="(23.568)"
-        android:id="@+id/textViewInfo"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/textView1"
-        android:gravity="center_vertical"
-        android:textColor="@color/red"
-        android:layout_marginRight="20dp"/>
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/zeroTime"
+            android:id="@+id/textViewAo5"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/zeroTime"
+            android:id="@+id/textViewAo10"
+            android:layout_marginRight="10dp"/>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

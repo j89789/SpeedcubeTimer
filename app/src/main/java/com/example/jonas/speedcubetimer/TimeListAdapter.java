@@ -1,5 +1,6 @@
 package com.example.jonas.speedcubetimer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,6 @@ public class TimeListAdapter extends BaseAdapter {
 
         TextView textViewPos = (TextView) convertView.findViewById(R.id.textView1);
         TextView textViewTime = (TextView) convertView.findViewById(R.id.textViewTime);
-        TextView textViewInfo = (TextView) convertView.findViewById(R.id.textViewInfo);
 
         textViewPos.setText("" + (position + 1) + ".");
 
@@ -63,7 +63,6 @@ public class TimeListAdapter extends BaseAdapter {
         }
 
         textViewTime.setText(timeString);
-        textViewInfo.setText(infoString);
 
         return convertView;
     }
