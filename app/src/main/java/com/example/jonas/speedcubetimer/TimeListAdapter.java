@@ -15,7 +15,6 @@ public class TimeListAdapter extends BaseAdapter {
 
     List<Time> sourceList;
     TimeSession session;
-    ColorStateList defaultTextColor;
 
     public TimeListAdapter(TimeSession session) {
         this.session = session;
@@ -87,6 +86,22 @@ public class TimeListAdapter extends BaseAdapter {
             textViewPos.setTextColor(SpeedcubeApplication.instance().getResources().getColor(R.color.red));
         } else {
             textViewPos.setTextColor(SpeedcubeApplication.instance().defaultTextColor);
+        }
+
+        if (time == session.getBestAverageOf5Time()) {
+            textViewAo5.setTextColor(SpeedcubeApplication.instance().getResources().getColor(R.color.green));
+        } else if (time == session.getWorseAverageOf5Time()) {
+            textViewAo5.setTextColor(SpeedcubeApplication.instance().getResources().getColor(R.color.red));
+        } else {
+            textViewAo5.setTextColor(SpeedcubeApplication.instance().defaultTextColor);
+        }
+
+        if (time == session.getBestAverageOf12Time()) {
+            textViewAo12.setTextColor(SpeedcubeApplication.instance().getResources().getColor(R.color.green));
+        } else if (time == session.getWorseAverageOf12Time()) {
+            textViewAo12.setTextColor(SpeedcubeApplication.instance().getResources().getColor(R.color.red));
+        } else {
+            textViewAo12.setTextColor(SpeedcubeApplication.instance().defaultTextColor);
         }
 
         return convertView;
