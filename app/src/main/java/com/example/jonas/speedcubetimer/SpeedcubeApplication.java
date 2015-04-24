@@ -1,6 +1,7 @@
 package com.example.jonas.speedcubetimer;
 
 import android.app.Application;
+import android.content.res.ColorStateList;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class SpeedcubeApplication extends Application {
 
     private SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer();
     TimeSession timeSession = new TimeSession();
+    public ColorStateList defaultTextColor;
 
     public TimeSession getTimeSession() {
         return timeSession;

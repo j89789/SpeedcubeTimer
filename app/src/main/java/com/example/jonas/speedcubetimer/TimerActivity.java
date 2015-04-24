@@ -64,7 +64,6 @@ public class TimerActivity extends Activity {
         }
     };
     private boolean isShowScramble;
-    private ColorStateList defaultTextColor;
 
     public TimerActivity() {
         isUseMilliseconds = false;
@@ -155,8 +154,8 @@ public class TimerActivity extends Activity {
     private void updateExtremeValues() {
 
         if (isShowExtremeValues && session.size() > 1 && !speedcubeTimer.isRunning()) {
-            textViewBestTime.setText(Time.toString(session.getBestTime(), isUseMilliseconds));
-            textViewWorstTime.setText(Time.toString(session.getWorseTime(), isUseMilliseconds));
+            textViewBestTime.setText(Time.toString(session.getBestTime().getTimeMs(), isUseMilliseconds));
+            textViewWorstTime.setText(Time.toString(session.getWorseTime().getTimeMs(), isUseMilliseconds));
             findViewById(R.id.tableLayoutExtremeValues).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.tableLayoutExtremeValues).setVisibility(View.GONE);
@@ -188,7 +187,7 @@ public class TimerActivity extends Activity {
         textViewWorstTime = (TextView) findViewById(R.id.textViewWorstTime);
         textViewScramble = (TextView) findViewById(R.id.textViewScramble);
 
-        defaultTextColor = textViewAverage12.getTextColors();
+        SpeedcubeApplication.instance().defaultTextColor = textViewAverage12.getTextColors();
 
         textViewScramble.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,7 +301,7 @@ public class TimerActivity extends Activity {
             if (speedcubeTimer.getTimerState() == SpeedcubeTimer.TimerState.ready) {
                 textViewTime.setTextColor(getResources().getColor(R.color.blue));
             } else {
-                textViewTime.setTextColor(defaultTextColor);
+                textViewTime.setTextColor(SpeedcubeApplication.instance().defaultTextColor);
             }
         }
 

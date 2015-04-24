@@ -6,9 +6,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
-public class Time {
+public class Time{
 
     private long timeMs = 0;
+    private long averageOf5 = 0;
+    private long averageOf12 = 0;
     private Type type = Type.valid;
 
     private OnChangeListener lister;
@@ -145,6 +147,22 @@ public class Time {
 
     public long getOriginTimeMs() {
         return timeMs;
+    }
+
+    public long getAverageOf5() {
+        return averageOf5;
+    }
+
+    public void setAverageOf5(long averageOf5) {
+        this.averageOf5 = averageOf5;
+    }
+
+    public long getAverageOf12() {
+        return averageOf12;
+    }
+
+    public void setAverageOf12(long averageOf12) {
+        this.averageOf12 = averageOf12;
     }
 
     enum Type {valid, plus2, DNF}

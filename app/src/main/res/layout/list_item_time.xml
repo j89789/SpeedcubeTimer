@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/zeroTime"
-            android:id="@+id/textViewAo10"
+            android:id="@+id/textViewAo12"
             android:layout_marginRight="10dp"/>
 
     </LinearLayout>

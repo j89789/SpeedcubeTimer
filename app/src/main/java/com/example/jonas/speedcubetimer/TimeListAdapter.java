@@ -1,7 +1,7 @@
 package com.example.jonas.speedcubetimer;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,12 @@ import java.util.List;
 public class TimeListAdapter extends BaseAdapter {
 
     List<Time> sourceList;
+    TimeSession session;
+    ColorStateList defaultTextColor;
 
-    public TimeListAdapter(List<Time> sourceList) {
-        this.sourceList = sourceList;
+    public TimeListAdapter(TimeSession session) {
+        this.session = session;
+        this.sourceList = session.getTimes();
     }
 
     @Override
@@ -45,6 +48,9 @@ public class TimeListAdapter extends BaseAdapter {
 
         TextView textViewPos = (TextView) convertView.findViewById(R.id.textView1);
         TextView textViewTime = (TextView) convertView.findViewById(R.id.textViewTime);
+        TextView textViewAo5 = (TextView) convertView.findViewById(R.id.textViewAo5);
+        TextView textViewAo12 = (TextView) convertView.findViewById(R.id.textViewAo12);
+
 
         textViewPos.setText("" + (position + 1) + ".");
 
@@ -52,17 +58,36 @@ public class TimeListAdapter extends BaseAdapter {
         Time.Type type = time.getType();
 
         String timeString = Time.toStringMs(time.getTimeMs());
-        String infoString = "";
 
         if (type == Time.Type.plus2) {
             timeString += "+";
-            infoString = "( " + Time.toStringMs(time.getOriginTimeMs()) + " )";
         } else if (type == Time.Type.DNF) {
             timeString = SpeedcubeApplication.instance().getString(R.string.DNF);
-            infoString = "( " + Time.toStringMs(time.getOriginTimeMs()) + " )";
         }
 
         textViewTime.setText(timeString);
+
+        if (time.getAverageOf5() > 0) {
+            textViewAo5.setText(Time.toStringMs(time.getAverageOf5()));
+            textViewAo5.setVisibility(View.VISIBLE);
+        } else {
+            textViewAo5.setVisibility(View.GONE);
+        }
+
+        if (time.getAverageOf12() > 0) {
+            textViewAo12.setText(Time.toStringMs(time.getAverageOf12()));
+            textViewAo12.setVisibility(View.VISIBLE);
+        } else {
+            textViewAo12.setVisibility(View.GONE);
+        }
+
+        if (time == session.getBestTime()) {
+            textViewPos.setTextColor(SpeedcubeApplication.instance().getResources().getColor(R.color.green));
+        } else if (time == session.getWorseTime()) {
+            textViewPos.setTextColor(SpeedcubeApplication.instance().getResources().getColor(R.color.red));
+        } else {
+            textViewPos.setTextColor(SpeedcubeApplication.instance().defaultTextColor);
+        }
 
         return convertView;
     }
