@@ -40,6 +40,7 @@
         android:layout_marginLeft="20dp" />
 
     <TableLayout
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -48,6 +49,13 @@
 
         <TableRow
             android:id="@+id/rowAo5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="ao5"
+                android:layout_marginRight="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,6 +70,12 @@
         <TableRow
             android:id="@+id/rowAo12">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="ao12"
+                android:layout_marginRight="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"

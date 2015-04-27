@@ -68,16 +68,16 @@ public class TimeListAdapter extends BaseAdapter {
 
         if (time.getAverageOf5() > 0) {
             textViewAo5.setText(Time.toStringMs(time.getAverageOf5()));
-            textViewAo5.setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.rowAo5).setVisibility(View.VISIBLE);
         } else {
-            textViewAo5.setVisibility(View.GONE);
+            convertView.findViewById(R.id.rowAo5).setVisibility(View.GONE);
         }
 
         if (time.getAverageOf12() > 0) {
             textViewAo12.setText(Time.toStringMs(time.getAverageOf12()));
-            textViewAo12.setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.rowAo12).setVisibility(View.VISIBLE);
         } else {
-            textViewAo12.setVisibility(View.GONE);
+            convertView.findViewById(R.id.rowAo12).setVisibility(View.GONE);
         }
 
         if (time == session.getBestTime()) {
