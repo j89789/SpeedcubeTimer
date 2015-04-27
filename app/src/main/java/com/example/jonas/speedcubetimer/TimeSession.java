@@ -73,7 +73,7 @@ public class TimeSession {
         Random random = new Random();
 
         // For test insert 10 elements
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 1000; i++) {
             Time time = new Time();
             time.setTimeMs(random.nextInt(30000));
 
@@ -143,9 +143,7 @@ public class TimeSession {
             dnfTimes.add(time);
         }
 
-        updateExtremeValues(time);
-        updateAverageOf5(time);
-        updateAverageOf12(time);
+        updateExtremeValues();
 
         time.setOnChangeLister(onTimeChangeLister);
 
@@ -228,6 +226,8 @@ public class TimeSession {
 
     private void updateExtremeValues() {
 
+        averageAll = 0;
+
         if (times.size() > 0) {
             Time time = times.get(0);
             bestTime = time;
@@ -248,6 +248,8 @@ public class TimeSession {
             if(time.getType() == Time.Type.DNF){
                 continue;
             }
+
+            averageAll += time.getTimeMs();
 
             long ms = time.getTimeMs();
 
@@ -280,9 +282,12 @@ public class TimeSession {
             }
         }
 
+        averageAll /= validTimes.size() + plus2Times.size();
+
 
         if (onChangListener != null) {
             onChangListener.onExtremeValuesChange();
+            onChangListener.onAverageChanged();
         }
     }
 
@@ -299,7 +304,7 @@ public class TimeSession {
             time.setOnChangeLister(null);
             adapter.notifyDataSetChanged();
 
-            updateAverageAt(index);
+            updateAverageTimesAt(index);
 
             updateExtremeValues();
 
@@ -341,7 +346,7 @@ public class TimeSession {
         return times.size();
     }
 
-    public long getMean() {
+    public long getAverageAll() {
         return averageAll;
     }
 
@@ -349,7 +354,7 @@ public class TimeSession {
         return times;
     }
 
-    private void updateAverageAt(int i) {
+    private void updateAverageTimesAt(int i) {
         for (int count = 0; i < times.size(); i++, count++) {
             Time outdatedTime = times.get(i);
 
@@ -408,8 +413,7 @@ public class TimeSession {
 
             int i = times.indexOf(time);
 
-            updateAverageAt(i);
-
+            updateAverageTimesAt(i);
             updateExtremeValues();
 
             adapter.notifyDataSetChanged();

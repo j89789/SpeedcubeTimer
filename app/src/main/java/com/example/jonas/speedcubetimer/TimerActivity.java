@@ -3,7 +3,6 @@ package com.example.jonas.speedcubetimer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
@@ -120,7 +119,7 @@ public class TimerActivity extends Activity {
         if (isShowAverage && !speedcubeTimer.isRunning()) {
             long average5 = session.getAverage5();
             long average12 = session.getAverage12();
-            long mean = session.getMean();
+            long mean = session.getAverageAll();
 
             if (average5 != 0) {
                 textViewAverage5.setText(Time.toString(average5, isUseMilliseconds));

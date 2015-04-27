@@ -89,6 +89,10 @@ public class TimeListActivity extends Activity {
                 s += "worse: " + session.getWorseTime().toString() + "\n\n";
             }
 
+            if(session.getAverageAll() != 0){
+                s += "mean: " + Time.toStringMs(session.getAverageAll()) + "\n\n";
+            }
+
             if(session.getBestAverageOf5Time() != null){
                 s += "Average of 5\n";
                 s += "best: " + session.getBestAverageOf5Time().toString() + "\n";
