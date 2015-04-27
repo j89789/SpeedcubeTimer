@@ -24,6 +24,19 @@ public class TimeSession {
     private List<Time> validTimes = new ArrayList<>();
     private List<Time> plus2Times = new ArrayList<>();
     private List<Time> dnfTimes = new ArrayList<>();
+
+    public List<Time> getValidTimes() {
+        return validTimes;
+    }
+
+    public List<Time> getDnfTimes() {
+        return dnfTimes;
+    }
+
+    public List<Time> getPlus2Times() {
+        return plus2Times;
+    }
+
     /**
      * Adapter vor ListView
      */
@@ -380,6 +393,18 @@ public class TimeSession {
     private class OnTimeChangeListener implements Time.OnChangeListener {
         @Override
         public void onChanged(Time time) {
+
+            validTimes.remove(time);
+            plus2Times.remove(time);
+            dnfTimes.remove(time);
+
+            if (time.getType() == Time.Type.valid) {
+                validTimes.add(time);
+            } else if (time.getType() == Time.Type.plus2) {
+                plus2Times.add(time);
+            } else if (time.getType() == Time.Type.DNF) {
+                dnfTimes.add(time);
+            }
 
             int i = times.indexOf(time);
 

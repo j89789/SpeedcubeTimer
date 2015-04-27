@@ -15,7 +15,7 @@ public class TimeListActivity extends Activity {
 
     private ListView listView;
 
-    private TimeSession timeSession = SpeedcubeApplication.instance().getTimeSession();
+    private TimeSession session = SpeedcubeApplication.instance().getTimeSession();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class TimeListActivity extends Activity {
         setContentView(R.layout.activity_time_list);
 
         listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(timeSession.getAdapter());
+        listView.setAdapter(session.getAdapter());
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -31,7 +31,7 @@ public class TimeListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final Time time = timeSession.get(position);
+                final Time time = session.get(position);
 
                 time.showPopupMenu(TimeListActivity.this, view, null);
             }
@@ -57,7 +57,7 @@ public class TimeListActivity extends Activity {
         }
         else if (id == R.id.action_delete){
 
-            if(timeSession.size() > 0) {
+            if(session.size() > 0) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Delete all Times?");
@@ -66,13 +66,50 @@ public class TimeListActivity extends Activity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        timeSession.clear();
+                        session.clear();
                     }
 
                 });
 
                 builder.create().show();
             }
+        }
+        else if (id == R.id.action_statistic){
+
+            String s = "";
+
+            s += "valid: " + session.getValidTimes().size() + "\n" ;
+            s += "+2: " + session.getPlus2Times().size() + "\n";
+            s += "DNF: " + session.getDnfTimes().size() + "\n\n";
+
+            if(session.getBestTime() != null){
+                s += "best: " + session.getBestTime().toString() + "\n";
+            }
+            if(session.getWorseTime() != null){
+                s += "worse: " + session.getWorseTime().toString() + "\n\n";
+            }
+
+            if(session.getBestAverageOf5Time() != null){
+                s += "Average of 5\n";
+                s += "best: " + session.getBestAverageOf5Time().toString() + "\n";
+            }
+            if(session.getWorseAverageOf5Time() != null){
+                s += "worse: " + session.getWorseAverageOf5Time().toString() + "\n\n";
+            }
+
+            if(session.getBestAverageOf12Time() != null){
+                s += "Average of 12\n";
+                s += "best: " + session.getBestAverageOf12Time().toString() + "\n";
+            }
+            if(session.getWorseAverageOf12Time() != null){
+                s += "worse: " + session.getWorseAverageOf12Time().toString() + "\n\n";
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Time Statistics");
+            builder.setPositiveButton("OK", null);
+            builder.setMessage(s);
+            builder.create().show();
         }
 
         return super.onOptionsItemSelected(item);

@@ -15,6 +15,10 @@ public class Time{
 
     private OnChangeListener lister;
 
+    public String toString() {
+        return Time.toString(timeMs, 3);
+    }
+
     static public String toStringMs(long timeMs) {
         return Time.toString(timeMs, 3);
     }
