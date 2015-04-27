@@ -1,8 +1,6 @@
 package com.example.jonas.speedcubetimer;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -98,12 +96,18 @@ public class TimeSession {
         onChangListener = listener;
     }
 
+    /**
+     * @return 0 if no average exits
+     */
     public long getAverage12() {
-        return times.size() > 0 ? times.get(times.size() - 1).getAverageOf5() : 0;
+        return times.size() > 0 ? times.get(times.size() - 1).getAverageOf12() : 0;
     }
 
+    /**
+     * @return 0 if no average exits
+     */
     public long getAverage5() {
-        return times.size() > 0 ? times.get(times.size() - 1).getAverageOf12() : 0;
+        return times.size() > 0 ? times.get(times.size() - 1).getAverageOf5() : 0;
     }
 
 
@@ -163,7 +167,7 @@ public class TimeSession {
     private void updateAverageOf5(Time time) {
         long averageOf5 = time.getAverageOf5();
 
-        if(averageOf5 != 0) {
+        if (averageOf5 != 0) {
             boolean isAverageChanged = false;
 
             if (bestAverageOf5Time == null || averageOf5 < bestAverageOf5Time.getAverageOf5()) {
@@ -187,7 +191,7 @@ public class TimeSession {
     private void updateAverageOf12(Time time) {
         long averageOf12 = time.getAverageOf12();
 
-        if(averageOf12 != 0) {
+        if (averageOf12 != 0) {
             boolean isAverageChanged = false;
 
             if (bestAverageOf12Time == null || averageOf12 < bestAverageOf12Time.getAverageOf12()) {
@@ -211,86 +215,61 @@ public class TimeSession {
 
     private void updateExtremeValues() {
 
-        Collections.sort(validTimes, new Comparator<Time>() {
-            @Override
-            public int compare(Time lhs, Time rhs) {
-                if (lhs.getTimeMs() < rhs.getTimeMs()) {
-                    return -1;
-                } else if (rhs.getTimeMs() > lhs.getTimeMs()) {
-                    return 1;
-                } else {
-                    return 0;
+        if (times.size() > 0) {
+            Time time = times.get(0);
+            bestTime = time;
+            worseTime = time;
+        } else{
+            bestTime = null;
+            worseTime = null;
+        }
+
+        bestAverageOf5Time = null;
+        worseAverageOf5Time = null;
+        bestAverageOf12Time = null;
+        worseAverageOf12Time = null;
+
+        for (int i = 0; i < times.size(); i++) {
+            Time time = times.get(i);
+
+            if(time.getType() == Time.Type.DNF){
+                continue;
+            }
+
+            long ms = time.getTimeMs();
+
+            if (ms < bestTime.getTimeMs()) {
+                bestTime = time;
+            }
+
+            if (ms > worseTime.getTimeMs()) {
+                worseTime = time;
+            }
+
+            if (time.getAverageOf5() != 0) {
+                if (bestAverageOf5Time == null ||ms < bestAverageOf5Time.getTimeMs()) {
+                    bestAverageOf5Time = time;
+                }
+
+                if (worseAverageOf5Time == null || ms > worseAverageOf5Time.getTimeMs()) {
+                    worseAverageOf5Time = time;
                 }
             }
-        });
 
-        bestTime = validTimes.get(0);
-        worseTime = validTimes.get(validTimes.size() - 1);
+            if (time.getAverageOf12() != 0) {
+                if (bestAverageOf12Time == null || ms < bestAverageOf12Time.getTimeMs()) {
+                    bestAverageOf12Time = time;
+                }
+
+                if (worseAverageOf12Time == null || ms > worseAverageOf12Time.getTimeMs()) {
+                    worseAverageOf12Time = time;
+                }
+            }
+        }
+
 
         if (onChangListener != null) {
             onChangListener.onExtremeValuesChange();
-        }
-    }
-
-    private void updateAverageOf5() {
-
-        Collections.sort(validTimes, new Comparator<Time>() {
-            @Override
-            public int compare(Time lhs, Time rhs) {
-                if (lhs.getAverageOf5() < rhs.getAverageOf5()) {
-                    return -1;
-                } else if (rhs.getAverageOf5() > lhs.getAverageOf5()) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        });
-
-        for (int i = 0; i < validTimes.size(); i++) {
-            long averageOf5 = validTimes.get(i).getAverageOf5();
-
-            if(averageOf5 != 0) {
-                bestAverageOf5Time = validTimes.get(i);
-                break;
-            }
-        }
-
-        worseAverageOf5Time = validTimes.get(validTimes.size() - 1);
-
-        if (onChangListener != null) {
-            onChangListener.onAverageChanged();
-        }
-    }
-
-    private void updateAverageOf12() {
-
-        Collections.sort(validTimes, new Comparator<Time>() {
-            @Override
-            public int compare(Time lhs, Time rhs) {
-                if (lhs.getAverageOf12() < rhs.getAverageOf12()) {
-                    return -1;
-                } else if (rhs.getAverageOf12() > lhs.getAverageOf12()) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        });
-
-        for (int i = 0; i < validTimes.size(); i++) {
-            long averageOf12 = validTimes.get(i).getAverageOf12();
-
-            if(averageOf12 != 0) {
-                bestAverageOf12Time = validTimes.get(i);
-                break;
-            }
-        }
-
-        worseAverageOf12Time = validTimes.get(validTimes.size() - 1);
-
-        if (onChangListener != null) {
-            onChangListener.onAverageChanged();
         }
     }
 
@@ -307,15 +286,9 @@ public class TimeSession {
             time.setOnChangeLister(null);
             adapter.notifyDataSetChanged();
 
-            updateAvarageAt(index);
+            updateAverageAt(index);
 
-            if (time == bestTime || time == worseTime) {
-                updateExtremeValues();
-            } else if (time == bestAverageOf5Time || time == worseAverageOf5Time) {
-                updateAverageOf5();
-            } else if (time == bestAverageOf12Time || time == worseAverageOf12Time) {
-                updateAverageOf12();
-            }
+            updateExtremeValues();
 
             if (onChangListener != null) {
                 onChangListener.onSizeChanged();
@@ -363,7 +336,7 @@ public class TimeSession {
         return times;
     }
 
-    private void updateAvarageAt(int i) {
+    private void updateAverageAt(int i) {
         for (int count = 0; i < times.size(); i++, count++) {
             Time outdatedTime = times.get(i);
 
@@ -375,11 +348,19 @@ public class TimeSession {
         }
     }
 
+    /**
+     * Calc average time from Time at Index for the given cont.
+     *
+     * @return 0 if not enough times are exists or a DNF time exits
+     */
     private long calcAverage(int endIndex, int count) {
         long timeMs = 0;
         int beginIndex = endIndex - count + 1;
         if (endIndex < times.size() && beginIndex >= 0) {
             for (int i = beginIndex; i <= endIndex; i++) {
+                if(times.get(i).getType() == Time.Type.DNF){
+                    return 0;
+                }
                 timeMs += times.get(i).getTimeMs();
             }
             timeMs /= count;
@@ -402,11 +383,9 @@ public class TimeSession {
 
             int i = times.indexOf(time);
 
-            updateAvarageAt(i);
+            updateAverageAt(i);
 
             updateExtremeValues();
-            updateAverageOf5();
-            updateAverageOf12();
 
             adapter.notifyDataSetChanged();
         }
