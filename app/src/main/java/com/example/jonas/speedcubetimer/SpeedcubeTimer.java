@@ -104,8 +104,6 @@ class SpeedcubeTimer {
         inspectionTimer.reset();
 
         startTimeUpdater();
-
-        Log.d(tag, "Start solving...");
     }
 
     /**
@@ -148,8 +146,6 @@ class SpeedcubeTimer {
 
         time.setTimeMs(solvingTimer.getCurrentTime());
         SpeedcubeApplication.instance().getTimeSession().addNewTime(time);
-
-        Log.d(tag, "Finished solving!");
     }
 
     private void startInspection() {
@@ -157,8 +153,6 @@ class SpeedcubeTimer {
 
         inspectionTimer.start();
         startTimeUpdater();
-
-        Log.d(tag, "Start inspection...");
     }
 
     public void reset() {
@@ -181,8 +175,6 @@ class SpeedcubeTimer {
 
             timeUpdater.run();
         }
-
-        Log.d(tag, "Reset");
     }
 
     public void setTouchPad(TouchSensor touchSensor) {

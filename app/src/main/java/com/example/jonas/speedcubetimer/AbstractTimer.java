@@ -34,15 +34,11 @@ abstract class AbstractTimer {
         this.isRunning = true;
         this.isReady = false;
         this.elapsedTimer.start();
-
-        Log.d(TAG, "Timer started");
     }
 
     public void stop() {
         this.isRunning = false;
         this.offset += this.elapsedTimer.elapsed();
-
-        Log.d(TAG, "Timer stopped");
     }
 
     public void reset() {
@@ -50,10 +46,8 @@ abstract class AbstractTimer {
 
         if (!this.isRunning) {
             this.isReady = true;
-            Log.d(TAG, "Timer was reset");
         } else {
             this.elapsedTimer.restart();
-            Log.d(TAG, "Timer reset while running");
         }
     }
 

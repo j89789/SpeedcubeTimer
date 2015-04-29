@@ -54,7 +54,6 @@ class TouchSensor {
                     if (!isDown) {
                         isDown = true;
                         if (listener != null) {
-                            Log.d(TAG, "onSensorDown()");
                             listener.onSensorDown();
                         }
                     }
@@ -65,7 +64,6 @@ class TouchSensor {
                         if (isDown) {
                             isDown = false;
                             if (listener != null) {
-                                Log.d(TAG, "onSensorUp()");
                                 listener.onSensorUp();
                             }
                             isTouchInvalid = true;
@@ -80,7 +78,6 @@ class TouchSensor {
                     isTouchInvalid = false;
                 } else {
                     if (listener != null) {
-                        Log.d(TAG, "onTrigger()");
                         listener.onTrigger();
                     }
                 }

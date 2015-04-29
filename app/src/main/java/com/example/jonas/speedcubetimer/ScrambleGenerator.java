@@ -40,8 +40,6 @@ public class ScrambleGenerator {
             scramble += moves.get(i).toString() + " ";
         }
 
-        Log.d("scramble", scramble);
-
         return scramble;
     }
 
