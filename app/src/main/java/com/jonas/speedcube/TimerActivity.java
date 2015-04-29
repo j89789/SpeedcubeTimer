@@ -1,4 +1,4 @@
-package com.example.jonas.speedcubetimer;
+package com.jonas.speedcube;
 
 import android.app.Activity;
 import android.content.Intent;

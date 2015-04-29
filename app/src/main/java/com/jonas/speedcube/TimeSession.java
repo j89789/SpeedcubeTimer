@@ -1,4 +1,4 @@
-package com.example.jonas.speedcubetimer;
+package com.jonas.speedcube;
 
 import java.util.ArrayList;
 import java.util.List;

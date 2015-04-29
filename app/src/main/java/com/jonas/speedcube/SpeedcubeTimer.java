@@ -1,10 +1,9 @@
-package com.example.jonas.speedcubetimer;
+package com.jonas.speedcube;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Handler;
-import android.util.Log;
 
 /**
  * Combine touch pad and solvingTimer to a speedcube time functions

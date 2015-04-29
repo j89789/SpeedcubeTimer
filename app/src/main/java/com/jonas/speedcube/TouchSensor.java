@@ -1,6 +1,5 @@
-package com.example.jonas.speedcubetimer;
+package com.jonas.speedcube;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 

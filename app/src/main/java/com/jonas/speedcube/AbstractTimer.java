@@ -1,6 +1,4 @@
-package com.example.jonas.speedcubetimer;
-
-import android.util.Log;
+package com.jonas.speedcube;
 
 /**
  * A basic timer with start, stop and reset function.

@@ -1,9 +1,7 @@
-package com.example.jonas.speedcubetimer;
+package com.jonas.speedcube;
 
 import android.app.Application;
 import android.content.res.ColorStateList;
-
-import java.util.List;
 
 /**
  * Main Application
