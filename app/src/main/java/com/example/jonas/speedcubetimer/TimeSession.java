@@ -73,7 +73,7 @@ public class TimeSession {
         Random random = new Random();
 
         // For test insert 10 elements
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 20; i++) {
             Time time = new Time();
             time.setTimeMs(random.nextInt(30000));
 
@@ -331,6 +331,10 @@ public class TimeSession {
         worseTime = null;
         bestTime = null;
         averageAll = 0;
+        bestAverageOf12Time = null;
+        bestAverageOf5Time = null;
+        worseAverageOf12Time = null;
+        worseAverageOf5Time = null;
 
         adapter.notifyDataSetChanged();
 

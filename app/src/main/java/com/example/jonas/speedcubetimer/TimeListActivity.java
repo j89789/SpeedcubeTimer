@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class TimeListActivity extends Activity {
@@ -76,43 +78,50 @@ public class TimeListActivity extends Activity {
         }
         else if (id == R.id.action_statistic){
 
-            String s = "";
-
-            s += "valid: " + session.getValidTimes().size() + "\n" ;
-            s += "+2: " + session.getPlus2Times().size() + "\n";
-            s += "DNF: " + session.getDnfTimes().size() + "\n\n";
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.dialog_statistics, null);
 
             if(session.getBestTime() != null){
-                s += "best: " + session.getBestTime().toString() + "\n";
+                ((TextView) view.findViewById(R.id.textViewBest))
+                        .setText(session.getBestTime().toString());
             }
+
             if(session.getWorseTime() != null){
-                s += "worse: " + session.getWorseTime().toString() + "\n\n";
+                ((TextView) view.findViewById(R.id.textViewWorse))
+                        .setText(session.getWorseTime().toString());
             }
 
             if(session.getAverageAll() != 0){
-                s += "mean: " + Time.toStringMs(session.getAverageAll()) + "\n\n";
+                ((TextView) view.findViewById(R.id.textViewMean))
+                        .setText(Time.toStringMs(session.getAverageAll()));
             }
 
             if(session.getBestAverageOf5Time() != null){
-                s += "Average of 5\n";
-                s += "best: " + session.getBestAverageOf5Time().toString() + "\n";
+                ((TextView) view.findViewById(R.id.textViewAo5Best))
+                        .setText(session.getBestAverageOf5Time().toString());
             }
             if(session.getWorseAverageOf5Time() != null){
-                s += "worse: " + session.getWorseAverageOf5Time().toString() + "\n\n";
+                ((TextView) view.findViewById(R.id.textViewAo5Worse))
+                        .setText(session.getWorseAverageOf5Time().toString());
             }
 
             if(session.getBestAverageOf12Time() != null){
-                s += "Average of 12\n";
-                s += "best: " + session.getBestAverageOf12Time().toString() + "\n";
-            }
-            if(session.getWorseAverageOf12Time() != null){
-                s += "worse: " + session.getWorseAverageOf12Time().toString() + "\n\n";
+                ((TextView) view.findViewById(R.id.textViewAo12Best))
+                        .setText(session.getBestAverageOf12Time().toString());
             }
 
+            if(session.getWorseAverageOf12Time() != null){
+                ((TextView) view.findViewById(R.id.textViewAo12Worse))
+                        .setText(session.getWorseAverageOf12Time().toString());
+            }
+
+            int total = session.size();
+            int valid = session.size() - session.getDnfTimes().size();
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Time Statistics");
+            builder.setView(view);
+            builder.setTitle("Time Statistics" + " (" + valid + "/" + total + ")");
             builder.setPositiveButton("OK", null);
-            builder.setMessage(s);
             builder.create().show();
         }
 
