@@ -21,4 +21,6 @@
     <string name="pref_showScramble_summery">For a 3*3*3 speedcube</string>
     <string name="mean">mean</string>
     <string name="zeroTime">0.000</string>
+    <string name="average_of_5">Average of 5</string>
+    <string name="average_of_12">Average of 12</string>
 </resources>

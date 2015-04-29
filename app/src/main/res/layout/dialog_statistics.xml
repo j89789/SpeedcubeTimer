@@ -7,7 +7,8 @@
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="best"
+                android:text="@string/best"
                 android:layout_marginRight="30dp" />
 
             <TextView
@@ -41,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="worst"
+                android:text="@string/worst"
                 android:layout_marginRight="30dp" />
 
             <TextView
@@ -61,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="mean"
+                android:text="@string/mean"
                 android:layout_marginRight="30dp"/>
 
             <TextView
@@ -78,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Average of 5"
+        android:text="@string/average_of_5"
         android:layout_marginTop="20dp" />
 
     <TableLayout
@@ -93,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="best"
+                android:text="@string/best"
                 android:layout_marginRight="30dp" />
 
             <TextView
@@ -112,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="worst"
+                android:text="@string/worst"
                 android:layout_marginRight="30dp" />
 
             <TextView
@@ -128,7 +129,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Average of 12"
+        android:text="@string/average_of_12"
         android:layout_marginTop="20dp" />
 
     <TableLayout
@@ -143,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="best"
+                android:text="@string/best"
                 android:layout_marginRight="30dp" />
 
             <TextView
@@ -162,7 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="worst"
+                android:text="@string/worst"
                 android:layout_marginRight="30dp" />
 
             <TextView
