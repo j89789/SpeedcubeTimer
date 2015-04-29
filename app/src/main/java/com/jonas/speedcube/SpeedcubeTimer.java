@@ -1,5 +1,6 @@
 package com.jonas.speedcube;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -72,6 +73,8 @@ class SpeedcubeTimer {
      */
     private boolean isTimeUpdaterEnable = false;
 
+    private int unusedTriggerCounter;
+    private int unusedSensorDownCounter;
 
     public SpeedcubeTimer() {
     }
@@ -300,15 +303,25 @@ class SpeedcubeTimer {
         @Override
         public void onSensorDown() {
 
-            if (d.getTimerState() == TimerState.ready && !isUseInspectionTime ||
-                    d.getTimerState() == TimerState.inspection ||
-                    d.getTimerState() == TimerState.solved && !isUseInspectionTime) {
-                d.setSensorStatus(SensorStatus.waitForValidation);
+            if (!(isRunning() || isUseInspectionTime) ||
+                    d.getTimerState() == TimerState.inspection) {
 
+                d.setSensorStatus(SensorStatus.waitForValidation);
                 handler.postDelayed(sensorDownValidMaker, 550);
             }
-            if (d.getTimerState() == TimerState.solving) {
+            else if (d.getTimerState() == TimerState.solving) {
                 finishedSolving();
+            }
+            else{
+
+                if(++unusedSensorDownCounter % 2 == 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Start inspection time?");
+                    builder.setMessage("A simple click on screen to start the inspection Time. You can disable the inspection time in the settings!");
+                    builder.setPositiveButton("ok", null);
+
+                    builder.create().show();
+                }
             }
         }
 
@@ -316,9 +329,19 @@ class SpeedcubeTimer {
         public void onTrigger() {
 
             if (isUseInspectionTime) {
-                if (d.getTimerState() == TimerState.ready ||
-                        d.getTimerState() == TimerState.solved) {
+                if (!isRunning()) {
                     startInspection();
+                }
+            }
+            else if (!isRunning()){
+
+                if(++unusedTriggerCounter % 2 == 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Start speedcube time?");
+                    builder.setMessage("Use two fingers to start the timer or enable the inspection time!");
+                    builder.setPositiveButton("ok", null);
+
+                    builder.create().show();
                 }
             }
         }
