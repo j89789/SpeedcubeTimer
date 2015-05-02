@@ -282,7 +282,9 @@ public class TimeSession {
             }
         }
 
-        averageAll /= validTimes.size() + plus2Times.size();
+        if(validTimes.size() + plus2Times.size() > 0) {
+            averageAll /= validTimes.size() + plus2Times.size();
+        }
 
 
         if (onChangListener != null) {

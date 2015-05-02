@@ -17,4 +17,11 @@
         android:orderInCategory="10"
         android:icon="@android:drawable/ic_menu_recent_history" />
 
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/help"
+        android:showAsAction="ifRoom"
+        android:orderInCategory="30"
+        android:icon="@android:drawable/ic_menu_help" />
+
 </menu>

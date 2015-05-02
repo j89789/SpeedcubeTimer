@@ -36,7 +36,7 @@ class SpeedcubeTimer {
     private TimerUpdater timeUpdater = new TimerUpdater();
     /**
      * This makes the solving timer ready to stat.
-     *
+     * <p/>
      * The touch sensor must be down for a certain time before the solving time can start.
      */
     private SensorDownValidMaker sensorDownValidMaker = new SensorDownValidMaker();
@@ -73,8 +73,8 @@ class SpeedcubeTimer {
      */
     private boolean isTimeUpdaterEnable = false;
 
-    private int unusedTriggerCounter;
-    private int unusedSensorDownCounter;
+    private int unusedSensorEvent;
+    private boolean isSenorDownUsedForStopSolving = false;
 
     public SpeedcubeTimer() {
     }
@@ -87,7 +87,7 @@ class SpeedcubeTimer {
         this.isUseInspectionTime = isUseInspectionTime;
     }
 
-    public SensorStatus getSensorStatus(){
+    public SensorStatus getSensorStatus() {
         return d.getSensorStatus();
     }
 
@@ -110,7 +110,7 @@ class SpeedcubeTimer {
 
     /**
      * Check if the update is required. If no the update will stopped otherwise will start.
-     *
+     * <p/>
      * Dependent of isTimeUpdaterActive and isTimeUpdaterActive
      */
     private void refreshTimeUpdater() {
@@ -133,7 +133,6 @@ class SpeedcubeTimer {
         isTimeUpdaterActive = false;
         refreshTimeUpdater();
     }
-
 
     private void finishedSolving() {
 
@@ -159,21 +158,24 @@ class SpeedcubeTimer {
 
     public void reset() {
         if (d.getTimerState() == TimerState.solved) {
-            d.setTimerState(TimerState.ready);
-            d.setSensorStatus(SensorStatus.invalid);
+
             solvingTimer.reset();
             timeUpdater.run();
-        }
-        else if(d.getTimerState() == TimerState.inspection)
-        {
-            d.setTimerState(TimerState.ready);
+
             d.setSensorStatus(SensorStatus.invalid);
+            d.setTimerState(TimerState.ready);
+
+        } else if (d.getTimerState() == TimerState.inspection) {
 
             inspectionTimer.stop();
             inspectionTimer.reset();
+            solvingTimer.reset();
 
             time.setType(Time.Type.valid);
             time.setTimeMs(0);
+
+            d.setSensorStatus(SensorStatus.invalid);
+            d.setTimerState(TimerState.ready);
 
             timeUpdater.run();
         }
@@ -182,7 +184,6 @@ class SpeedcubeTimer {
     public void setTouchPad(TouchSensor touchSensor) {
         touchSensor.setListener(touchPadListener);
     }
-
 
     /**
      * The listener get all update Events. If any relevant property changed e.g timerState
@@ -223,6 +224,8 @@ class SpeedcubeTimer {
 
     public enum TimerState {ready, inspection, solving, solved}
 
+    enum SensorStatus {waitForValidation, valid, invalid}
+
     interface Listener {
 
         /**
@@ -240,8 +243,6 @@ class SpeedcubeTimer {
          */
         void onSensorStatusChanged();
     }
-
-    enum SensorStatus {waitForValidation, valid, invalid}
 
     /**
      * Protects the timer state variable. So you must call the set Function and the chance event
@@ -274,7 +275,7 @@ class SpeedcubeTimer {
             if (timerState != newTimerState) {
                 TimerState oldTimerState = timerState;
 
-                if(oldTimerState == TimerState.solved){
+                if (oldTimerState == TimerState.solved) {
                     time = new Time();
                 }
 
@@ -291,13 +292,18 @@ class SpeedcubeTimer {
         @Override
         public void onSensorUp() {
 
-            if (d.getSensorStatus() == SensorStatus.valid) {
-                startSolving();
-            } else {
-                handler.removeCallbacks(sensorDownValidMaker);
-            }
+            if (!isSenorDownUsedForStopSolving) {
+                if (d.getSensorStatus() == SensorStatus.valid) {
+                    startSolving();
+                } else if (!isRunning() && isUseInspectionTime) {
+                    startInspection();
+                }
 
-            d.setSensorStatus(SensorStatus.invalid);
+                d.setSensorStatus(SensorStatus.invalid);
+                handler.removeCallbacks(sensorDownValidMaker);
+            } else {
+                isSenorDownUsedForStopSolving = false;
+            }
         }
 
         @Override
@@ -312,19 +318,18 @@ class SpeedcubeTimer {
                 handler.postDelayed(sensorDownValidMaker, 550);
 
                 isUsed = true;
-            }
-            else if (d.getTimerState() == TimerState.solving) {
+            } else if (d.getTimerState() == TimerState.solving) {
                 finishedSolving();
-
+                isSenorDownUsedForStopSolving = true;
                 isUsed = true;
             }
 
-            if(!isUsed && d.getTimerState() != TimerState.solving){
+            if (!isUsed && d.getTimerState() != TimerState.solving) {
 
-                if(++unusedSensorDownCounter % 2 == 0) {
+                if (++unusedSensorEvent % 2 == 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(context.getString(R.string.help_start_inspection_timer));
-                    builder.setMessage(context.getString(R.string.help_start_inspection_timer_detail));
+                    builder.setTitle(context.getString(R.string.help_start_solving_timer));
+                    builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
                     builder.setPositiveButton(android.R.string.ok, null);
 
                     builder.create().show();
@@ -335,25 +340,28 @@ class SpeedcubeTimer {
         @Override
         public void onTrigger() {
 
-            boolean isUsed = false;
+            boolean isShowHelp = false;
 
             if (isUseInspectionTime) {
                 if (!isRunning()) {
                     startInspection();
-                    isUsed = true;
+                }
+                else if (d.getTimerState() != TimerState.solving){
+                    isShowHelp = true;
                 }
             }
+            else if (d.getTimerState() != TimerState.solving) {
 
-            if (!isUsed && d.getTimerState() != TimerState.solving){
+               isShowHelp = true;
+            }
 
-                if(++unusedTriggerCounter % 2 == 0) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(context.getString(R.string.help_start_solving_timer));
-                    builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
-                    builder.setPositiveButton(context.getString(android.R.string.ok), null);
+            if (++unusedSensorEvent % 2 == 0 && isShowHelp) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(context.getString(R.string.help_start_solving_timer));
+                builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
+                builder.setPositiveButton(android.R.string.ok, null);
 
-                    builder.create().show();
-                }
+                builder.create().show();
             }
         }
     }

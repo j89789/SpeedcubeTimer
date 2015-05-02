@@ -4,10 +4,8 @@
     <string name="average_of_5">Durchnitt von 5</string>
     <string name="delete">Löschen</string>
     <string name="display">Anzeige</string>
-    <string name="help_start_inspection_timer">Inspektions Timer starten?</string>
-    <string name="help_start_inspection_timer_detail">Ein einfacher klick startet den Inspektions Timer. Der Inspektions Timer kann in Einstellungen deaktiviewt werden.</string>
     <string name="help_start_solving_timer">Timer starten?</string>
-    <string name="help_start_solving_timer_detail">Um den Timer zu starte bitte den Touchscrenn mit zwei Fingern berühren und warten bis die Zeit grün wird. Die Inspektions Timer kann in den Einstellungen aktiviewt werden!</string>
+    <string name="help_start_solving_timer_detail">Um den Timer zu starte bitte den Touchscrenn mit zwei Fingern berühren und warten bis die Zeit grün wird.</string>
     <string name="pref_showAverage">Durchschnittszeiten anzeigen</string>
     <string name="pref_showAverage_summery">Durchschitt von allen,  letzten 5 und letzten 12 Zeiten</string>
     <string name="pref_showExtremeValues">Beste und schlechteste Zeit anzeigen</string>
@@ -23,4 +21,11 @@
     <string name="pref_acoustic_signals_summery">Warnton währen der Inspektionszeit bei 8 und 3 Sekunden</string>
     <string name="delet_all_times">Alle Zeiten Löschen?</string>
     <string name="time_statistics">Statistik</string>
+    <string name="help">Hilfe</string><string name="help_text">Inspektion Timer\n\n
+Die 15 Sekunden Inspektionszeit wird mit ein einfache Klick gestartet werden. Die
+Inspektionszeit kann in den Einstellung deaktiviert werden.\n\n
+Speedcube Timer\n\n
+Der eigentlichen Timer wird gestartet indem zwe Fingeri den Touchscrenn berühren bis
+det Zeit grün wird. Wenn ein Finger den Touchscrenn verlässt läuft läuft die Zeit
+Der Timer wird gestoppt sobalt wieder zwei Finger den Touchscreen berühren.</string>
 </resources>

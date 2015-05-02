@@ -1,8 +1,11 @@
 package com.jonas.speedcube;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
@@ -228,7 +231,22 @@ public class TimerActivity extends Activity {
             Intent intent = new Intent(this, TimeListActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_help) {
+
+            String version = "";
+
+            try {
+                PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                version = pInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e) {}
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.app_name) + "  " + version);
+            builder.setMessage(getString(R.string.help_text));
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.create().show();
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -328,7 +346,7 @@ public class TimerActivity extends Activity {
             updateAverageView();
 
 
-            if(newState == SpeedcubeTimer.TimerState.solved) {
+            if (newState == SpeedcubeTimer.TimerState.solved) {
                 invalidateScramble();
             }
         }

@@ -21,14 +21,20 @@
     <string name="zero_time" translatable="false">0.000</string>
     <string name="average_of_5">Average of 5</string>
     <string name="average_of_12">Average of 12</string>
-    <string name="help_start_inspection_timer">Start inspection timer?</string>
-    <string name="help_start_inspection_timer_detail">A simple click on the screen to start the inspection time. You can disable the inspection time in the settings!</string>
     <string name="help_start_solving_timer">Start solving timer?</string>
-    <string name="help_start_solving_timer_detail">Use two fingers to start the timer (wait while the time text is green). You can enable the inspection time in the settings!</string>
+    <string name="help_start_solving_timer_detail">Touch the screnn with two fingers an wait until the time text is green.</string>
     <string name="time_type_ok" translatable="false">ok</string>
     <string name="pref_acoustic_signals">Acoustic signals</string>
     <string name="pref_acoustic_signals_summery">Play an acoustic signal at 8s and 3s while inspection</string>
     <string name="mean" translatable="false">mean</string>
     <string name="time_statistics">Statistics</string>
     <string name="delet_all_times">Delete all Times?</string>
+    <string name="help">Help</string>
+    <string name="help_text">Inspection timer\n\n
+Start the 15 Seconds inspection time with a simple click on screen. The inspection time
+can be disable in the Settings.\n\n
+Solving timer\n\n
+If you are ready to start touch the screen with two finger and wait until the
+text is going green. If one finger no longer touching the screen the timer is Running.
+The timer will stop if you touch the screen with two fingers again.</string>
 </resources>
