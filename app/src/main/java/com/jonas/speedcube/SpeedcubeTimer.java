@@ -303,22 +303,29 @@ class SpeedcubeTimer {
         @Override
         public void onSensorDown() {
 
+            boolean isUsed = false;
+
             if (!(isRunning() || isUseInspectionTime) ||
                     d.getTimerState() == TimerState.inspection) {
 
                 d.setSensorStatus(SensorStatus.waitForValidation);
                 handler.postDelayed(sensorDownValidMaker, 550);
+
+                isUsed = true;
             }
             else if (d.getTimerState() == TimerState.solving) {
                 finishedSolving();
+
+                isUsed = true;
             }
-            else{
+
+            if(!isUsed && d.getTimerState() != TimerState.solving){
 
                 if(++unusedSensorDownCounter % 2 == 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Start inspection time?");
-                    builder.setMessage("A simple click on screen to start the inspection Time. You can disable the inspection time in the settings!");
-                    builder.setPositiveButton("ok", null);
+                    builder.setTitle(context.getString(R.string.help_start_inspection_timer));
+                    builder.setMessage(context.getString(R.string.help_start_inspection_timer_detail));
+                    builder.setPositiveButton(android.R.string.ok, null);
 
                     builder.create().show();
                 }
@@ -328,18 +335,22 @@ class SpeedcubeTimer {
         @Override
         public void onTrigger() {
 
+            boolean isUsed = false;
+
             if (isUseInspectionTime) {
                 if (!isRunning()) {
                     startInspection();
+                    isUsed = true;
                 }
             }
-            else if (!isRunning()){
+
+            if (!isUsed && d.getTimerState() != TimerState.solving){
 
                 if(++unusedTriggerCounter % 2 == 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Start speedcube time?");
-                    builder.setMessage("Use two fingers to start the timer or enable the inspection time!");
-                    builder.setPositiveButton("ok", null);
+                    builder.setTitle(context.getString(R.string.help_start_solving_timer));
+                    builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
+                    builder.setPositiveButton(context.getString(android.R.string.ok), null);
 
                     builder.create().show();
                 }

@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/action_statistic"
-        android:title="statistics"
+        android:title="@string/time_statistics"
         android:icon="@android:drawable/ic_menu_info_details"
         android:showAsAction="ifRoom" />
 

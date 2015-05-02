@@ -13,8 +13,8 @@
 
         <CheckBoxPreference
             android:key="inspectionAcousticSignals"
-            android:title="Acoustic signals"
-            android:summary="Play an acoustic signal at 8s and 3s while inspection"
+            android:title="@string/pref_acoustic_signals"
+            android:summary="@string/pref_acoustic_signals_summery"
             android:defaultValue="true"
             android:dependency="inspectionTimeEnable" />
 

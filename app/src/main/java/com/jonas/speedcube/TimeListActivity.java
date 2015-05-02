@@ -62,9 +62,9 @@ public class TimeListActivity extends Activity {
             if(session.size() > 0) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Delete all Times?");
-                builder.setNegativeButton("no", null);
-                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                builder.setMessage(getString(R.string.delet_all_times));
+                builder.setNegativeButton(android.R.string.no, null);
+                builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -120,8 +120,8 @@ public class TimeListActivity extends Activity {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setView(view);
-            builder.setTitle("Time Statistics" + " (" + valid + "/" + total + ")");
-            builder.setPositiveButton("OK", null);
+            builder.setTitle(getString(R.string.time_statistics) + " (" + valid + "/" + total + ")");
+            builder.setPositiveButton(android.R.string.ok, null);
             builder.create().show();
         }
 

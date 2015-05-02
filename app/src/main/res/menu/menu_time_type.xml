@@ -4,14 +4,14 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/ok"
-            android:title="@android:string/ok" />
+            android:title="@string/time_type_ok" />
         <item
             android:id="@+id/plus2"
-            android:title="@string/plus2" />
+            android:title="@string/time_type_plus2" />
 
         <item
             android:id="@+id/DNF"
-            android:title="@string/DNF" />
+            android:title="@string/time_type_DNF" />
     </group>
 
     <item

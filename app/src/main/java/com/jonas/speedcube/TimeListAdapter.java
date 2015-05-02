@@ -60,7 +60,7 @@ public class TimeListAdapter extends BaseAdapter {
         if (type == Time.Type.plus2) {
             timeString += "+";
         } else if (type == Time.Type.DNF) {
-            timeString = SpeedcubeApplication.instance().getString(R.string.DNF);
+            timeString = SpeedcubeApplication.instance().getString(R.string.time_type_DNF);
         }
 
         textViewTime.setText(timeString);

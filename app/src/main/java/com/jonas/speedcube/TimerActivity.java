@@ -252,9 +252,9 @@ public class TimerActivity extends Activity {
 
     private void updateTypeView() {
         if (speedcubeTimer.getTime().getType() == Time.Type.DNF) {
-            ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.DNF));
+            ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.time_type_DNF));
         } else if (speedcubeTimer.getTime().getType() == Time.Type.plus2) {
-            ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.plus2));
+            ((TextView) findViewById(R.id.textViewType)).setText(getString(R.string.time_type_plus2));
         } else {
             ((TextView) findViewById(R.id.textViewType)).setText("");
         }
@@ -270,9 +270,9 @@ public class TimerActivity extends Activity {
             long inspectionTime = speedcubeTimer.getInspectionTime();
 
             if (inspectionTime < -2000) {
-                text += getString(R.string.DNF);
+                text += getString(R.string.time_type_DNF);
             } else if (inspectionTime < 0) {
-                text += getString(R.string.plus2);
+                text += getString(R.string.time_type_plus2);
             } else {
                 text = Time.toString(inspectionTime + 999, 0);
             }

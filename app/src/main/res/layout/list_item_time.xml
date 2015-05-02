@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/zeroTime"
+                android:text="@string/zero_time"
                 android:id="@+id/textViewAo5"
                 android:layout_marginRight="10dp" />
 
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/zeroTime"
+                android:text="@string/zero_time"
                 android:id="@+id/textViewAo12"
                 android:layout_marginRight="10dp" />
 

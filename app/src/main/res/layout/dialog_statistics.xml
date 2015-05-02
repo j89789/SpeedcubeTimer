@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zeroTime"
+                    android:text="@string/zero_time"
                     android:id="@+id/textViewBest" />
             </TableRow>
 
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zeroTime"
+                    android:text="@string/zero_time"
                     android:id="@+id/textViewWorse" />
 
             </TableRow>
@@ -69,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zeroTime"
+                    android:text="@string/zero_time"
                     android:id="@+id/textViewMean" />
             </TableRow>
 
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zeroTime"
+                    android:text="@string/zero_time"
                     android:id="@+id/textViewAo5Best" />
             </TableRow>
 
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zeroTime"
+                    android:text="@string/zero_time"
                     android:id="@+id/textViewAo5Worse" />
             </TableRow>
         </TableLayout>
@@ -151,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zeroTime"
+                    android:text="@string/zero_time"
                     android:id="@+id/textViewAo12Best" />
             </TableRow>
 
@@ -170,7 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/zeroTime"
+                    android:text="@string/zero_time"
                     android:id="@+id/textViewAo12Worse" />
             </TableRow>
         </TableLayout>

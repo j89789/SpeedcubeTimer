@@ -19,10 +19,10 @@
         </activity>
         <activity
             android:name="com.jonas.speedcube.SettingsActivity"
-            android:label="Settings" />
+            android:label="@string/settings" />
         <activity
             android:name="com.jonas.speedcube.TimeListActivity"
-            android:label="@string/title_activity_time_list" >
+            android:label="@string/time_list" >
         </activity>
     </application>
 
