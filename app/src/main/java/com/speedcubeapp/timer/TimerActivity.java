@@ -138,7 +138,7 @@ public class TimerActivity extends Activity {
                 findViewById(R.id.rowAo12).setVisibility(View.GONE);
             }
 
-            if (mean != 0) {
+            if (session.getSize() > 1) {
                 ((TextView) findViewById(R.id.textViewMean)).setText(Time.toString(mean, isUseMilliseconds));
                 findViewById(R.id.tableRowMean).setVisibility(View.VISIBLE);
             } else {
