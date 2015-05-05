@@ -22,7 +22,7 @@ public class TimerActivity extends Activity {
      * Input for the SpeedcubeTimer.
      */
     private final TouchSensor touchSensor = new TouchSensor();
-    private boolean isUseMilliseconds;
+    private boolean isUseMilliseconds = false;
     /**
      * This is the central element which will be visualise with this activity
      */
@@ -41,6 +41,8 @@ public class TimerActivity extends Activity {
      * Handel's changed form the Speedcube Timer
      */
     private SpeedcubeListener speedcubeListener = new SpeedcubeListener();
+
+    SingleShotTimer screenOfTimer = new SingleShotTimer();
 
     private SharedPreferences defaultSharedPreferences;
     private boolean isShowAverage;
@@ -66,10 +68,6 @@ public class TimerActivity extends Activity {
         }
     };
     private boolean isShowScramble;
-
-    public TimerActivity() {
-        isUseMilliseconds = false;
-    }
 
     @Override
     protected void onPause() {
@@ -113,6 +111,9 @@ public class TimerActivity extends Activity {
         if (textViewScramble.getText() == "") {
             invalidateScramble();
         }
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        stopKeepScreenOn();
 
         super.onResume();
     }
@@ -208,7 +209,16 @@ public class TimerActivity extends Activity {
 
         speedcubeTimer.setContext(this);
 
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // Keep screen for 2 minutes on
+        screenOfTimer.setInterval(120000);
+
+        screenOfTimer.setTimeoutLister(new SingleShotTimer.TimeoutLister() {
+            @Override
+            public void onTimeout() {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        });
     }
 
     @Override
@@ -298,8 +308,6 @@ public class TimerActivity extends Activity {
                 || state == SpeedcubeTimer.TimerState.solved
                 || state == SpeedcubeTimer.TimerState.ready) {
             text = Time.toString(speedcubeTimer.getCurrentSolvingTime(), isUseMilliseconds);
-        } else if (state == SpeedcubeTimer.TimerState.ready) {
-            text = Time.toString(speedcubeTimer.getTime().getTimeMs(), isUseMilliseconds);
         }
 
         if (!text.isEmpty()) {
@@ -349,6 +357,15 @@ public class TimerActivity extends Activity {
             if (newState == SpeedcubeTimer.TimerState.solved) {
                 invalidateScramble();
             }
+
+            if (newState == SpeedcubeTimer.TimerState.inspection ||
+                    newState == SpeedcubeTimer.TimerState.solving) {
+                keepScreenOn();
+            }
+            else{
+                stopKeepScreenOn();
+            }
+
         }
 
         @Override
@@ -361,6 +378,15 @@ public class TimerActivity extends Activity {
             updateTimeView();
         }
 
+    }
+
+    private void stopKeepScreenOn() {
+        screenOfTimer.restart();
+    }
+
+    private void keepScreenOn() {
+        screenOfTimer.stop();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private class TimeViewOnClickListener implements View.OnClickListener {
