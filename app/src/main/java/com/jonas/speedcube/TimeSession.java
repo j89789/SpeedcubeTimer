@@ -70,15 +70,18 @@ public class TimeSession {
 
     public TimeSession() {
 
+        /*
         Random random = new Random();
 
         // For test insert 10 elements
         for (int i = 0; i < 20; i++) {
             Time time = new Time();
             time.setTimeMs(random.nextInt(30000));
-
+            time.setTimeMs(17000 + (int)((double) 15000 * (double) random.nextInt(1000) / 1000));
             addNewTime(time);
         }
+        */
+
     }
 
     public Time getBestAverageOf12Time() {

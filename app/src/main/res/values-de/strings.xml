@@ -21,11 +21,13 @@
     <string name="pref_acoustic_signals_summery">Warnton währen der Inspektionszeit bei 8 und 3 Sekunden</string>
     <string name="delet_all_times">Alle Zeiten Löschen?</string>
     <string name="time_statistics">Statistik</string>
-    <string name="help">Hilfe</string><string name="help_text">Inspektion Timer\n\n
-Die 15 Sekunden Inspektionszeit wird mit ein einfache Klick gestartet werden. Die
-Inspektionszeit kann in den Einstellung deaktiviert werden.\n\n
-Speedcube Timer\n\n
-Der eigentlichen Timer wird gestartet indem zwe Fingeri den Touchscrenn berühren bis
-det Zeit grün wird. Wenn ein Finger den Touchscrenn verlässt läuft läuft die Zeit
-Der Timer wird gestoppt sobalt wieder zwei Finger den Touchscreen berühren.</string>
+    <string name="help">Hilfe</string>
+    <string name="help_text">Timer\n\n
+Der  Timer wird gestartet indem zwei Finger den Touchscrenn berühren bis
+det Zeit grün wird. Wenn ein Finger den Touchscrenn verlässt läuft die Zeit
+Der Timer wird gestoppt sobalt wieder zwei Finger den Touchscreen berühren.\n\n
+
+Inspektion Timer\n\n
+Die 15 Sekunden Inspektionszeit wird mit ein einfache Klick gestartet. Die
+Inspektionszeit kann in den Einstellung deaktiviert werden.</string>
 </resources>
