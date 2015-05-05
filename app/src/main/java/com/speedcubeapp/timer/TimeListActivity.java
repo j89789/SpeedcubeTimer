@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,15 @@ public class TimeListActivity extends Activity {
     private ListView listView;
 
     private TimeSession session = SpeedcubeApplication.instance().getTimeSession();
+
+    @Override
+    protected void onResume() {
+
+        boolean isUseMilliseconds = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("useMilliseconds", true);
+        session.getAdapter().setIsUseMilliseconds(isUseMilliseconds);
+
+        super.onResume();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

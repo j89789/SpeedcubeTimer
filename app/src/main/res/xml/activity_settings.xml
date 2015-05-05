@@ -28,7 +28,7 @@
             android:key="useMilliseconds"
             android:title="@string/pref_useMilliseconds"
             android:summary="@string/pref_useMilliseconds_summery"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
 
         <CheckBoxPreference
             android:key="showAverage"

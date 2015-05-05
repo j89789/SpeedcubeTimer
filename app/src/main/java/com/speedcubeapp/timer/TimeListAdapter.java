@@ -15,6 +15,12 @@ public class TimeListAdapter extends BaseAdapter {
     List<Time> sourceList;
     TimeSession session;
 
+    boolean isUseMilliseconds = false;
+
+    public void setIsUseMilliseconds(boolean useMilliseconds) {
+        isUseMilliseconds = useMilliseconds;
+    }
+
     public TimeListAdapter(TimeSession session) {
         this.session = session;
         this.sourceList = session.getTimes();
@@ -55,7 +61,7 @@ public class TimeListAdapter extends BaseAdapter {
         Time time = sourceList.get(position);
         Time.Type type = time.getType();
 
-        String timeString = Time.toStringMs(time.getTimeMs());
+        String timeString = Time.toString(time.getTimeMs(), isUseMilliseconds ? 3 : 2);
 
         if (type == Time.Type.plus2) {
             timeString += "+";
@@ -66,14 +72,14 @@ public class TimeListAdapter extends BaseAdapter {
         textViewTime.setText(timeString);
 
         if (time.getAverageOf5() > 0) {
-            textViewAo5.setText(Time.toStringMs(time.getAverageOf5()));
+            textViewAo5.setText(Time.toString(time.getAverageOf5(), isUseMilliseconds ? 3 : 2));
             convertView.findViewById(R.id.rowAo5).setVisibility(View.VISIBLE);
         } else {
             convertView.findViewById(R.id.rowAo5).setVisibility(View.GONE);
         }
 
         if (time.getAverageOf12() > 0) {
-            textViewAo12.setText(Time.toStringMs(time.getAverageOf12()));
+            textViewAo12.setText(Time.toString(time.getAverageOf12(), isUseMilliseconds ? 3 : 2));
             convertView.findViewById(R.id.rowAo12).setVisibility(View.VISIBLE);
         } else {
             convertView.findViewById(R.id.rowAo12).setVisibility(View.GONE);
