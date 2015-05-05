@@ -5,11 +5,11 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.jonas.speedcube"
+        applicationId "com.speedcubeapp.timer"
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
-        versionName "0.0.1"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
