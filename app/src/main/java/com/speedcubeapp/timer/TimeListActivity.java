@@ -62,7 +62,7 @@ public class TimeListActivity extends Activity {
             if(session.size() > 0) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(getString(R.string.delet_all_times));
+                builder.setMessage(getString(R.string.delete_all_times));
                 builder.setNegativeButton(android.R.string.no, null);
                 builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
