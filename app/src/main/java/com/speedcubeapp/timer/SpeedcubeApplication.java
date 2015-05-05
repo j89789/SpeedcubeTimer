@@ -1,4 +1,4 @@
-package com.jonas.speedcube;
+package com.speedcubeapp.timer;
 
 import android.app.Application;
 import android.content.res.ColorStateList;

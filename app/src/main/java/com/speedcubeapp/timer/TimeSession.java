@@ -1,8 +1,7 @@
-package com.jonas.speedcube;
+package com.speedcubeapp.timer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Time list

@@ -1,4 +1,4 @@
-package com.jonas.speedcube;
+package com.speedcubeapp.timer;
 
 import android.view.MotionEvent;
 import android.view.View;

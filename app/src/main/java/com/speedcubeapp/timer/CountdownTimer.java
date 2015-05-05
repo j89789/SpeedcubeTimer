@@ -1,4 +1,4 @@
-package com.jonas.speedcube;
+package com.speedcubeapp.timer;
 
 /**
  * The time will go down form the giver up value. The time can by smaller than zero. The default

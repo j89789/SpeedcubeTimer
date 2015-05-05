@@ -1,4 +1,4 @@
-package com.jonas.speedcube;
+package com.speedcubeapp.timer;
 
 /**
  * A basic timer with start, stop and reset function.

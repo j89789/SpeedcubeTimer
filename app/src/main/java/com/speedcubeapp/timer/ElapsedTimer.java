@@ -1,4 +1,4 @@
-package com.jonas.speedcube;
+package com.speedcubeapp.timer;
 
 class ElapsedTimer {
 
