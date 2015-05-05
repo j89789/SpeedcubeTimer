@@ -22,12 +22,11 @@
     <string name="delete_all_times">Alle Zeiten Löschen?</string>
     <string name="time_statistics">Statistik</string>
     <string name="help">Hilfe</string>
-    <string name="help_text">Timer\n\n
-Der  Timer wird gestartet indem zwei Finger den Touchscrenn berühren bis
-det Zeit grün wird. Wenn ein Finger den Touchscrenn verlässt läuft die Zeit
-Der Timer wird gestoppt sobalt wieder zwei Finger den Touchscreen berühren.\n\n
+    <string name="help_text">Der  Timer wird gestartet indem zwei Finger den Touchscrenn berühren bis
+die Zeit grün wird. Wenn ein Finger den Touchscrenn nicht mehr berührt läuft die Zeit.
+Der Timer wird gestoppt sobald wieder zwei Finger den Touchscreen berühren.\n\n
 
-Inspektion Timer\n\n
-Die 15 Sekunden Inspektionszeit wird mit ein einfache Klick gestartet. Die
+Inspektionszeit\n\n
+Der  Inspektions Timer (15 Sekunden) wird mit ein einfache Klick gestartet. Die
 Inspektionszeit kann in den Einstellung deaktiviert werden.</string>
 </resources>

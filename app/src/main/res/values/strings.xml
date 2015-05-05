@@ -37,7 +37,6 @@ time is going green. If one finger no longer touching the screen the timer is ru
 The timer will stop if you touch the screen with two fingers again.\n\n
 
 Inspection timer\n\n
-Start the 15 Seconds inspection time with a simple click on screen. The inspection time
-can be disable in the settings.
-</string>
+Start the inspection timer (15 seconds) with a simple click on screen. The inspection time
+can be disable in the settings.</string>
 </resources>
