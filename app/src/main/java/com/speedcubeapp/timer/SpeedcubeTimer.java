@@ -322,11 +322,13 @@ class SpeedcubeTimer {
                 finishedSolving();
                 isSenorDownUsedForStopSolving = true;
                 isUsed = true;
+            } else if(isUseInspectionTime){
+                isUsed = true;
             }
 
-            if (!isUsed && d.getTimerState() != TimerState.solving) {
+            if (!isUsed) {
 
-                if (++unusedSensorEvent % 2 == 0) {
+                if (++unusedSensorEvent % 4 == 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(context.getString(R.string.help_start_solving_timer));
                     builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
@@ -355,7 +357,7 @@ class SpeedcubeTimer {
                isShowHelp = true;
             }
 
-            if (++unusedSensorEvent % 2 == 0 && isShowHelp) {
+            if (++unusedSensorEvent % 4 == 0 && isShowHelp) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(context.getString(R.string.help_start_solving_timer));
                 builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
