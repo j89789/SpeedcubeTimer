@@ -70,6 +70,7 @@ public class TimeSession {
 
     public TimeSession() {
 
+        /*
         Random random = new Random();
 
         // For test insert 10 elements
@@ -79,6 +80,7 @@ public class TimeSession {
             time.setTimeMs(17000 + (int)((double) 15000 * (double) random.nextInt(1000) / 1000));
             addNewTime(time);
         }
+        */
 
     }
 
