@@ -2,6 +2,7 @@ package com.speedcubeapp.timer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Time list
@@ -69,7 +70,6 @@ public class TimeSession {
 
     public TimeSession() {
 
-        /*
         Random random = new Random();
 
         // For test insert 10 elements
@@ -79,7 +79,6 @@ public class TimeSession {
             time.setTimeMs(17000 + (int)((double) 15000 * (double) random.nextInt(1000) / 1000));
             addNewTime(time);
         }
-        */
 
     }
 
@@ -154,77 +153,6 @@ public class TimeSession {
         }
     }
 
-    private void updateExtremeValues(Time time) {
-        long timeMs = time.getTimeMs();
-
-        boolean isExtremeValueChanged = false;
-
-        if (bestTime == null || timeMs < bestTime.getTimeMs()) {
-            bestTime = time;
-            isExtremeValueChanged = true;
-        }
-
-        if (worseTime == null || timeMs > worseTime.getTimeMs()) {
-            worseTime = time;
-            isExtremeValueChanged = true;
-        }
-
-
-        if (onChangListener != null) {
-            if (isExtremeValueChanged) {
-                onChangListener.onExtremeValuesChange();
-            }
-        }
-    }
-
-    private void updateAverageOf5(Time time) {
-        long averageOf5 = time.getAverageOf5();
-
-        if (averageOf5 != 0) {
-            boolean isAverageChanged = false;
-
-            if (bestAverageOf5Time == null || averageOf5 < bestAverageOf5Time.getAverageOf5()) {
-                bestAverageOf5Time = time;
-                isAverageChanged = true;
-            }
-
-            if (worseAverageOf5Time == null || averageOf5 > worseAverageOf5Time.getAverageOf5()) {
-                worseAverageOf5Time = time;
-                isAverageChanged = true;
-            }
-
-            if (onChangListener != null) {
-                if (isAverageChanged) {
-                    onChangListener.onAverageChanged();
-                }
-            }
-        }
-    }
-
-    private void updateAverageOf12(Time time) {
-        long averageOf12 = time.getAverageOf12();
-
-        if (averageOf12 != 0) {
-            boolean isAverageChanged = false;
-
-            if (bestAverageOf12Time == null || averageOf12 < bestAverageOf12Time.getAverageOf12()) {
-                bestAverageOf12Time = time;
-                isAverageChanged = true;
-            }
-
-            if (worseAverageOf12Time == null || averageOf12 > worseAverageOf12Time.getAverageOf12()) {
-                worseAverageOf12Time = time;
-                isAverageChanged = true;
-            }
-
-            if (onChangListener != null) {
-                if (isAverageChanged) {
-                    onChangListener.onAverageChanged();
-                }
-            }
-        }
-    }
-
 
     private void updateExtremeValues() {
 
@@ -263,22 +191,26 @@ public class TimeSession {
                 worseTime = time;
             }
 
-            if (time.getAverageOf5() != 0) {
-                if (bestAverageOf5Time == null ||ms < bestAverageOf5Time.getTimeMs()) {
+            ms = time.getAverageOf5();
+
+            if (ms != 0) {
+                if (bestAverageOf5Time == null || ms < bestAverageOf5Time.getAverageOf5()) {
                     bestAverageOf5Time = time;
                 }
 
-                if (worseAverageOf5Time == null || ms > worseAverageOf5Time.getTimeMs()) {
+                if (worseAverageOf5Time == null || ms > worseAverageOf5Time.getAverageOf5()) {
                     worseAverageOf5Time = time;
                 }
             }
 
-            if (time.getAverageOf12() != 0) {
-                if (bestAverageOf12Time == null || ms < bestAverageOf12Time.getTimeMs()) {
+            ms = time.getAverageOf12();
+
+            if (ms != 0) {
+                if (bestAverageOf12Time == null || ms < bestAverageOf12Time.getAverageOf12()) {
                     bestAverageOf12Time = time;
                 }
 
-                if (worseAverageOf12Time == null || ms > worseAverageOf12Time.getTimeMs()) {
+                if (worseAverageOf12Time == null || ms > worseAverageOf12Time.getAverageOf12()) {
                     worseAverageOf12Time = time;
                 }
             }
