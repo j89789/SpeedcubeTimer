@@ -209,6 +209,7 @@ public class TimerActivity extends Activity {
 
         speedcubeTimer.setContext(this);
 
+        checkFirstRun();
 
         // Keep screen for 2 minutes on
         screenOfTimer.setInterval(120000);
@@ -219,6 +220,18 @@ public class TimerActivity extends Activity {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
+    }
+
+    public void checkFirstRun() {
+        SharedPreferences preference = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+
+        boolean isFirstRun = preference.getBoolean("isFirstRun", true);
+
+        if (isFirstRun){
+
+            showHelpDialog();
+            preference.edit().putBoolean("isFirstRun", false).apply();
+        }
     }
 
     @Override
@@ -243,22 +256,26 @@ public class TimerActivity extends Activity {
             return true;
         } else if (id == R.id.action_help) {
 
-            String version = "";
-
-            try {
-                PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                version = pInfo.versionName;
-            } catch (PackageManager.NameNotFoundException e) {}
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getString(R.string.app_name) + "  " + version);
-            builder.setMessage(getString(R.string.help_text));
-            builder.setPositiveButton(android.R.string.ok, null);
-            builder.create().show();
+            showHelpDialog();
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showHelpDialog() {
+        String version = "";
+
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {}
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.app_name) + "  " + version);
+        builder.setMessage(getString(R.string.help_text));
+        builder.setPositiveButton(android.R.string.ok, null);
+        builder.create().show();
     }
 
     @Override

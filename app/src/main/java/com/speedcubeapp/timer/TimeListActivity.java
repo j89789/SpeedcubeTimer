@@ -108,21 +108,21 @@ public class TimeListActivity extends Activity {
 
             if(session.getBestAverageOf5Time() != null){
                 ((TextView) view.findViewById(R.id.textViewAo5Best))
-                        .setText(session.getBestAverageOf5Time().toString());
+                        .setText(Time.toStringMs(session.getBestAverageOf5Time().getAverageOf5()));
             }
             if(session.getWorseAverageOf5Time() != null){
                 ((TextView) view.findViewById(R.id.textViewAo5Worse))
-                        .setText(session.getWorseAverageOf5Time().toString());
+                        .setText(Time.toStringMs(session.getWorseAverageOf5Time().getAverageOf5()));
             }
 
             if(session.getBestAverageOf12Time() != null){
                 ((TextView) view.findViewById(R.id.textViewAo12Best))
-                        .setText(session.getBestAverageOf12Time().toString());
+                        .setText(Time.toStringMs(session.getBestAverageOf12Time().getAverageOf12()));
             }
 
             if(session.getWorseAverageOf12Time() != null){
                 ((TextView) view.findViewById(R.id.textViewAo12Worse))
-                        .setText(session.getWorseAverageOf12Time().toString());
+                        .setText(Time.toStringMs(session.getWorseAverageOf12Time().getAverageOf12()));
             }
 
             int total = session.size();
