@@ -146,6 +146,8 @@ class SpeedcubeTimer {
         }
 
         time.setTimeMs(solvingTimer.getCurrentTime());
+        time.setTimestampToNow();
+
         SpeedcubeApplication.instance().getTimeSession().addNewTime(time);
     }
 

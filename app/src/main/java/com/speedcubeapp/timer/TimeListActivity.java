@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
+
 
 public class TimeListActivity extends Activity {
 
@@ -88,53 +90,69 @@ public class TimeListActivity extends Activity {
         }
         else if (id == R.id.action_statistic){
 
-            LayoutInflater inflater = getLayoutInflater();
-            View view = inflater.inflate(R.layout.dialog_statistics, null);
+            showStatistic();
+        }
+        else if (id == R.id.action_save){
 
-            if(session.getBestTime() != null){
-                ((TextView) view.findViewById(R.id.textViewBest))
-                        .setText(session.getBestTime().toString());
-            }
+            File file = new File(getFilesDir(), "data");
 
-            if(session.getWorseTime() != null){
-                ((TextView) view.findViewById(R.id.textViewWorse))
-                        .setText(session.getWorseTime().toString());
-            }
+            session.save(file);
+        }
+        else if (id == R.id.action_load){
 
-            if(session.getAverageAll() != 0){
-                ((TextView) view.findViewById(R.id.textViewMean))
-                        .setText(Time.toStringMs(session.getAverageAll()));
-            }
+            File file = new File(getFilesDir(), "data");
 
-            if(session.getBestAverageOf5Time() != null){
-                ((TextView) view.findViewById(R.id.textViewAo5Best))
-                        .setText(Time.toStringMs(session.getBestAverageOf5Time().getAverageOf5()));
-            }
-            if(session.getWorseAverageOf5Time() != null){
-                ((TextView) view.findViewById(R.id.textViewAo5Worse))
-                        .setText(Time.toStringMs(session.getWorseAverageOf5Time().getAverageOf5()));
-            }
-
-            if(session.getBestAverageOf12Time() != null){
-                ((TextView) view.findViewById(R.id.textViewAo12Best))
-                        .setText(Time.toStringMs(session.getBestAverageOf12Time().getAverageOf12()));
-            }
-
-            if(session.getWorseAverageOf12Time() != null){
-                ((TextView) view.findViewById(R.id.textViewAo12Worse))
-                        .setText(Time.toStringMs(session.getWorseAverageOf12Time().getAverageOf12()));
-            }
-
-            int total = session.size();
-            int valid = session.size() - session.getDnfTimes().size();
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(view);
-            builder.setTitle(getString(R.string.time_statistics) + " (" + valid + "/" + total + ")");
-            builder.setPositiveButton(android.R.string.ok, null);
-            builder.create().show();
+            session.load(file);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showStatistic() {
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_statistics, null);
+
+        if(session.getBestTime() != null){
+            ((TextView) view.findViewById(R.id.textViewBest))
+                    .setText(session.getBestTime().toStringMs());
+        }
+
+        if(session.getWorseTime() != null){
+            ((TextView) view.findViewById(R.id.textViewWorse))
+                    .setText(session.getWorseTime().toStringMs());
+        }
+
+        if(session.getAverageAll() != 0){
+            ((TextView) view.findViewById(R.id.textViewMean))
+                    .setText(Time.toStringMs(session.getAverageAll()));
+        }
+
+        if(session.getBestAverageOf5Time() != null){
+            ((TextView) view.findViewById(R.id.textViewAo5Best))
+                    .setText(Time.toStringMs(session.getBestAverageOf5Time().getAverageOf5()));
+        }
+        if(session.getWorseAverageOf5Time() != null){
+            ((TextView) view.findViewById(R.id.textViewAo5Worse))
+                    .setText(Time.toStringMs(session.getWorseAverageOf5Time().getAverageOf5()));
+        }
+
+        if(session.getBestAverageOf12Time() != null){
+            ((TextView) view.findViewById(R.id.textViewAo12Best))
+                    .setText(Time.toStringMs(session.getBestAverageOf12Time().getAverageOf12()));
+        }
+
+        if(session.getWorseAverageOf12Time() != null){
+            ((TextView) view.findViewById(R.id.textViewAo12Worse))
+                    .setText(Time.toStringMs(session.getWorseAverageOf12Time().getAverageOf12()));
+        }
+
+        int total = session.size();
+        int valid = session.size() - session.getDnfTimes().size();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        builder.setTitle(getString(R.string.time_statistics) + " (" + valid + "/" + total + ")");
+        builder.setPositiveButton(android.R.string.ok, null);
+        builder.create().show();
     }
 }

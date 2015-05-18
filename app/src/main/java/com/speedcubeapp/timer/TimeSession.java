@@ -1,5 +1,13 @@
 package com.speedcubeapp.timer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +32,35 @@ public class TimeSession {
     private List<Time> validTimes = new ArrayList<>();
     private List<Time> plus2Times = new ArrayList<>();
     private List<Time> dnfTimes = new ArrayList<>();
+    /**
+     * Adapter vor ListView
+     */
+    private TimeListAdapter adapter = new TimeListAdapter(this);
+    /**
+     * Reviver for change events
+     */
+    private OnChangListener onChangListener = null;
+    /**
+     * Average of the last 5 Times. 0 if there a DNF time.
+     */
+    private long average5;
+    /**
+     * Average of the last 12 Times. 0 if there a DNF time.
+     */
+    private long average12;
+    /**
+     * Average of all Times. Excluding DNF time.
+     */
+    private long averageAll;
+    /**
+     * Listen to all time changes in the session
+     */
+    private Time.OnChangeListener onTimeChangeLister = new OnTimeChangeListener();
+
+    public TimeSession() {
+
+        generateRandomTimers();
+    }
 
     public List<Time> getValidTimes() {
         return validTimes;
@@ -37,51 +74,16 @@ public class TimeSession {
         return plus2Times;
     }
 
-    /**
-     * Adapter vor ListView
-     */
-    private TimeListAdapter adapter = new TimeListAdapter(this);
-
-    /**
-     * Reviver for change events
-     */
-    private OnChangListener onChangListener = null;
-
-    /**
-     * Average of the last 5 Times. 0 if there a DNF time.
-     */
-    private long average5;
-
-    /**
-     * Average of the last 12 Times. 0 if there a DNF time.
-     */
-    private long average12;
-
-    /**
-     * Average of all Times. Excluding DNF time.
-     */
-    private long averageAll;
-
-
-    /**
-     * Listen to all time changes in the session
-     */
-    private Time.OnChangeListener onTimeChangeLister = new OnTimeChangeListener();
-
-    public TimeSession() {
-
-        /*
+    private void generateRandomTimers() {
         Random random = new Random();
 
         // For test insert 10 elements
         for (int i = 0; i < 20; i++) {
             Time time = new Time();
             time.setTimeMs(random.nextInt(30000));
-            time.setTimeMs(17000 + (int)((double) 15000 * (double) random.nextInt(1000) / 1000));
+            time.setTimeMs(17000 + (int) ((double) 15000 * (double) random.nextInt(1000) / 1000));
             addNewTime(time);
         }
-        */
-
     }
 
     public Time getBestAverageOf12Time() {
@@ -146,7 +148,7 @@ public class TimeSession {
             dnfTimes.add(time);
         }
 
-        updateExtremeValues();
+        update();
 
         time.setOnChangeLister(onTimeChangeLister);
 
@@ -156,7 +158,7 @@ public class TimeSession {
     }
 
 
-    private void updateExtremeValues() {
+    private void update() {
 
         averageAll = 0;
 
@@ -164,7 +166,7 @@ public class TimeSession {
             Time time = times.get(0);
             bestTime = time;
             worseTime = time;
-        } else{
+        } else {
             bestTime = null;
             worseTime = null;
         }
@@ -177,7 +179,7 @@ public class TimeSession {
         for (int i = 0; i < times.size(); i++) {
             Time time = times.get(i);
 
-            if(time.getType() == Time.Type.DNF){
+            if (time.getType() == Time.Type.DNF) {
                 continue;
             }
 
@@ -218,7 +220,7 @@ public class TimeSession {
             }
         }
 
-        if(validTimes.size() + plus2Times.size() > 0) {
+        if (validTimes.size() + plus2Times.size() > 0) {
             averageAll /= validTimes.size() + plus2Times.size();
         }
 
@@ -244,7 +246,7 @@ public class TimeSession {
 
             updateAverageTimesAt(index);
 
-            updateExtremeValues();
+            update();
 
             if (onChangListener != null) {
                 onChangListener.onSizeChanged();
@@ -318,7 +320,7 @@ public class TimeSession {
         int beginIndex = endIndex - count + 1;
         if (endIndex < times.size() && beginIndex >= 0) {
             for (int i = beginIndex; i <= endIndex; i++) {
-                if(times.get(i).getType() == Time.Type.DNF){
+                if (times.get(i).getType() == Time.Type.DNF) {
                     return 0;
                 }
                 timeMs += times.get(i).getTimeMs();
@@ -326,6 +328,81 @@ public class TimeSession {
             timeMs /= count;
         }
         return timeMs;
+    }
+
+    public void save(File file) {
+
+        String data = "";
+
+        data = "version=" + SpeedcubeApplication.versionCode + "\n";
+
+        for (Time time : this.times) {
+            data += time.getTimestamp() + ";" + time.getTimeMs() + ";" + time.getType().ordinal() + "\n";
+        }
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            OutputStreamWriter writer = new OutputStreamWriter(out);
+            writer.write(data);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void load(File file) {
+
+        this.times.clear();
+
+        try {
+            FileInputStream in = new FileInputStream(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line = reader.readLine();
+            int versionCode = 0;
+
+            if (line != null && line.contains("version=")) {
+                versionCode = Integer.parseInt(line.split("=")[1]);
+            }
+
+            if (versionCode > 0) {
+                while (true) {
+                    line = reader.readLine();
+
+                    if (line != null) {
+
+                        String[] split = line.split(";");
+
+                        long timeStamp = Long.parseLong(split[0]);
+                        int timeMs = Integer.parseInt(split[1]);
+                        Time.Type type = Time.Type.values()[Integer.parseInt(split[2])];
+
+                        Time time = new Time();
+                        time.setTimeMs(timeMs);
+                        time.setType(type);
+                        time.setTimestamp(timeStamp);
+
+                        times.add(time);
+
+                    } else {
+                        break;
+                    }
+                }
+                reader.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < times.size(); i++) {
+            updateAverageTimesAt(i);
+            times.get(i).setOnChangeLister(onTimeChangeLister);
+        }
+
+        update();
+
+        adapter.notifyDataSetChanged();
     }
 
     interface OnChangListener {
@@ -356,9 +433,10 @@ public class TimeSession {
             int i = times.indexOf(time);
 
             updateAverageTimesAt(i);
-            updateExtremeValues();
+            update();
 
             adapter.notifyDataSetChanged();
         }
     }
 }
+

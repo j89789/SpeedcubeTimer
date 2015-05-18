@@ -13,5 +13,16 @@
         android:icon="@android:drawable/ic_menu_delete"
         android:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_save"
+        android:title="save"
+        android:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_load"
+        android:title="load"
+        android:showAsAction="never" />
+
+
 
 </menu>

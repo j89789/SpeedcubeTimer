@@ -8,14 +8,15 @@ import android.widget.PopupMenu;
 
 public class Time{
 
-    private long timeMs = 0;
-    private long averageOf5 = 0;
-    private long averageOf12 = 0;
+    private long timeMs;
+    private long averageOf5;
+    private long averageOf12;
+    private long timestamp;
     private Type type = Type.valid;
 
     private OnChangeListener lister;
 
-    public String toString() {
+    public String toStringMs() {
         return Time.toString(timeMs, 3);
     }
 
@@ -167,6 +168,18 @@ public class Time{
 
     public void setAverageOf12(long averageOf12) {
         this.averageOf12 = averageOf12;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setTimestampToNow() {
+        this.timestamp = System.currentTimeMillis();
     }
 
     enum Type {valid, plus2, DNF}
