@@ -337,7 +337,7 @@ public class TimeSession {
         data = "version=" + SpeedcubeApplication.versionCode + "\n";
 
         for (Time time : this.times) {
-            data += time.getTimestamp() + ";" + time.getTimeMs() + ";" + time.getType().ordinal() + "\n";
+            data += time.getTimestamp() + ";" + time.getOriginTimeMs() + ";" + time.getType().ordinal() + "\n";
         }
 
         try {
