@@ -82,6 +82,7 @@ public class TimeSession {
             Time time = new Time();
             time.setTimeMs(random.nextInt(30000));
             time.setTimeMs(17000 + (int) ((double) 15000 * (double) random.nextInt(1000) / 1000));
+            time.setTimestampToNow();
             addNewTime(time);
         }
     }

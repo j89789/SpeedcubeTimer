@@ -148,7 +148,7 @@ class SpeedcubeTimer {
         time.setTimeMs(solvingTimer.getCurrentTime());
         time.setTimestampToNow();
 
-        SpeedcubeApplication.instance().getTimeSession().addNewTime(time);
+        SpeedcubeApplication.instance().getCurrentPuzzle().getSession().addNewTime(time);
     }
 
     private void startInspection() {

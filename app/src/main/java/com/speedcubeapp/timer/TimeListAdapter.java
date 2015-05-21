@@ -17,13 +17,13 @@ public class TimeListAdapter extends BaseAdapter {
 
     boolean isUseMilliseconds = false;
 
-    public void setIsUseMilliseconds(boolean useMilliseconds) {
-        isUseMilliseconds = useMilliseconds;
-    }
-
     public TimeListAdapter(TimeSession session) {
         this.session = session;
         this.sourceList = session.getTimes();
+    }
+
+    public void setIsUseMilliseconds(boolean useMilliseconds) {
+        isUseMilliseconds = useMilliseconds;
     }
 
     @Override
@@ -52,6 +52,7 @@ public class TimeListAdapter extends BaseAdapter {
 
         TextView textViewPos = (TextView) convertView.findViewById(R.id.textView1);
         TextView textViewTime = (TextView) convertView.findViewById(R.id.textViewTime);
+        TextView textViewTimeStamp = (TextView) convertView.findViewById(R.id.textViewTimeStamp);
         TextView textViewAo5 = (TextView) convertView.findViewById(R.id.textViewAo5);
         TextView textViewAo12 = (TextView) convertView.findViewById(R.id.textViewAo12);
 
@@ -82,7 +83,7 @@ public class TimeListAdapter extends BaseAdapter {
             textViewAo12.setText(Time.toString(time.getAverageOf12(), isUseMilliseconds ? 3 : 2));
             convertView.findViewById(R.id.rowAo12).setVisibility(View.VISIBLE);
         } else {
-            convertView.findViewById(R.id.rowAo12).setVisibility(View.GONE);
+            convertView.findViewById(R.id.rowAo12).setVisibility(View.INVISIBLE);
         }
 
         if (time == session.getBestTime()) {
@@ -109,6 +110,46 @@ public class TimeListAdapter extends BaseAdapter {
             textViewAo12.setTextColor(SpeedcubeApplication.instance().defaultTextColor);
         }
 
+        textViewTimeStamp.setText(getTimeStampAgoString(time));
+
         return convertView;
+    }
+
+    private String getTimeStampAgoString(Time time) {
+        String text;
+        long msAgo = System.currentTimeMillis() - time.getTimestamp();
+        long secondsAgo = msAgo / 1000;
+
+        if (secondsAgo < 60) {
+            if (secondsAgo < 10) {
+                text = "just now";
+            } else {
+                text = secondsAgo + " seconds ago";
+            }
+        } else {
+
+            long minutesAgo = secondsAgo / 60;
+
+            if (minutesAgo < 2) {
+                text = minutesAgo + " a minute ago";
+
+            } else if (minutesAgo < 60 * 3) {
+                text = minutesAgo + " minutes ago";
+
+            } else {
+
+                long hoursAgo = minutesAgo / 60;
+
+                if (hoursAgo < 24 * 3) {
+                    text = hoursAgo + " hours ago";
+
+                } else {
+                    long daysAgo = hoursAgo / 24;
+
+                    text = daysAgo + " days ago";
+                }
+            }
+        }
+        return text;
     }
 }

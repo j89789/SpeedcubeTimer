@@ -77,6 +77,7 @@ public class FileAdapter extends BaseAdapter {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
+                    //noinspection ResultOfMethodCallIgnored
                     mContext.getFilesDir().listFiles()[position].delete();
                     notifyDataSetChanged();
                 }

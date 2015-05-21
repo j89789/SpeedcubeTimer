@@ -114,6 +114,7 @@ public class Time{
 
         PopupMenu popup = new PopupMenu(context, view);
 
+
         popup.inflate(R.menu.menu_time_type);
 
         if (type == Time.Type.valid) {
@@ -136,7 +137,11 @@ public class Time{
                 } else if (id == R.id.DNF) {
                     setType(Time.Type.DNF);
                 } else if (id == R.id.delete) {
-                    SpeedcubeApplication.instance().getTimeSession().removeTime(Time.this);
+
+                    SpeedcubeApplication.instance()
+                            .getCurrentPuzzle()
+                            .getSession()
+                            .removeTime(Time.this);
                 }
 
                 if (popupMenuLister != null) {

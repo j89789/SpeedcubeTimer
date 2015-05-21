@@ -39,4 +39,8 @@ The timer will stop if you touch the screen with two fingers again.\n\n
 Inspection timer\n\n
 Start the inspection timer (15 seconds) with a simple click on screen. The inspection time
 can be disable in the settings.</string>
+    <string name="puzzle_name_2x2x2">Speedcube 2*2*2</string>
+    <string name="puzzle_name_3x3x3">Speedcube 3*3*3</string>
+    <string name="puzzle_name_4x4x4">Speedcube 4*4*4</string>
+    <string name="puzzle_name_pyraminx">Pyraminx</string>
 </resources>

@@ -7,14 +7,6 @@
     android:paddingBottom="10dp"
     android:theme="@style/AppTheme">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@mipmap/speedcube_scrambled"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,22 +14,11 @@
         android:text="14."
         android:id="@+id/textView1"
         android:layout_marginTop="0dp"
-        android:textSize="30dp"
+        android:textSize="40dp"
         android:textStyle="bold"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/image"
         android:layout_marginLeft="20dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="24.342"
-        android:id="@+id/textViewTime"
-        android:textSize="30dp"
-        android:layout_toRightOf="@id/textView1"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp" />
 
     <TableLayout
         android:layout_width="wrap_content"
@@ -74,5 +55,29 @@
         </TableRow>
 
     </TableLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/textView1"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="24.342"
+        android:id="@+id/textViewTime"
+        android:textSize="30dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8 minutes ago"
+        android:id="@+id/textViewTimeStamp"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

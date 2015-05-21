@@ -30,7 +30,8 @@ public class TimerActivity extends Activity {
     /**
      * Information's of the current Session will be shown
      */
-    private TimeSession session = SpeedcubeApplication.instance().getTimeSession();
+    private TimeSession session;
+    private Puzzle puzzel;
     private TextView textViewTime;
     private TextView textViewAverage5;
     private TextView textViewAverage12;
@@ -50,7 +51,6 @@ public class TimerActivity extends Activity {
      * Best and worst time
      */
     private boolean isShowExtremeValues;
-    private ScrambleGenerator scrambleGenerator = new ScrambleGenerator();
 
     private TimeSession.OnChangListener onChangListener = new TimeSession.OnChangListener() {
         @Override
@@ -98,6 +98,22 @@ public class TimerActivity extends Activity {
         speedcubeTimer.setTouchPad(touchSensor);
         speedcubeTimer.setListener(speedcubeListener);
 
+        updatePuzzle();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        stopKeepScreenOn();
+
+        super.onResume();
+    }
+
+    private void updatePuzzle() {
+
+        session = SpeedcubeApplication.instance().getCurrentPuzzle().getSession();
+        puzzel = SpeedcubeApplication.instance().getCurrentPuzzle();
+
+        getActionBar().setIcon(puzzel.getImageResourceId());
+        getActionBar().setTitle(puzzel.getNameResourceId());
+
         session.setOnChangListener(onChangListener);
 
         // Update all
@@ -108,14 +124,7 @@ public class TimerActivity extends Activity {
         updateTypeView();
         updateScrambleView();
 
-        if (textViewScramble.getText() == "") {
-            invalidateScramble();
-        }
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        stopKeepScreenOn();
-
-        super.onResume();
+        invalidateScramble();
     }
 
     private void updateAverageView() {
@@ -174,7 +183,7 @@ public class TimerActivity extends Activity {
 
     private void invalidateScramble() {
         if (isShowScramble) {
-            textViewScramble.setText(scrambleGenerator.generateScramble());
+            textViewScramble.setText(puzzel.generateScramble());
         }
     }
 
@@ -220,6 +229,15 @@ public class TimerActivity extends Activity {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        SpeedcubeApplication.instance().addListener(new SpeedcubeApplication.PuzzleChangeListener() {
+            @Override
+            public void onPuzzleChanged() {
+                updatePuzzle();
+            }
+        });
     }
 
     public void checkFirstRun() {
@@ -255,8 +273,10 @@ public class TimerActivity extends Activity {
             startActivity(intent);
             return true;
         } else if (id == R.id.action_help) {
-
             showHelpDialog();
+        }
+        else if (id == android.R.id.home) {
+            SpeedcubeApplication.instance().showPuzzlesDialog(this);
         }
 
 

@@ -28,13 +28,16 @@ public class TimeListActivity extends Activity {
 
     private ListView listView;
 
-    private TimeSession session = SpeedcubeApplication.instance().getTimeSession();
+    private Puzzle puzzle = SpeedcubeApplication.instance().getCurrentPuzzle();
+    private TimeSession session = SpeedcubeApplication.instance().getCurrentPuzzle().getSession();
 
     @Override
     protected void onResume() {
 
         boolean isUseMilliseconds = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("useMilliseconds", true);
         session.getAdapter().setIsUseMilliseconds(isUseMilliseconds);
+
+        getActionBar().setIcon(puzzle.getImageResourceId());
 
         super.onResume();
     }
@@ -120,7 +123,6 @@ public class TimeListActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         FileAdapter adapter = new FileAdapter(this);
-        ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fileNames);
 
         ListView listView = new ListView(this);
         listView.setAdapter(adapter);

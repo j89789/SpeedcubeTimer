@@ -12,8 +12,9 @@
         android:id="@+id/timerView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="60dp"
-        android:textStyle="bold" />
+        android:textSize="80dp"
+        android:textStyle="bold"
+        android:textIsSelectable="false" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,14 +22,10 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="DNF"
         android:id="@+id/textViewType"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
         android:textColor="@color/red"
         android:textSize="25dp"
-        android:layout_alignBottom="@+id/timerView"
-        android:layout_toRightOf="@+id/timerView"
-        android:layout_toEndOf="@+id/timerView"
-        android:layout_marginBottom="17dp" />
+        android:layout_below="@+id/timerView"
+        android:layout_centerHorizontal="true" />
 
     <TableLayout
         android:layout_width="wrap_content"

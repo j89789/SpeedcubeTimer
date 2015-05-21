@@ -1,23 +1,33 @@
 package com.speedcubeapp.timer;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /**
  * Main Application
  */
 public class SpeedcubeApplication extends Application {
 
-    private SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer();
-    TimeSession timeSession = new TimeSession();
-    public ColorStateList defaultTextColor;
     static public int versionCode;
     static public String versionName;
+    static private SpeedcubeApplication globalInstance;
+    public ColorStateList defaultTextColor;
+    ArrayList<PuzzleChangeListener> listeners = new ArrayList<>();
+    private SpeedcubeTimer speedcubeTimer = new SpeedcubeTimer();
+    private Puzzle[] puzzles = {new Cube2x2x2(), new Cube3x3x3(), new Cube4x4x4(), new Pyraminx()};
+    private Puzzle currentPuzzle = null;
 
-    public TimeSession getTimeSession() {
-        return timeSession;
+    static public SpeedcubeApplication instance() {
+        return globalInstance;
     }
 
     @Override
@@ -25,6 +35,8 @@ public class SpeedcubeApplication extends Application {
         super.onCreate();
 
         globalInstance = this;
+
+        this.currentPuzzle = puzzles[0];
 
         PackageInfo pInfo = null;
         try {
@@ -36,13 +48,52 @@ public class SpeedcubeApplication extends Application {
         }
     }
 
+    public Puzzle getCurrentPuzzle() {
+        return currentPuzzle;
+    }
+
     public SpeedcubeTimer getSpeedcubeTimer() {
         return speedcubeTimer;
     }
 
-    static public SpeedcubeApplication instance(){
-        return globalInstance;
+    void showPuzzlesDialog(Context context) {
+
+        PuzzleAdapter adapter = new PuzzleAdapter(puzzles);
+
+        ListView listView = new ListView(context);
+        listView.setAdapter(adapter);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Select puzzle");
+        builder.setView(listView);
+        builder.setNegativeButton(android.R.string.cancel, null);
+
+        final AlertDialog alertDialog = builder.create();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (currentPuzzle != puzzles[position]) {
+                    currentPuzzle = puzzles[position];
+
+                    for (PuzzleChangeListener listener : listeners) {
+                        listener.onPuzzleChanged();
+                    }
+                }
+
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
     }
 
-    static private SpeedcubeApplication globalInstance;
+    public void addListener(PuzzleChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    interface PuzzleChangeListener {
+        void onPuzzleChanged();
+    }
 }
