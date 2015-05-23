@@ -16,12 +16,12 @@
     <item
         android:id="@+id/action_save"
         android:title="save"
-        android:showAsAction="always" />
+        android:showAsAction="never" />
 
     <item
         android:id="@+id/action_load"
         android:title="load"
-        android:showAsAction="always" />
+        android:showAsAction="never" />
 
 
 

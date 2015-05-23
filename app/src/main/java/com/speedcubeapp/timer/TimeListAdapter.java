@@ -131,7 +131,7 @@ public class TimeListAdapter extends BaseAdapter {
             long minutesAgo = secondsAgo / 60;
 
             if (minutesAgo < 2) {
-                text = minutesAgo + " a minute ago";
+                text = "a minute ago";
 
             } else if (minutesAgo < 60 * 3) {
                 text = minutesAgo + " minutes ago";

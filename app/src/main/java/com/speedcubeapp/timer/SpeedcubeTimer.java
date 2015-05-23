@@ -329,7 +329,6 @@ class SpeedcubeTimer {
                 isSenorDownUsedForStopSolving = true;
                 isUsed = true;
             } else if(isUseInspectionTime){
-                reset();
                 isUsed = true;
             }
         }

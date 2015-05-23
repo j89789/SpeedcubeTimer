@@ -245,6 +245,9 @@ public class TimerActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         SpeedcubeApplication.instance().addListener(new SpeedcubeApplication.PuzzleChangeListener() {
             @Override
             public void onPuzzleChanged() {
