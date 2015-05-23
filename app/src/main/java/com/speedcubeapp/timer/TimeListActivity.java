@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,8 +29,9 @@ public class TimeListActivity extends Activity {
 
     private ListView listView;
 
-    private Puzzle puzzle = SpeedcubeApplication.instance().getCurrentPuzzle();
-    private TimeSession session = SpeedcubeApplication.instance().getCurrentPuzzle().getSession();
+    private Puzzle puzzle;
+    private TimeSession session;
+
 
     @Override
     protected void onResume() {
@@ -37,9 +39,17 @@ public class TimeListActivity extends Activity {
         boolean isUseMilliseconds = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("useMilliseconds", true);
         session.getAdapter().setIsUseMilliseconds(isUseMilliseconds);
 
+        super.onResume();
+    }
+
+    private void updatePuzzle() {
+
+        puzzle = SpeedcubeApplication.instance().getCurrentPuzzle();
+        session = SpeedcubeApplication.instance().getCurrentPuzzle().getSession();
+
         getActionBar().setIcon(puzzle.getImageResourceId());
 
-        super.onResume();
+        listView.setAdapter(session.getAdapter());
     }
 
     @Override
@@ -48,7 +58,6 @@ public class TimeListActivity extends Activity {
         setContentView(R.layout.activity_time_list);
 
         listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(session.getAdapter());
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -59,6 +68,14 @@ public class TimeListActivity extends Activity {
                 final Time time = session.get(position);
 
                 time.showPopupMenu(TimeListActivity.this, view, null);
+            }
+        });
+
+        updatePuzzle();
+        SpeedcubeApplication.instance().addListener(new SpeedcubeApplication.PuzzleChangeListener() {
+            @Override
+            public void onPuzzleChanged() {
+                updatePuzzle();
             }
         });
     }

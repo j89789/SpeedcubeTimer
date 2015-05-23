@@ -17,4 +17,9 @@ public class Cube4x4x4 extends Cube{
     int getNameResourceId() {
         return R.string.puzzle_name_4x4x4;
     }
+
+    @Override
+    int getId() {
+        return 40;
+    }
 }

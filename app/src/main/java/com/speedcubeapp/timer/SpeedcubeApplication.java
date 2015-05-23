@@ -36,7 +36,7 @@ public class SpeedcubeApplication extends Application {
 
         globalInstance = this;
 
-        this.currentPuzzle = puzzles[0];
+        setCurrentPuzzle(puzzles[0]);
 
         PackageInfo pInfo = null;
         try {
@@ -74,13 +74,7 @@ public class SpeedcubeApplication extends Application {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (currentPuzzle != puzzles[position]) {
-                    currentPuzzle = puzzles[position];
-
-                    for (PuzzleChangeListener listener : listeners) {
-                        listener.onPuzzleChanged();
-                    }
-                }
+                setCurrentPuzzle(puzzles[position]);
 
                 alertDialog.dismiss();
             }
@@ -93,7 +87,30 @@ public class SpeedcubeApplication extends Application {
         listeners.add(listener);
     }
 
+    public void setCurrentPuzzle(Puzzle puzzle) {
+
+        if (puzzle != currentPuzzle) {
+            this.currentPuzzle = puzzle;
+
+            for (PuzzleChangeListener listener : listeners) {
+                listener.onPuzzleChanged();
+            }
+        }
+
+    }
+
     interface PuzzleChangeListener {
         void onPuzzleChanged();
+
+
+    }
+
+    Puzzle getPuzzleById(int id){
+        for (Puzzle puzzle : puzzles) {
+            if (puzzle.getId() == id) {
+                return puzzle;
+            }
+        }
+        return null;
     }
 }

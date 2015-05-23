@@ -17,4 +17,9 @@ public class Cube3x3x3 extends Cube {
         return R.string.puzzle_name_3x3x3;
     }
 
+    @Override
+    int getId() {
+        return 30;
+    }
+
 }

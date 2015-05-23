@@ -17,4 +17,9 @@ public class Pyraminx extends Puzzle {
     int getNameResourceId() {
         return R.string.puzzle_name_pyraminx;
     }
+
+    @Override
+    int getId() {
+        return 10;
+    }
 }

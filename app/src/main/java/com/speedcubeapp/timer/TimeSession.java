@@ -82,8 +82,16 @@ public class TimeSession {
             Time time = new Time();
             time.setTimeMs(random.nextInt(30000));
             time.setTimeMs(17000 + (int) ((double) 15000 * (double) random.nextInt(1000) / 1000));
-            time.setTimestampToNow();
             addNewTime(time);
+        }
+
+        long timeStamp = System.currentTimeMillis();
+
+        for (int j = times.size() - 1; j >= 0; j--) {
+            times.get(j).setTimestamp(timeStamp);
+
+            timeStamp -= times.get(j).getOriginTimeMs();
+            timeStamp -= 20000 + (int) ((double) 60000 * (double) random.nextInt(1000) / 1000);
         }
     }
 
@@ -335,7 +343,8 @@ public class TimeSession {
 
         String data = "";
 
-        data = "version=" + SpeedcubeApplication.versionCode + "\n";
+        data += "version=" + SpeedcubeApplication.versionCode + "\n";
+        data += "puzzle=" + SpeedcubeApplication.instance().getCurrentPuzzle().getId() + "\n";
 
         for (Time time : this.times) {
             data += time.getTimestamp() + ";" + time.getOriginTimeMs() + ";" + time.getType().ordinal() + "\n";
@@ -368,7 +377,21 @@ public class TimeSession {
             }
 
             if (versionCode > 0) {
+
+                line = reader.readLine();
+
+                if (line != null && line.contains("puzzle=")) {
+                    int puzzleId = Integer.parseInt(line.split("=")[1]);
+
+                    Puzzle puzzle = SpeedcubeApplication.instance().getPuzzleById(puzzleId);
+
+                    if (puzzle != null) {
+                        SpeedcubeApplication.instance().setCurrentPuzzle(puzzle);
+                    }
+                }
+
                 while (true) {
+
                     line = reader.readLine();
 
                     if (line != null) {

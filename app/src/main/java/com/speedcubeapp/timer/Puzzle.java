@@ -17,4 +17,6 @@ public abstract class Puzzle {
     abstract int getImageResourceId();
 
     abstract int getNameResourceId();
+
+    abstract int getId();
 }

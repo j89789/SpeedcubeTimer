@@ -59,4 +59,9 @@ public class Cube2x2x2 extends Cube {
     int getNameResourceId() {
         return R.string.puzzle_name_2x2x2;
     }
+
+    @Override
+    int getId() {
+        return 20;
+    }
 }
