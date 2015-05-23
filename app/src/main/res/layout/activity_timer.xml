@@ -175,6 +175,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:text="L B D L2 U2 D&apos; B2 D2 F L2 B&apos; L2 F L&apos; B&apos; L D L2 R&apos; F R "
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:gravity="center" />
 
 </RelativeLayout>
