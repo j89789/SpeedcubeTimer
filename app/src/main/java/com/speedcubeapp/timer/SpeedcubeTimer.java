@@ -325,19 +325,8 @@ class SpeedcubeTimer {
                 isSenorDownUsedForStopSolving = true;
                 isUsed = true;
             } else if(isUseInspectionTime){
+                reset();
                 isUsed = true;
-            }
-
-            if (!isUsed) {
-
-                if (++unusedSensorEvent % 4 == 0) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle(context.getString(R.string.help_start_solving_timer));
-                    builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
-                    builder.setPositiveButton(android.R.string.ok, null);
-
-                    builder.create().show();
-                }
             }
         }
 

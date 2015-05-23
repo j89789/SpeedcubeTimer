@@ -6,6 +6,12 @@
         android:key="category_timer">
 
         <CheckBoxPreference
+            android:key="oneFingerMode"
+            android:title="One finger mode"
+            android:summary="You need only one finger to start the timer. Otherwise you need two fingers."
+            android:defaultValue="false"/>
+
+        <CheckBoxPreference
             android:key="inspectionTimeEnable"
             android:title="@string/pref_useInspectionTime"
             android:summary="@string/pref_useInspectionTime_summery"
@@ -17,6 +23,7 @@
             android:summary="@string/pref_acoustic_signals_summery"
             android:defaultValue="true"
             android:dependency="inspectionTimeEnable" />
+
 
     </PreferenceCategory>
 

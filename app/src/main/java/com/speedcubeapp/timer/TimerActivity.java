@@ -86,6 +86,8 @@ public class TimerActivity extends Activity {
         isShowExtremeValues = defaultSharedPreferences.getBoolean("showExtremeValues", true);
         isShowScramble = defaultSharedPreferences.getBoolean("showScramble", true);
 
+        touchSensor.setIsOneFingerMode(defaultSharedPreferences.getBoolean("oneFingerMode", false));
+
         if (!isShowScramble) {
             textViewScramble.setVisibility(View.GONE);
         } else {

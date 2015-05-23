@@ -15,10 +15,11 @@ import android.view.View;
  */
 class TouchSensor {
 
+    private final MyOnTouchListener touchListener = new MyOnTouchListener();
     private boolean isDown = false;
     private View view = null;
-    private final MyOnTouchListener touchListener = new MyOnTouchListener();
     private Listener listener = null;
+    private boolean isOneFingerMode;
     private String TAG = TouchSensor.class.getSimpleName();
 
     /**
@@ -27,6 +28,10 @@ class TouchSensor {
      */
     private boolean isTouchInvalid = false;
 
+
+    public void setIsOneFingerMode(boolean isOneFingerMode) {
+        this.isOneFingerMode = isOneFingerMode;
+    }
 
     public void setListener(Listener listener) {
         this.listener = listener;
@@ -40,50 +45,6 @@ class TouchSensor {
 
         this.view = view;
         this.view.setOnTouchListener(this.touchListener);
-    }
-
-    class MyOnTouchListener implements View.OnTouchListener {
-
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (!isTouchInvalid) {
-                if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
-                    if (!isDown) {
-                        isDown = true;
-                        if (listener != null) {
-                            listener.onSensorDown();
-                        }
-                    }
-                }
-
-                if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
-                    if (event.getPointerCount() <= 2) {
-                        if (isDown) {
-                            isDown = false;
-                            if (listener != null) {
-                                listener.onSensorUp();
-                            }
-                            isTouchInvalid = true;
-                        }
-                    }
-                }
-            }
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                if (isTouchInvalid) {
-                    isTouchInvalid = false;
-                } else {
-                    if (listener != null) {
-                        listener.onTrigger();
-                    }
-                }
-            }
-
-            return true;
-        }
     }
 
     public interface Listener {
@@ -103,5 +64,69 @@ class TouchSensor {
          * Called when one hand leave the touch pad when no both hands has touched the pad.
          */
         void onTrigger();
+    }
+
+    class MyOnTouchListener implements View.OnTouchListener {
+
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (!isOneFingerMode) {
+                if (!isTouchInvalid) {
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
+                        if (!isDown) {
+                            isDown = true;
+                            if (listener != null) {
+                                listener.onSensorDown();
+                            }
+                        }
+                    }
+
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP) {
+                        if (event.getPointerCount() <= 2) {
+                            if (isDown) {
+                                isDown = false;
+                                if (listener != null) {
+                                    listener.onSensorUp();
+                                }
+                                isTouchInvalid = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                if (isOneFingerMode) {
+                    isDown = true;
+                    if (listener != null) {
+                        listener.onSensorDown();
+                    }
+                }
+            }
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
+                if (isOneFingerMode) {
+                    isDown = false;
+                    if (listener != null) {
+                        listener.onSensorUp();
+                    }
+                } else {
+                    if (isTouchInvalid) {
+                        isTouchInvalid = false;
+                    } else {
+                        if (listener != null) {
+                            listener.onTrigger();
+                        }
+                    }
+                }
+            }
+
+
+            return true;
+        }
     }
 }
