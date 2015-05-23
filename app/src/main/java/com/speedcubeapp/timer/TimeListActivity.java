@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class TimeListActivity extends Activity {
@@ -253,8 +254,20 @@ public class TimeListActivity extends Activity {
     }
 
     private void showStatistic() {
+
+        List<Time> times = session.getTimes();
+
+        int totalSolvingTime = 0;
+
+        for (Time time : times) {
+            totalSolvingTime += time.getTimeMs();
+        }
+
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_statistics, null);
+
+        ((TextView) view.findViewById(R.id.textViewTotalSolvingTime))
+                .setText(Time.toStringMs(totalSolvingTime));
 
         if (session.getBestTime() != null) {
             ((TextView) view.findViewById(R.id.textViewBest))
