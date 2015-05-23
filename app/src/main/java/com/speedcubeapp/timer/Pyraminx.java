@@ -25,21 +25,25 @@ public class Pyraminx extends Puzzle {
                 boolean isValid = true;
 
                 Move lastMove = null;
+                Move beforeLastMove = null;
 
                 if (normalMoves.size() > 0) {
                     lastMove = normalMoves.get(normalMoves.size() - 1);
                 }
 
-                if (lastMove != null) {
-
-                    if (randomMove.face.equals(lastMove.face)) {
-                        isValid = false; // don't allow L L, U' U, F F', R R2,
-
-                    } else if (randomMove.face.equals(lastMove.face)) {
-
-                        isValid = false; // don't allow F B, R L2, U2 D2
-                    }
+                if (normalMoves.size() > 1) {
+                    beforeLastMove = normalMoves.get(normalMoves.size() - 2);
                 }
+
+
+                if (lastMove != null && randomMove.face.equals(lastMove.face)) {
+                    isValid = false; // don't allow L L, U' U, F F', R R2,
+
+                } else if (beforeLastMove != null && randomMove.face.equals(beforeLastMove.face)) {
+
+                    isValid = false; // don't allow R L R
+                }
+
 
                 if (isValid) {
                     break;
