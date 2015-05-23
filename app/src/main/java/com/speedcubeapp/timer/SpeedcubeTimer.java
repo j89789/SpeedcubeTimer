@@ -224,6 +224,10 @@ class SpeedcubeTimer {
         return d.getTimerState() == TimerState.inspection || d.getTimerState() == TimerState.solving;
     }
 
+    public boolean getIsUseInspectionTime() {
+        return isUseInspectionTime;
+    }
+
     public enum TimerState {ready, inspection, solving, solved}
 
     enum SensorStatus {waitForValidation, valid, invalid}

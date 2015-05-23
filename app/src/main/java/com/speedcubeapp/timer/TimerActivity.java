@@ -306,7 +306,30 @@ public class TimerActivity extends Activity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.app_name) + "  " + version);
-        builder.setMessage(getString(R.string.help_text));
+
+        String message = getString(R.string.help_text_hot_to_use) + "\n\n";
+
+        if (speedcubeTimer.getIsUseInspectionTime()) {
+            message += getString(R.string.help_text_inspection) + "\n\n";
+        }
+
+        if (touchSensor.getIsOneFingerMode()) {
+            message += getString(R.string.help_text_start_timer_one_finger) + "\n\n";
+        }else{
+            message += getString(R.string.help_text_start_timer_two_finger) + "\n\n";
+        }
+
+        message += getString(R.string.help_text_start_timer_release) + "\n\n";
+
+        if (touchSensor.getIsOneFingerMode()) {
+            message += getString(R.string.help_text_stop_timer_one_finger) + "\n\n";
+        }else{
+            message += getString(R.string.help_text_stop_timer_two_finger) + "\n\n";
+        }
+
+        message += getString(R.string.help_text_change_tye);
+
+        builder.setMessage(message);
         builder.setPositiveButton(android.R.string.ok, null);
         builder.create().show();
     }

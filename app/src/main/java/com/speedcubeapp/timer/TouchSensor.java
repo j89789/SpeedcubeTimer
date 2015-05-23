@@ -47,6 +47,10 @@ class TouchSensor {
         this.view.setOnTouchListener(this.touchListener);
     }
 
+    public boolean getIsOneFingerMode() {
+        return isOneFingerMode;
+    }
+
     public interface Listener {
 
 

@@ -31,14 +31,14 @@ time is going green .</string>
     <string name="time_statistics">Statistics</string>
     <string name="delete_all_times">Delete all Times?</string>
     <string name="help">Help</string>
-    <string name="help_text">Solving timer\n\n
-If you are ready to start touch the screen with two finger and wait until the
-time is going green. If one finger no longer touching the screen the timer is running.
-The timer will stop if you touch the screen with two fingers again.\n\n
-
-Inspection timer\n\n
-Start the inspection timer (15 seconds) with a simple click on screen. The inspection time
-can be disable in the settings.</string>
+    <string name="help_text_hot_to_use">How to ues the timer:</string>
+    <string name="help_text_inspection">- Start inspection with a click on screen</string>
+    <string name="help_text_start_timer_one_finger">- Put one finger on screen and wait until the time is going green</string>
+    <string name="help_text_start_timer_two_finger">- Put one finger of each hand on the screen and wait until the time is going green</string>
+    <string name="help_text_start_timer_release">- If you release the screen, the solving timer will start</string>
+    <string name="help_text_stop_timer_one_finger">- Put one finger on screen again to stop the solving timer</string>
+    <string name="help_text_stop_timer_two_finger">- Put two fingers on screen again to stop the solving timer</string>
+    <string name="help_text_change_tye">- Is the solve not OK you can change the type to "+2" or "DNF" with a click on the time</string>
     <string name="puzzle_name_2x2x2">Cube 2*2</string>
     <string name="puzzle_name_3x3x3">Cube 3*3</string>
     <string name="puzzle_name_4x4x4">Cube 4*4</string>
