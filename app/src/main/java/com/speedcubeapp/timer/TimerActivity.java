@@ -175,6 +175,17 @@ public class TimerActivity extends Activity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+        SharedPreferences preference = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+
+        preference.edit()
+                .putInt("lastPuzzle", SpeedcubeApplication.instance().getCurrentPuzzle().getId())
+                .apply();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 

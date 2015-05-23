@@ -3,6 +3,7 @@ package com.speedcubeapp.timer;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -36,7 +37,17 @@ public class SpeedcubeApplication extends Application {
 
         globalInstance = this;
 
-        setCurrentPuzzle(puzzles[0]);
+        SharedPreferences preference = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+        int puzzleId = preference.getInt("lastPuzzle", 0);
+
+        Puzzle puzzle = SpeedcubeApplication.instance().getPuzzleById(puzzleId);
+
+        if (puzzle != null) {
+            setCurrentPuzzle(puzzle);
+        }
+        else {
+            setCurrentPuzzle(puzzles[1]);
+        }
 
         PackageInfo pInfo = null;
         try {
@@ -86,6 +97,7 @@ public class SpeedcubeApplication extends Application {
     public void addListener(PuzzleChangeListener listener) {
         listeners.add(listener);
     }
+
 
     public void setCurrentPuzzle(Puzzle puzzle) {
 
