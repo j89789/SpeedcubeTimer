@@ -7,7 +7,7 @@
     <string name="pref_useMilliseconds_summery">e.g. 16.259 instead of 16.25</string>
     <string name="timer" translatable="false">Timer</string>
     <string name="display">Display</string>
-    <string name="time_list">Time List</string>
+    <string name="time_list">Times</string>
     <string name="delete">delete</string>
     <string name="time_type_plus2" translatable="false">+2</string>
     <string name="time_type_DNF" translatable="false">DNF</string>

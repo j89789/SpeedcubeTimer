@@ -9,7 +9,7 @@ public class Cube3x3x3 extends Cube {
 
     @Override
     int getImageResourceId() {
-        return R.mipmap.speedcube3x3x3;
+        return R.mipmap.ic_launcher;
     }
 
     @Override
