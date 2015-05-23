@@ -4,7 +4,7 @@ package com.speedcubeapp.timer;
 public class Cube3x3x3 extends Cube {
 
     public String generateScramble() {
-        return generateScramble(21, 1);
+        return scrambleToString(generateMoves(21));
     }
 
     @Override

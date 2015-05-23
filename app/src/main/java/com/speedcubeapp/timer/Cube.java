@@ -14,11 +14,7 @@ public abstract class Cube extends Puzzle {
         return scramble;
     }
 
-    enum Face {right, left, up, down, front, back}
-
-    enum Direction {clockwise, counterclockwise, halfTurn}
-
-    String generateScramble(int count, int layer) {
+    ArrayList<Movement> generateMoves(int count) {
         ArrayList<Movement> moves = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
@@ -30,11 +26,7 @@ public abstract class Cube extends Puzzle {
                 Face randomFace = Face.values()[random.nextInt(Face.values().length)];
                 Direction randomDirection = Direction.values()[random.nextInt(Direction.values().length)];
 
-                int randomLayer = 1;
-
-                if(layer != 1){randomLayer = 1 + random.nextInt(layer - 1);}
-
-                randomMove = new Movement(randomFace, randomDirection, layer);
+                randomMove = new Movement(randomFace, randomDirection);
 
                 boolean isValid = true;
 
@@ -63,7 +55,7 @@ public abstract class Cube extends Puzzle {
                     }
                 }
 
-                if(isValid){
+                if (isValid) {
                     break;
                 }
             }
@@ -71,8 +63,12 @@ public abstract class Cube extends Puzzle {
             moves.add(randomMove);
         }
 
-        return scrambleToString(moves);
+        return moves;
     }
+
+    enum Face {right, left, up, down, front, back}
+
+    enum Direction {clockwise, counterclockwise, halfTurn}
 
     /**
      * One Move of a scramble.
@@ -121,6 +117,10 @@ public abstract class Cube extends Puzzle {
         public String toString() {
             String s = faceToString(face);
 
+            if (layer == 2) {
+                s += "w";
+            }
+
             if (direction == Direction.counterclockwise) {
                 s += "'";
             } else if (direction == Direction.halfTurn) {
@@ -128,6 +128,10 @@ public abstract class Cube extends Puzzle {
             }
 
             return s;
+        }
+
+        public void setLayer(int layer) {
+            this.layer = layer;
         }
     }
 }
