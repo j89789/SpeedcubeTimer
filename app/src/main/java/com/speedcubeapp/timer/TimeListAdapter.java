@@ -33,7 +33,7 @@ public class TimeListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return sourceList.get(position);
+        return sourceList.get(sourceList.size() - position - 1);
     }
 
     @Override
@@ -57,10 +57,13 @@ public class TimeListAdapter extends BaseAdapter {
         TextView textViewAo12 = (TextView) convertView.findViewById(R.id.textViewAo12);
 
 
-        textViewPos.setText("" + (position + 1) + ".");
 
-        Time time = sourceList.get(position);
+
+        int index = sourceList.size() - position - 1;
+        Time time = sourceList.get(index);
         Time.Type type = time.getType();
+
+        textViewPos.setText("" + (index + 1) + ".");
 
         String timeString = Time.toString(time.getTimeMs(), isUseMilliseconds ? 3 : 2);
 

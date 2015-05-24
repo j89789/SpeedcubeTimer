@@ -66,7 +66,7 @@ public class TimeListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final Time time = session.get(position);
+                final Time time = (Time) listView.getAdapter().getItem(position);
 
                 time.showPopupMenu(TimeListActivity.this, view, null);
             }
