@@ -14,8 +14,8 @@
     <string name="pref_showAverage">Show average times</string>
     <string name="pref_showAverage_summery">Average of all, last 5 and 12 times</string>
     <string name="pref_showExtremeValues">Show best and worst time</string>
-    <string name="worst" translatable="false">worst</string>
-    <string name="best" translatable="false">best</string>
+    <string name="worst" translatable="false">Worst</string>
+    <string name="best" translatable="false">Best</string>
     <string name="pref_showScramble">Show scramble</string>
     <string name="pref_showScramble_summery">For a 3*3*3 speedcube</string>
     <string name="zero_time" translatable="false">0.000</string>
@@ -43,4 +43,7 @@ time is going green .</string>
     <string name="puzzle_name_3x3x3">Cube 3*3</string>
     <string name="puzzle_name_4x4x4">Cube 4*4</string>
     <string name="puzzle_name_pyraminx">Pyraminx</string>
+    <string name="avg_12">AVG 12</string>
+    <string name="avg_all">AVG all</string>
+    <string name="avg_5">AVG 5</string>
 </resources>

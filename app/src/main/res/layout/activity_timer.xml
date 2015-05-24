@@ -24,8 +24,12 @@
         android:id="@+id/textViewType"
         android:textColor="@color/red"
         android:textSize="25dp"
-        android:layout_below="@+id/timerView"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignBaseline="@+id/timerView"
+        android:layout_alignBottom="@+id/timerView"
+        android:layout_toRightOf="@+id/timerView"
+        android:layout_toEndOf="@+id/timerView"
+        android:layout_marginLeft="37dp"
+        android:layout_marginStart="37dp" />
 
     <TableLayout
         android:layout_width="wrap_content"
@@ -44,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="ao5"
+                android:text="@string/avg_5"
                 android:paddingRight="20dp" />
 
             <TextView
@@ -66,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="ao12"
+                android:text="@string/avg_12"
                 android:paddingRight="20dp" />
 
             <TextView
@@ -90,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/mean"
+                android:text="@string/avg_all"
                 android:paddingRight="20dp"/>
 
             <TextView
