@@ -73,7 +73,6 @@ class SpeedcubeTimer {
      */
     private boolean isTimeUpdaterEnable = false;
 
-    private int unusedSensorEvent;
     private boolean isSenorDownUsedForStopSolving = false;
 
     public SpeedcubeTimer() {
@@ -315,49 +314,31 @@ class SpeedcubeTimer {
         @Override
         public void onSensorDown() {
 
-            boolean isUsed = false;
-
             if (!(isRunning() || isUseInspectionTime) ||
                     d.getTimerState() == TimerState.inspection) {
 
                 d.setSensorStatus(SensorStatus.waitForValidation);
                 handler.postDelayed(sensorDownValidMaker, 550);
 
-                isUsed = true;
             } else if (d.getTimerState() == TimerState.solving) {
                 finishedSolving();
                 isSenorDownUsedForStopSolving = true;
-                isUsed = true;
             } else if(isUseInspectionTime){
-                isUsed = true;
             }
         }
 
         @Override
         public void onTrigger() {
 
-            boolean isShowHelp = false;
-
             if (isUseInspectionTime) {
                 if (!isRunning()) {
                     startInspection();
                 }
                 else if (d.getTimerState() != TimerState.solving){
-                    isShowHelp = true;
                 }
             }
             else if (d.getTimerState() != TimerState.solving) {
 
-               isShowHelp = true;
-            }
-
-            if (++unusedSensorEvent % 4 == 0 && isShowHelp) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(context.getString(R.string.help_start_solving_timer));
-                builder.setMessage(context.getString(R.string.help_start_solving_timer_detail));
-                builder.setPositiveButton(android.R.string.ok, null);
-
-                builder.create().show();
             }
         }
     }

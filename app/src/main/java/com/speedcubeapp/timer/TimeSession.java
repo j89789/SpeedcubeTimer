@@ -59,7 +59,7 @@ public class TimeSession {
 
     public TimeSession() {
 
-        generateRandomTimers();
+        //generateRandomTimers();
     }
 
     public List<Time> getValidTimes() {

@@ -22,6 +22,7 @@ public class TimerActivity extends Activity {
      * Input for the SpeedcubeTimer.
      */
     private final TouchSensor touchSensor = new TouchSensor();
+    SingleShotTimer screenOfTimer = new SingleShotTimer();
     private boolean isUseMilliseconds = false;
     /**
      * This is the central element which will be visualise with this activity
@@ -42,9 +43,6 @@ public class TimerActivity extends Activity {
      * Handel's changed form the Speedcube Timer
      */
     private SpeedcubeListener speedcubeListener = new SpeedcubeListener();
-
-    SingleShotTimer screenOfTimer = new SingleShotTimer();
-
     private SharedPreferences defaultSharedPreferences;
     private boolean isShowAverage;
     /**
@@ -86,7 +84,7 @@ public class TimerActivity extends Activity {
         isShowExtremeValues = defaultSharedPreferences.getBoolean("showExtremeValues", true);
         isShowScramble = defaultSharedPreferences.getBoolean("showScramble", true);
 
-        touchSensor.setIsOneFingerMode(defaultSharedPreferences.getBoolean("oneFingerMode", false));
+        touchSensor.setIsTwoFingerMode(defaultSharedPreferences.getBoolean("twoFingerMode", false));
 
         if (!isShowScramble) {
             textViewScramble.setVisibility(View.GONE);
@@ -231,8 +229,6 @@ public class TimerActivity extends Activity {
 
         speedcubeTimer.setContext(this);
 
-        checkFirstRun();
-
         // Keep screen for 2 minutes on
         screenOfTimer.setInterval(120000);
 
@@ -256,18 +252,6 @@ public class TimerActivity extends Activity {
         });
     }
 
-    public void checkFirstRun() {
-        SharedPreferences preference = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
-
-        boolean isFirstRun = preference.getBoolean("isFirstRun", true);
-
-        if (isFirstRun){
-
-            showHelpDialog();
-            preference.edit().putBoolean("isFirstRun", false).apply();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -288,53 +272,12 @@ public class TimerActivity extends Activity {
             Intent intent = new Intent(this, TimeListActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_help) {
-            showHelpDialog();
-        }
-        else if (id == android.R.id.home) {
+        } else if (id == android.R.id.home) {
             SpeedcubeApplication.instance().showPuzzlesDialog(this);
         }
 
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showHelpDialog() {
-        String version = "";
-
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            version = pInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {}
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.app_name) + "  " + version);
-
-        String message = getString(R.string.help_text_hot_to_use) + "\n\n";
-
-        if (speedcubeTimer.getIsUseInspectionTime()) {
-            message += getString(R.string.help_text_inspection) + "\n\n";
-        }
-
-        if (touchSensor.getIsOneFingerMode()) {
-            message += getString(R.string.help_text_start_timer_one_finger) + "\n\n";
-        }else{
-            message += getString(R.string.help_text_start_timer_two_finger) + "\n\n";
-        }
-
-        message += getString(R.string.help_text_start_timer_release) + "\n\n";
-
-        if (touchSensor.getIsOneFingerMode()) {
-            message += getString(R.string.help_text_stop_timer_one_finger) + "\n\n";
-        }else{
-            message += getString(R.string.help_text_stop_timer_two_finger) + "\n\n";
-        }
-
-        message += getString(R.string.help_text_change_tye);
-
-        builder.setMessage(message);
-        builder.setPositiveButton(android.R.string.ok, null);
-        builder.create().show();
     }
 
     @Override
@@ -420,6 +363,15 @@ public class TimerActivity extends Activity {
 
     }
 
+    private void stopKeepScreenOn() {
+        screenOfTimer.restart();
+    }
+
+    private void keepScreenOn() {
+        screenOfTimer.stop();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
     private class SpeedcubeListener implements SpeedcubeTimer.Listener {
         @Override
         public void onStatusChanged(SpeedcubeTimer.TimerState oldState, SpeedcubeTimer.TimerState newState) {
@@ -437,8 +389,7 @@ public class TimerActivity extends Activity {
             if (newState == SpeedcubeTimer.TimerState.inspection ||
                     newState == SpeedcubeTimer.TimerState.solving) {
                 keepScreenOn();
-            }
-            else{
+            } else {
                 stopKeepScreenOn();
             }
 
@@ -454,15 +405,6 @@ public class TimerActivity extends Activity {
             updateTimeView();
         }
 
-    }
-
-    private void stopKeepScreenOn() {
-        screenOfTimer.restart();
-    }
-
-    private void keepScreenOn() {
-        screenOfTimer.stop();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private class TimeViewOnClickListener implements View.OnClickListener {

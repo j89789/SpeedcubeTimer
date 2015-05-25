@@ -7,43 +7,30 @@
     <string name="pref_useMilliseconds_summery">e.g. 16.259 instead of 16.25</string>
     <string name="timer" translatable="false">Timer</string>
     <string name="display">Display</string>
-    <string name="time_list">Times</string>
+    <string name="time_list">History</string>
     <string name="delete">delete</string>
     <string name="time_type_plus2" translatable="false">+2</string>
     <string name="time_type_DNF" translatable="false">DNF</string>
     <string name="pref_showAverage">Show average times</string>
-    <string name="pref_showAverage_summery">Average of all, last 5 and 12 times</string>
+    <string name="pref_showAverage_summery">Average of all, last 5 and 12</string>
     <string name="pref_showExtremeValues">Show best and worst time</string>
     <string name="worst" translatable="false">Worst</string>
     <string name="best" translatable="false">Best</string>
     <string name="pref_showScramble">Show scramble</string>
-    <string name="pref_showScramble_summery">For a 3*3*3 speedcube</string>
     <string name="zero_time" translatable="false">0.000</string>
     <string name="average_of_5">Average of 5</string>
     <string name="average_of_12">Average of 12</string>
-    <string name="help_start_solving_timer">Start solving timer?</string>
-    <string name="help_start_solving_timer_detail">Touch the screen with two fingers until the
-time is going green .</string>
     <string name="time_type_ok" translatable="false">ok</string>
     <string name="pref_acoustic_signals">Acoustic signals</string>
     <string name="pref_acoustic_signals_summery">Play an acoustic signal at 8 and 3 seconds while inspection</string>
-    <string name="mean" translatable="false">mean</string>
+    <string name="avg" translatable="false">Avg</string>
     <string name="time_statistics">Statistics</string>
     <string name="delete_all_times">Delete all Times?</string>
-    <string name="help">Help</string>
-    <string name="help_text_hot_to_use">How to ues the timer:</string>
-    <string name="help_text_inspection">- Start inspection with a click on screen</string>
-    <string name="help_text_start_timer_one_finger">- Put one finger on screen and wait until the time is going green</string>
-    <string name="help_text_start_timer_two_finger">- Put one finger of each hand on the screen and wait until the time is going green</string>
-    <string name="help_text_start_timer_release">- If you release the screen, the solving timer will start</string>
-    <string name="help_text_stop_timer_one_finger">- Put one finger on screen again to stop the solving timer</string>
-    <string name="help_text_stop_timer_two_finger">- Put two fingers on screen again to stop the solving timer</string>
-    <string name="help_text_change_tye">- Is the solve not OK you can change the type to "+2" or "DNF" with a click on the time</string>
     <string name="puzzle_name_2x2x2">Cube 2*2</string>
     <string name="puzzle_name_3x3x3">Cube 3*3</string>
     <string name="puzzle_name_4x4x4">Cube 4*4</string>
     <string name="puzzle_name_pyraminx">Pyraminx</string>
-    <string name="avg_12">AVG 12</string>
-    <string name="avg_all">AVG all</string>
-    <string name="avg_5">AVG 5</string>
+    <string name="avg_12">Avg 12</string>
+    <string name="avg_all">Avg all</string>
+    <string name="avg_5">Avg 5</string>
 </resources>

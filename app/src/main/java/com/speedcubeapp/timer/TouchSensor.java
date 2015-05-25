@@ -19,7 +19,7 @@ class TouchSensor {
     private boolean isDown = false;
     private View view = null;
     private Listener listener = null;
-    private boolean isOneFingerMode;
+    private boolean isTwoFingerMode;
     private String TAG = TouchSensor.class.getSimpleName();
 
     /**
@@ -29,8 +29,8 @@ class TouchSensor {
     private boolean isTouchInvalid = false;
 
 
-    public void setIsOneFingerMode(boolean isOneFingerMode) {
-        this.isOneFingerMode = isOneFingerMode;
+    public void setIsTwoFingerMode(boolean isOneFingerMode) {
+        this.isTwoFingerMode = isOneFingerMode;
     }
 
     public void setListener(Listener listener) {
@@ -48,7 +48,7 @@ class TouchSensor {
     }
 
     public boolean getIsOneFingerMode() {
-        return isOneFingerMode;
+        return isTwoFingerMode;
     }
 
     public interface Listener {
@@ -76,7 +76,7 @@ class TouchSensor {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            if (!isOneFingerMode) {
+            if (isTwoFingerMode) {
                 if (!isTouchInvalid) {
                     if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_DOWN) {
                         if (!isDown) {
@@ -103,7 +103,7 @@ class TouchSensor {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-                if (isOneFingerMode) {
+                if (!isTwoFingerMode) {
                     isDown = true;
                     if (listener != null) {
                         listener.onSensorDown();
@@ -113,7 +113,7 @@ class TouchSensor {
 
             if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                if (isOneFingerMode) {
+                if (!isTwoFingerMode) {
                     isDown = false;
                     if (listener != null) {
                         listener.onSensorUp();

@@ -6,9 +6,9 @@
         android:key="category_timer">
 
         <CheckBoxPreference
-            android:key="oneFingerMode"
-            android:title="One finger mode"
-            android:summary="You need only one finger to start the timer. Otherwise you need two fingers."
+            android:key="twoFingerMode"
+            android:title="Two finger mode"
+            android:summary="You need both hands to start the timer."
             android:defaultValue="false"/>
 
         <CheckBoxPreference
@@ -51,7 +51,6 @@
         <CheckBoxPreference
             android:key="showScramble"
             android:title="@string/pref_showScramble"
-            android:summary="@string/pref_showScramble_summery"
             android:defaultValue="true" />
 
     </PreferenceCategory>
