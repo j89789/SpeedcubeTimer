@@ -3,7 +3,7 @@ A very simple speedcube timer for android. The basic feature are:
 
 - Time history with average of 3, 12 and all
 - Inspection time of 15 seconds
-- Scramble for a 2x2, 2x2, 4x4 cube and pyraminx
+- Scramble for a 2x2, 3x3, 4x4 cube and pyraminx
 
 This is a test project to learn android app development.
 
